@@ -1,10 +1,13 @@
+#include <memory>
 
 struct GLFWwindow;
+class Renderer;
 
-class Game {
+class Game final {
 private:
 	bool running;
 	GLFWwindow* window;
+	std::shared_ptr<Renderer> renderer;
 
 	void runMainLoop();
 

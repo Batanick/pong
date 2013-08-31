@@ -1,3 +1,6 @@
 !.gitignore
+
+#Visual Studio stuff
 /bin
 /Debug
+/ipch

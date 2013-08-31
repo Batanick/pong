@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "Renderer.h"
+
 bool Game::init() {
 	if (!glfwInit()) {
 		return false;
@@ -14,6 +16,8 @@ bool Game::init() {
         glfwTerminate();
         return false;
     }
+
+	renderer = std::shared_ptr<Renderer>(new Renderer(window));
 
 	/* Make the window's context current */
     glfwMakeContextCurrent(window);
@@ -33,16 +37,11 @@ void Game::shutdown() {
 
 void Game::runMainLoop() {
 	/* Loop until the user closes the window */
-    while (running)
-    {
-        /* Render here */
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window);
-
+    while (running) {
+		renderer->render();
+		
         /* Poll for and process events */
-        glfwPollEvents();
+		glfwPollEvents();
 
 		running = running & (!glfwWindowShouldClose(window));
     }
