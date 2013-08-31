@@ -7,6 +7,7 @@ public:
 	}
 
 	void render();
+	bool init();
 
 private:
 	GLFWwindow * const window;

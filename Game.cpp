@@ -17,10 +17,11 @@ bool Game::init() {
         return false;
     }
 
-	renderer = std::shared_ptr<Renderer>(new Renderer(window));
-
 	/* Make the window's context current */
     glfwMakeContextCurrent(window);
+
+	renderer = std::shared_ptr<Renderer>(new Renderer(window));
+	renderer->init();
 
 	return true;
 }
