@@ -17,7 +17,7 @@
         }                                   \
     };
 
-#define LOG( msg ) { \
-	printf ( msg );	 \
-	printf ( "\n" );   \
+#define LOG( msg ) {						\
+	printf ( msg );							\
+	printf ( "\n" );						\
 }

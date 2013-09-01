@@ -12,6 +12,12 @@ void printLog(GLuint obj);
 
 bool ShaderManager::init() {
 	//TODO: Vertex shader
+	std::string vertexShaderContent;
+	VERIFY( loadContent("shaders/VertexShader.vertexshader", vertexShaderContent) , 
+		"Unable to load fragment vertex program", return false);
+
+	GLuint vertextShaderId = glCreateShader(GL_VERTEX_SHADER);
+	loadShader(vertextShaderId, vertexShaderContent.c_str());
 	
 	//Fragment shader
 	std::string fragmentShaderContent;
@@ -20,12 +26,12 @@ bool ShaderManager::init() {
 
 	
 	GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-	char const * FragmentSourcePointer = fragmentShaderContent.c_str();
 	loadShader( fragmentShaderId, fragmentShaderContent.c_str());
 
 	//Program
 	GLuint programID = glCreateProgram();
 	glAttachShader(programID, fragmentShaderId);
+	glAttachShader(programID, vertextShaderId);
 	glLinkProgram(programID);
 
 	printLog(programID);
