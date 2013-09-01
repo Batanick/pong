@@ -3,6 +3,10 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "ShaderManager.h"
+
+#include "logging.h"
+
 static const GLfloat triangle[] = {
    -1.0f, -1.0f, 0.0f,
    1.0f, -1.0f, 0.0f,
@@ -37,9 +41,10 @@ void Renderer::render(){
 
 bool Renderer::init(){
 	// Initialize GLEW
-	if (glewInit() != GLEW_OK) {
-		return false;
-	}
+	VERIFY (glewInit() == GLEW_OK, "Unable to initialize glew", return false);
+
+	shaderManager = std::shared_ptr<ShaderManager> (new ShaderManager());
+	VERIFY (shaderManager->init(), "Unable to initialise renderer", return false );
 
 //	GLuint VertexArrayID;
 //	glGenVertexArrays(1, &VertexArrayID);

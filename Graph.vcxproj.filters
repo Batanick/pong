@@ -4,6 +4,9 @@
     <Filter Include="src">
       <UniqueIdentifier>{073e46dc-7342-4819-8118-ee44f35b627d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\common">
+      <UniqueIdentifier>{2c3a776c-2407-4c7b-a5c7-8db6294a6093}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -15,6 +18,12 @@
     <ClCompile Include="Renderer.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="fileUtils.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -22,6 +31,15 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="fileUtils.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="logging.h">
+      <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -5,6 +5,8 @@
 
 #include "Renderer.h"
 
+#include "logging.h"
+
 bool Game::init() {
 	if (!glfwInit()) {
 		return false;
@@ -21,7 +23,7 @@ bool Game::init() {
     glfwMakeContextCurrent(window);
 
 	renderer = std::shared_ptr<Renderer>(new Renderer(window));
-	renderer->init();
+	VERIFY (renderer->init(), "Unable to initialize renderer", return false);
 
 	return true;
 }
