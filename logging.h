@@ -17,7 +17,7 @@
         }                                   \
     };
 
-#define LOG( msg ) {						\
-	printf ( msg );							\
+#define LOG( msg, ... ) {						\
+	printf ( msg, ##__VA_ARGS__ );							\
 	printf ( "\n" );						\
 }

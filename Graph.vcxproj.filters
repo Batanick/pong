@@ -7,6 +7,10 @@
     <Filter Include="src\common">
       <UniqueIdentifier>{2c3a776c-2407-4c7b-a5c7-8db6294a6093}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\shaders">
+      <UniqueIdentifier>{289b0a5c-e8f5-4f10-996e-0435cf4e8260}</UniqueIdentifier>
+      <Extensions>*.*shader</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -22,6 +26,12 @@
       <Filter>src\common</Filter>
     </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,5 +51,25 @@
     <ClInclude Include="logging.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="Tickable.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderCommon.h">
+      <Filter>src</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\FragmentShader.fragmentshader">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\VertexShader.vertexshader">
+      <Filter>src\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

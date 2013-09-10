@@ -1,21 +1,35 @@
 #include <memory>
+#include <vector>
+
+#include "Tickable.hpp"
 
 struct GLFWwindow;
+
+struct RenderContext;
 class Renderer;
 
-class Game final {
-private:
-	bool running;
-	GLFWwindow* window;
-	std::shared_ptr<Renderer> renderer;
 
-	void runMainLoop();
+class Game final {
 
 public:
-	Game():running(false) {
-	};
+	Game();
 
 	bool init();
 	void start();
 	void shutdown();
+	
+private:
+	bool running;
+	
+	GLFWwindow* window;
+	double lastTick;
+
+	std::shared_ptr<Renderer> renderer;
+	std::vector<TickablePtr> tickables;
+	
+	class Timer;
+	std::shared_ptr<Timer> timer; 
+
+	void runMainLoop();
+	RenderContext createRenderContext();
 };

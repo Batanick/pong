@@ -29,7 +29,7 @@ bool ShaderManager::init() {
 	loadShader( fragmentShaderId, fragmentShaderContent.c_str());
 
 	//Program
-	GLuint programID = glCreateProgram();
+	programID = glCreateProgram();
 	glAttachShader(programID, fragmentShaderId);
 	glAttachShader(programID, vertextShaderId);
 	glLinkProgram(programID);
@@ -47,6 +47,10 @@ void loadShader( GLuint shaderId, char const * source) {
 	glCompileShader(shaderId);
 
 	printLog(shaderId);
+}
+
+GLuint ShaderManager::getProgramId(){
+	return programID;
 }
 
 void printLog(GLuint obj) {

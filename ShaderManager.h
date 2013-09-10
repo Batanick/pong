@@ -1,7 +1,10 @@
+typedef unsigned int GLuint;
 
-class ShaderManager {
+class ShaderManager final {
 public:
 	bool init();
+	GLuint getProgramId();
 
 private:
+	GLuint programID;
 };
