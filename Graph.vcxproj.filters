@@ -34,6 +34,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="assetLoader.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -62,6 +65,9 @@
     </ClInclude>
     <ClInclude Include="RenderCommon.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="assetLoader.h">
+      <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

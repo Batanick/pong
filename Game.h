@@ -31,5 +31,6 @@ private:
 	std::shared_ptr<Timer> timer; 
 
 	void runMainLoop();
+	void onShutdown();
 	RenderContext createRenderContext();
 };

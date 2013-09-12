@@ -13,7 +13,7 @@ void printLog(GLuint obj);
 bool ShaderManager::init() {
 	//TODO: Vertex shader
 	std::string vertexShaderContent;
-	VERIFY( loadContent("shaders/VertexShader.vertexshader", vertexShaderContent) , 
+	VERIFY( loadContent("../shaders/VertexShader.vertexshader", vertexShaderContent) , 
 		"Unable to load fragment vertex program", return false);
 
 	GLuint vertextShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -21,7 +21,7 @@ bool ShaderManager::init() {
 	
 	//Fragment shader
 	std::string fragmentShaderContent;
-	VERIFY( loadContent("shaders/FragmentShader.fragmentshader", fragmentShaderContent) , 
+	VERIFY( loadContent("../shaders/FragmentShader.fragmentshader", fragmentShaderContent) , 
 		"Unable to load fragment shader program", return false);
 
 	
@@ -38,8 +38,16 @@ bool ShaderManager::init() {
 
 	glUseProgram(programID);
 
-	glDeleteShader(fragmentShaderId);
+	glDeleteShader( fragmentShaderId );
+	glDeleteShader( vertextShaderId );
+
+	mvpId = glGetUniformLocation( programID, "mvp" );
+
 	return true;
+}
+
+void ShaderManager::shutdown() {
+	glDeleteProgram( programID );
 }
 
 void loadShader( GLuint shaderId, char const * source) {
@@ -49,8 +57,12 @@ void loadShader( GLuint shaderId, char const * source) {
 	printLog(shaderId);
 }
 
-GLuint ShaderManager::getProgramId(){
+GLuint ShaderManager::getProgramId() {
 	return programID;
+}
+
+GLuint ShaderManager::getMVPId() {
+	return mvpId;
 }
 
 void printLog(GLuint obj) {
@@ -70,6 +82,6 @@ void printLog(GLuint obj) {
 		glGetProgramInfoLog(obj, maxLength, &infologLength, infoLog);
  
 	if (infologLength > 0)
-		printf("%s\n",infoLog);
+		LOG( "%s\n",infoLog );
 }
 

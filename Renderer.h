@@ -18,6 +18,7 @@ public:
 
 	void render( const RenderContext & context );
 	bool init();
+	void shutdown();
 	
 	std::shared_ptr<Tickable> getTickable(); 
 private:

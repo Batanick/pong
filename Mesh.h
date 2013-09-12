@@ -6,22 +6,25 @@ typedef unsigned int GLuint;
 class Mesh final {
 
 public:
-	Mesh() {
+	Mesh( GLuint modelMatrix ): modelMatrix( modelMatrix ) {
 		model = glm::mat4(1);
-		model[3][3] = 1;		
 	}
 	~Mesh(){}
 
-	void load( GLuint shaderProgramId );
+	void init();
 	void render( glm::mat4 mvp );
+	void shutdown();
 	glm::mat4 getModelTrans();
 
 private:
-	std::vector<float> vertices;
-	std::vector<short> indices;
+	const GLuint modelMatrix;
+
+	std::vector<glm::vec3> vertices;
+	std::vector<unsigned short> indices;
 
 	GLuint vertexBuffer;
-	GLuint modelMatrix;
+	GLuint indexBuffer;
 
 	glm::mat4 model;
+
 };

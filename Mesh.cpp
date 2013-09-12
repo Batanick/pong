@@ -3,46 +3,53 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-static const GLfloat triangle[] = {
-   -1.0f, -1.0f, 0.0f,
-   1.0f, -1.0f, 0.0f,
-   0.0f,  1.0f, 0.0f,
-};
+#include "assetLoader.h"
 
-void Mesh::load( GLuint shaderProgramId ) {
-	for each (GLfloat val in triangle) {
-		vertices.push_back(val);
+void Mesh::init() {
+	if ( !loadFromFile( "../models/monkey.obj", vertices, indices ) ) {
+		return;
 	}
-	
-	glGenBuffers(1, &vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(triangle), triangle, GL_STATIC_DRAW);
 
-	modelMatrix = glGetUniformLocation(shaderProgramId, "mvp");
+	glGenBuffers( 1, &vertexBuffer );
+	glBindBuffer( GL_ARRAY_BUFFER, vertexBuffer );
+	glBufferData( GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3) , &vertices[0], GL_STATIC_DRAW );
+
+	glGenBuffers( 1, &indexBuffer );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof( unsigned short ), &indices[0], GL_STATIC_DRAW );
+
 }
 
 void Mesh::render( glm::mat4 mvp ) {
+	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+
 	glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, &mvp[0][0]);
 
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-	glVertexAttribPointer(
-	   0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-	   3,                  // size
-	   GL_FLOAT,           // type
-	   GL_FALSE,           // normalized?
-	   0,                  // stride
-	   (void*)0            // array buffer offset
-	);
- 
-	// Draw the triangle !
-	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+	glVertexAttribPointer (
+		0,                
+		3 , 
+		GL_FLOAT, 
+		GL_FALSE, 
+		0,        
+		(void*)0   
+		);
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
+
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_SHORT, (void *) 0); 
 
 	glDisableVertexAttribArray(0);
 }
 
 glm::mat4 Mesh::getModelTrans() {
 	return model;
+}
+
+void Mesh::shutdown() {
+	glDeleteBuffers ( 1, &vertexBuffer );
+	glDeleteBuffers ( 1, &indexBuffer );
 }
 

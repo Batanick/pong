@@ -102,6 +102,12 @@ void Game::runMainLoop() {
 
 		running = running & (!glfwWindowShouldClose(window));
     }
+
+	onShutdown();
+}
+
+void Game::onShutdown() {
+	renderer->shutdown();
 }
 
 RenderContext Game::createRenderContext() {

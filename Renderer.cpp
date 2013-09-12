@@ -32,14 +32,20 @@ bool Renderer::init(){
 	VERIFY (shaderManager->init(), "Unable to initialise renderer", return false );
 
 	camera = std::shared_ptr<Camera> (new Camera());
-
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
-	meshes.push_back(PMesh(new Mesh()));
+	PMesh msh =  PMesh( new Mesh( shaderManager->getMVPId()) );
+	msh->init();
 
-	for (PMesh& mesh : meshes) {
-		mesh->load( shaderManager->getProgramId() );
-	}
+	meshes.push_back( msh );
 
 	return true;
+}
+
+void Renderer::shutdown() {
+	for ( PMesh& mesh : meshes ) {
+		mesh->shutdown();
+	}
+
+	shaderManager->shutdown();
 }
