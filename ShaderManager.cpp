@@ -11,7 +11,6 @@ void loadShader( GLuint shaderId, char const * source);
 void printLog(GLuint obj);
 
 bool ShaderManager::init() {
-	//TODO: Vertex shader
 	std::string vertexShaderContent;
 	VERIFY( loadContent("../shaders/VertexShader.vertexshader", vertexShaderContent) , 
 		"Unable to load fragment vertex program", return false);

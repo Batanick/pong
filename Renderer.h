@@ -16,7 +16,7 @@ public:
 	Renderer(GLFWwindow* _window):window(_window){
 	}
 
-	void render( const RenderContext & context );
+	void render( double timeDelta );
 	bool init();
 	void shutdown();
 	

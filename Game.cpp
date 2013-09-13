@@ -4,7 +4,6 @@
 #include <GLFW/glfw3.h>
 
 #include "Renderer.h"
-#include "RenderCommon.h"
 
 #include "logging.h"
 
@@ -95,9 +94,10 @@ void Game::shutdown() {
 
 void Game::runMainLoop() {
 	while (running) {
-		const RenderContext context = createRenderContext();
-		renderer->render( context );
-		
+		const double deltaTime = timer->onTick();
+
+		renderer->render( deltaTime );
+	
         glfwPollEvents();
 
 		running = running & (!glfwWindowShouldClose(window));
@@ -108,17 +108,4 @@ void Game::runMainLoop() {
 
 void Game::onShutdown() {
 	renderer->shutdown();
-}
-
-RenderContext Game::createRenderContext() {
-	RenderContext context;
-
-	context.timeDelta = timer->onTick();
-	glfwGetCursorPos( window, &context.mouseXPos, &context.mouseYPos );
-	glfwGetWindowSize( window, &context.windowWidth, &context.windowHeight );
-	context.window = window;
-
-	glfwSetCursorPos(window, context.windowWidth/2, context.windowHeight/2);
-
-	return context;
 }

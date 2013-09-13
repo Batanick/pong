@@ -6,7 +6,11 @@
 #include "assetLoader.h"
 
 void Mesh::init() {
-	if ( !loadFromFile( "../models/monkey.obj", vertices, indices ) ) {
+	if ( !loadFromFile( "../models/suzanne.obj", vertices, indices ) ) {
+		return;
+	}
+
+	if ( !loadTexture("../models/testTexture.DDS") ){
 		return;
 	}
 
@@ -19,10 +23,8 @@ void Mesh::init() {
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof( unsigned short ), &indices[0], GL_STATIC_DRAW );
 }
 
-void Mesh::render( glm::mat4 mvp ) {
+void Mesh::render( const RenderContext context ) {
 	glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-
-	glUniformMatrix4fv(modelMatrix, 1, GL_FALSE, &mvp[0][0]);
 
 	glEnableVertexAttribArray(0);
 

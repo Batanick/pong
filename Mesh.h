@@ -1,24 +1,24 @@
 #include <vector>
 #include <glm.hpp>
 
+#include "RenderCommon.h"
+
 typedef unsigned int GLuint;
 
 class Mesh final {
 
 public:
-	Mesh( GLuint modelMatrix ): modelMatrix( modelMatrix ) {
+	Mesh() {
 		model = glm::mat4(1);
 	}
 	~Mesh(){}
 
 	void init();
-	void render( glm::mat4 mvp );
+	void render( const RenderContext context );
 	void shutdown();
 	glm::mat4 getModelTrans();
 
 private:
-	const GLuint modelMatrix;
-
 	std::vector<glm::vec3> vertices;
 	std::vector<unsigned short> indices;
 

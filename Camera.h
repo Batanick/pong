@@ -2,15 +2,16 @@
 #include <glm.hpp>
 
 struct RenderContext;
+struct GLFWwindow;
 
 class Camera final {
 
 public:
 	Camera();
 
-	void onBeforeRender( const RenderContext &context );
-	glm::mat4 getProjection();
-	glm::mat4 getView();
+	void Camera::onBeforeRender( GLFWwindow * const window, double timeDelta );
+	glm::mat4 Camera::getView();
+	glm::mat4 Camera::getProjection();
 
 private:
 	float horizontalAngle;
