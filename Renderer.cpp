@@ -7,6 +7,8 @@
 #include "Mesh.h"
 #include "Camera.h"
 
+#include <gtc\matrix_transform.hpp>
+
 #include "logging.h"
 
 void Renderer::render( double timeDelta ){
@@ -21,8 +23,10 @@ void Renderer::render( double timeDelta ){
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	static int frameNum = 0;
+
 	for (PMesh& mesh : meshes) {
-		const glm::mat4 mvp = projection * view; //TODO: introduce model here
+		const glm::mat4 mvp = projection * view * glm::rotate(glm::mat4(1), ((float) (frameNum++)), glm::vec3(0,1,0)); 
 		glUniformMatrix4fv( shaderManager->getMVPId() , 1, GL_FALSE, &mvp[0][0] );
 
 		mesh->render( context );

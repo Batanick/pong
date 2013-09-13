@@ -17,6 +17,10 @@ Camera::Camera() {
 }
 
 void Camera::onBeforeRender( GLFWwindow * const window, double deltaTime ) {
+	if ( glfwGetWindowAttrib( window, GLFW_FOCUSED ) != GL_TRUE ) {
+		return;
+	}
+
 	double mouseXPos, mouseYPos;
 	glfwGetCursorPos( window, &mouseXPos, &mouseYPos );
 	int windowHeight, windowWidth;
