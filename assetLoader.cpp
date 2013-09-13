@@ -58,11 +58,6 @@ bool loadFromFile( const char *fileName, std::vector<glm::vec3> &vertices,  std:
 	return true;
 }
 
-bool loadTexture( const char *fileName ) {
-	Assimp::Importer importer;
-	const aiScene *scene = importer.ReadFile( fileName, 0 ); // handled by importer obj
-	VERIFY( scene, importer.GetErrorString(), return false );
-
-
+bool loadTexture( const char *fileName, TextureData &data ) {
 	return true;
 }

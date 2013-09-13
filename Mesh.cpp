@@ -6,11 +6,7 @@
 #include "assetLoader.h"
 
 void Mesh::init() {
-	if ( !loadFromFile( "../models/suzanne.obj", vertices, indices ) ) {
-		return;
-	}
-
-	if ( !loadTexture("../models/testTexture.DDS") ){
+	if ( !loadFromFile( "../models/monkey.obj", vertices, indices ) ) {
 		return;
 	}
 
