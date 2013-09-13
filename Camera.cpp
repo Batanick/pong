@@ -31,20 +31,27 @@ void Camera::onBeforeRender( GLFWwindow * const window, double deltaTime ) {
 	const glm::vec3 right = getRight();
 	
 	// Forward
-	if (glfwGetKey( window, GLFW_KEY_UP ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_W ) == GLFW_PRESS){
 		position += direction * (float)deltaTime * CAMERA_MOVE_SPEED;
 	}
 	// Backward
-	if (glfwGetKey( window, GLFW_KEY_DOWN ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_S ) == GLFW_PRESS){
 		position -= direction * (float)deltaTime * CAMERA_MOVE_SPEED;
 	}
 	// Right
-	if (glfwGetKey( window, GLFW_KEY_RIGHT ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_D ) == GLFW_PRESS){
 		position += right * (float)deltaTime * CAMERA_MOVE_SPEED;
 	}
 	// Left
-	if (glfwGetKey( window, GLFW_KEY_LEFT ) == GLFW_PRESS){
+	if (glfwGetKey( window, GLFW_KEY_A ) == GLFW_PRESS){
 		position -= right * (float)deltaTime * CAMERA_MOVE_SPEED;
+	}
+	
+	//Switching polygon draw mode
+	if (glfwGetKey( window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		GLint currentMode[2]; //front and back value
+		glGetIntegerv( GL_POLYGON_MODE, &currentMode[0] );
+		glPolygonMode( GL_FRONT_AND_BACK,  currentMode[0] == GL_LINE ? GL_FILL : GL_LINE );
 	}
 }
 

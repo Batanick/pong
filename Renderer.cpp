@@ -17,11 +17,12 @@ void Renderer::render( double timeDelta ){
 
 	RenderContext context;
 	context.timeDelta = timeDelta;
+	context.textureUniformId = shaderManager->getTextureUniformId();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	for (PMesh& mesh : meshes) {
-		const glm::mat4 mvp = projection * view * mesh->getModelTrans();
+		const glm::mat4 mvp = projection * view; //TODO: introduce model here
 		glUniformMatrix4fv( shaderManager->getMVPId() , 1, GL_FALSE, &mvp[0][0] );
 
 		mesh->render( context );
@@ -43,6 +44,10 @@ bool Renderer::init(){
 	msh->init();
 
 	meshes.push_back( msh );
+
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS); 
+	glEnable(GL_CULL_FACE);
 
 	return true;
 }

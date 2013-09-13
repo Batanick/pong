@@ -41,7 +41,8 @@ bool ShaderManager::init() {
 	glDeleteShader( vertextShaderId );
 
 	mvpId = glGetUniformLocation( programID, "mvp" );
-
+	textureUniformId  = glGetUniformLocation( programID, "texture" );
+	
 	return true;
 }
 
@@ -62,6 +63,10 @@ GLuint ShaderManager::getProgramId() {
 
 GLuint ShaderManager::getMVPId() {
 	return mvpId;
+}
+
+GLuint ShaderManager::getTextureUniformId() {
+	return textureUniformId;
 }
 
 void printLog(GLuint obj) {

@@ -8,8 +8,10 @@ public:
 
 	GLuint getProgramId();
 	GLuint getMVPId();
+	GLuint getTextureUniformId();
 
 private:
 	GLuint programID;
 	GLuint mvpId;
+	GLuint textureUniformId;
 };
