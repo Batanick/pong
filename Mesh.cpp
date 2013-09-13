@@ -17,7 +17,6 @@ void Mesh::init() {
 	glGenBuffers( 1, &indexBuffer );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof( unsigned short ), &indices[0], GL_STATIC_DRAW );
-
 }
 
 void Mesh::render( glm::mat4 mvp ) {

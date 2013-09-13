@@ -16,4 +16,7 @@ private:
 	float horizontalAngle;
 	float verticalAngle;
 	glm::vec3 position; 
+
+	glm::vec3 getRight();
+	glm::vec3 getDirection();
 };
