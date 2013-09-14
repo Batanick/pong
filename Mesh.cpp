@@ -7,7 +7,7 @@
 #include "logging.h"
 
 void Mesh::init() {
-	if ( !loadFromFile( "../models/monkey.obj", vertices, indices, uvs ) ) {
+	if ( !loadFromFile( modelPath, vertices, indices, uvs ) ) {
 		return;
 	}
 	

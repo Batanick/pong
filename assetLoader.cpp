@@ -21,7 +21,7 @@ bool loadTriangle( std::vector<glm::vec3> &vertices, std::vector<unsigned short>
 	return true;
 }
 
-bool loadFromFile( const char *fileName, std::vector<glm::vec3> &vertices,  std::vector<unsigned short> &indices, std::vector<glm::vec2> &uvs ) {
+bool loadFromFile( const std::string fileName, std::vector<glm::vec3> &vertices,  std::vector<unsigned short> &indices, std::vector<glm::vec2> &uvs ) {
 	LOG ("Loading model %s", fileName);
 
 	Assimp::Importer imrporter;
