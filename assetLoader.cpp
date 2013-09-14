@@ -28,7 +28,7 @@ bool loadFromFile( const std::string fileName, std::vector<glm::vec3> &vertices,
 	const aiScene *scene =  imrporter.ReadFile( fileName, aiProcess_JoinIdenticalVertices ); // pointer handled by importer
 	VERIFY( scene, imrporter.GetErrorString(), return false );
 
-	//TODO: fix more then one mesh case
+	unsigned int indexOffset = 0;
 	for ( unsigned int meshIndex = 0; meshIndex < scene->mNumMeshes; meshIndex++ ) {
 		const aiMesh* currentMesh = scene->mMeshes[meshIndex];
 
@@ -43,7 +43,7 @@ bool loadFromFile( const std::string fileName, std::vector<glm::vec3> &vertices,
 			const aiFace face = currentMesh->mFaces[faceIndex];
 
 			for ( unsigned int i = 0; i < face.mNumIndices; i++ ) {
-				indices.push_back( (unsigned short) face.mIndices[i] );
+				indices.push_back( ((unsigned short) face.mIndices[i]) + indexOffset );
 			}
 		}	
 
@@ -55,9 +55,11 @@ bool loadFromFile( const std::string fileName, std::vector<glm::vec3> &vertices,
 			}
 		}
 
+		indexOffset += currentMesh->mNumVertices;
 	}
 
-	LOG ( "Meshes: [%d], vertices: [%d], indices: [%d], uvs: [%d]", scene->mNumMeshes, vertices.size(), indices.size(), uvs.size() );
+	LOG ( "Meshes: [%d], vertices: [%d], indices: [%d], uvs: [%d]", 
+		scene->mNumMeshes, vertices.size(), indices.size(), uvs.size() );
 
 	return true;
 }

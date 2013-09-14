@@ -19,16 +19,18 @@ void Mesh::init() {
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof( unsigned short ), &indices[0], GL_STATIC_DRAW );
 
-	glGenBuffers( 1, &uvsBuffer );
-	glBindBuffer( GL_ARRAY_BUFFER, uvsBuffer );
-	glBufferData( GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
-
 	loadTexture();
 }
 
 void Mesh::loadTexture() {
 	if ( texturePath.empty() ) {
 		return;
+	}
+
+	if ( uvs.size() > 0 ){
+		glGenBuffers( 1, &uvsBuffer );
+		glBindBuffer( GL_ARRAY_BUFFER, uvsBuffer );
+		glBufferData( GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 	}
 
 	glGenTextures(1, &textureId);
