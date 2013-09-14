@@ -11,11 +11,13 @@ public:
 	Mesh( const std::string modelPath, const std::string texturePath ): 
 		modelPath( modelPath ), 
 		texturePath(texturePath ) {
+		indicesSize = 0;
 	}
 
 	Mesh( ):
 		modelPath( "../models/monkey.obj" ), 
 		texturePath( "../models/testTexture.DDS" ) {
+		indicesSize = 0;
 	}
 
 	~Mesh(){}
@@ -28,14 +30,12 @@ private:
 	const std::string modelPath;
 	const std::string texturePath;
 
-	std::vector<glm::vec3> vertices;
-	std::vector<unsigned short> indices;
-	std::vector<glm::vec2> uvs;
-
 	GLuint vertexBuffer;
 	GLuint indexBuffer;
 	GLuint uvsBuffer;
 	GLuint textureId;
 
-	void loadTexture();
+	int indicesSize;
+
+	void Mesh::loadTexture( std::vector<glm::vec2> &uvs );
 };
