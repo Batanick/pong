@@ -97,8 +97,8 @@
     <ClInclude Include="Tickable.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\FragmentShader.fragmentshader" />
-    <None Include="shaders\VertexShader.vertexshader" />
+    <None Include="shaders\MeshFragmentShader.fragmentshader" />
+    <None Include="shaders\MeshVertexShader.vertexshader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

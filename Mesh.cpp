@@ -6,6 +6,8 @@
 #include "assetLoader.h"
 #include "logging.h"
 
+#include "RenderCommon.h"
+
 void Mesh::init() {
 	std::vector<glm::vec3> vertices;
 	std::vector<unsigned short> indices;
@@ -50,7 +52,7 @@ void Mesh::loadTexture( std::vector<glm::vec2> &uvs ) {
 void Mesh::render( const RenderContext context ) {
 	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_2D, textureId );
-	glUniform1i( context.textureUniformId, 0 );
+	glUniform1i( context.meshTextureUniformId, 0 );
 	
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);

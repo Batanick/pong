@@ -5,5 +5,6 @@ typedef unsigned int GLuint;
 
 struct RenderContext {
 	double timeDelta;
-	GLuint textureUniformId;
+	GLuint meshTextureUniformId;
+	GLuint meshMVPId;
 };

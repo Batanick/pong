@@ -22,7 +22,7 @@ bool loadTriangle( std::vector<glm::vec3> &vertices, std::vector<unsigned short>
 }
 
 bool loadFromFile( const std::string fileName, std::vector<glm::vec3> &vertices,  std::vector<unsigned short> &indices, std::vector<glm::vec2> &uvs ) {
-	LOG ("Loading model %s", fileName);
+	LOG ("Loading model: [%s]", fileName.c_str());
 
 	Assimp::Importer imrporter;
 	const aiScene *scene =  imrporter.ReadFile( fileName, aiProcess_JoinIdenticalVertices ); // pointer handled by importer

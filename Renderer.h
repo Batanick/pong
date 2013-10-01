@@ -1,3 +1,5 @@
+#include "RenderCommon.h"
+
 #include <memory>
 #include <vector>
 
@@ -26,5 +28,7 @@ private:
 	std::shared_ptr<ShaderManager> shaderManager;
 	std::shared_ptr<Camera> camera;
 	std::vector<PMesh> meshes; 
+
+	RenderContext context;
 };
 

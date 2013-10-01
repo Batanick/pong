@@ -17,17 +17,16 @@ void Renderer::render( double timeDelta ){
 	const glm::mat4 view = camera->getView();
 	const glm::mat4 projection = camera->getProjection();
 
-	RenderContext context;
 	context.timeDelta = timeDelta;
-	context.textureUniformId = shaderManager->getTextureUniformId();
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	static int frameNum = 0;
 
+	shaderManager->useProgram( ShaderManager::ShaderType::MODEL_SHADER );
 	for (PMesh& mesh : meshes) {
 		const glm::mat4 mvp = projection * view * glm::rotate(glm::mat4(1), ((float) (frameNum++)), glm::vec3(0,1,0)); 
-		glUniformMatrix4fv( shaderManager->getMVPId() , 1, GL_FALSE, &mvp[0][0] );
+		glUniformMatrix4fv( context.meshMVPId, 1, GL_FALSE, &mvp[0][0] );
 
 		mesh->render( context );
 	}
@@ -44,14 +43,17 @@ bool Renderer::init(){
 	camera = std::shared_ptr<Camera> (new Camera());
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
-	PMesh msh =  PMesh( new Mesh() );
-	msh->init();
-
-	meshes.push_back( msh );
-
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS); 
 	glEnable(GL_CULL_FACE);
+
+	context.meshTextureUniformId = shaderManager->getParam( ShaderManager::ShaderType::MODEL_SHADER, "texture" );
+	context.meshMVPId = shaderManager->getParam( ShaderManager::ShaderType::MODEL_SHADER, "mvp" );
+
+	//test mesh
+	PMesh msh =  PMesh( new Mesh() );
+	msh->init();
+	meshes.push_back( msh );
 
 	return true;
 }
