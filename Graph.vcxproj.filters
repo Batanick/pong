@@ -37,6 +37,9 @@
     <ClCompile Include="assetLoader.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -69,12 +72,21 @@
     <ClInclude Include="assetLoader.h">
       <Filter>src\common</Filter>
     </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\MeshFragmentShader.fragmentshader">
       <Filter>src\shaders</Filter>
     </None>
     <None Include="shaders\MeshVertexShader.vertexshader">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\TerrainFragmentShader.fragmentshader">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\TerrainVertexShader.vertexshader">
       <Filter>src\shaders</Filter>
     </None>
   </ItemGroup>

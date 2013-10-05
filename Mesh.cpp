@@ -1,7 +1,7 @@
 #include "Mesh.h"
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h> 
 
 #include "assetLoader.h"
 #include "logging.h"
@@ -49,7 +49,7 @@ void Mesh::loadTexture( std::vector<glm::vec2> &uvs ) {
 	ASSERT ( loadDDS( texturePath ), "Unable to load texture" );
 }
 
-void Mesh::render( const RenderContext context ) {
+void Mesh::render( const RenderContext &context ) {
 	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_2D, textureId );
 	glUniform1i( context.meshTextureUniformId, 0 );

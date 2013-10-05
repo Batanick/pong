@@ -28,11 +28,22 @@ std::vector<ShaderDesc> buildShaders() {
 	std::set<std::string> meshShaderParams;
 	meshShaderParams.insert( "mvp" );
 	meshShaderParams.insert( "texture" );
+
 	shaders.push_back( ShaderDesc( 
 		ShaderManager::ShaderType::MODEL_SHADER, 
 		"MeshVertexShader.vertexshader", 
 		"MeshFragmentShader.fragmentshader", 
 		meshShaderParams ) );
+
+	//TERRAIN_SHADER
+	std::set<std::string> terrainShaderParams;
+	terrainShaderParams.insert( "mvp" );
+
+	shaders.push_back( ShaderDesc( 
+		ShaderManager::ShaderType::TERRAIN_SHADER, 
+		"TerrainVertexShader.vertexshader", 
+		"TerrainFragmentShader.fragmentshader", 
+		terrainShaderParams ) );
 
 	return shaders;
 }

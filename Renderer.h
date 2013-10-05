@@ -8,6 +8,7 @@ struct RenderContext;
 
 class ShaderManager;
 class Mesh;
+class Terrain;
 class Camera;
 class Tickable;
 
@@ -24,11 +25,16 @@ public:
 	
 	std::shared_ptr<Tickable> getTickable(); 
 private:
-	GLFWwindow * const window;
+	GLFWwindow* const window;
+	
 	std::shared_ptr<ShaderManager> shaderManager;
 	std::shared_ptr<Camera> camera;
 	std::vector<PMesh> meshes; 
+	std::shared_ptr<Terrain> terrain;
 
 	RenderContext context;
+
+	void renderMeshes();
+	void renderTerrain();
 };
 

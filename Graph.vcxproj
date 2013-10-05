@@ -83,6 +83,7 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="assetLoader.cpp" />
+    <ClCompile Include="Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fileUtils.h" />
@@ -94,11 +95,14 @@
     <ClInclude Include="RenderCommon.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ShaderManager.h" />
+    <ClInclude Include="Terrain.h" />
     <ClInclude Include="Tickable.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\MeshFragmentShader.fragmentshader" />
     <None Include="shaders\MeshVertexShader.vertexshader" />
+    <None Include="shaders\TerrainFragmentShader.fragmentshader" />
+    <None Include="shaders\TerrainVertexShader.vertexshader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

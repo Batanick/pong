@@ -1,10 +1,9 @@
+#include "RenderCommon.h"
+
 #include <vector>
 #include <glm.hpp>
 
-typedef unsigned int GLuint;
-struct RenderContext;
-
-class Mesh final {
+class Mesh final : public Renderable {
 public:
 	Mesh( const std::string modelPath, const std::string texturePath ): 
 		modelPath( modelPath ), 
@@ -21,7 +20,7 @@ public:
 	~Mesh(){}
 
 	void init();
-	void render( const RenderContext context );
+	virtual void render( const RenderContext &context );
 	void shutdown();
 
 private:
