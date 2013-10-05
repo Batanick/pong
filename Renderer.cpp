@@ -28,7 +28,7 @@ bool Renderer::init(){
 	//glEnable(GL_CULL_FACE);
 
 	terrain = std::shared_ptr<Terrain>( new Terrain() );
-	terrain->init();
+	terrain->init( 1.0, 32, 32 );
 
 	context.meshTextureUniformId = shaderManager->getParam( ShaderManager::ShaderType::MODEL_SHADER, "texture" );
 	context.meshMVPId = shaderManager->getParam( ShaderManager::ShaderType::MODEL_SHADER, "mvp" );

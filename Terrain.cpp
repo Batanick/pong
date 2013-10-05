@@ -7,23 +7,52 @@
 
 #include <glm.hpp>
 
-void Terrain::init() {
+void generateIndicies( const int heightTiles, const int widthTiles, std::vector<unsigned short> &indices );
+void generateVertices( const int heightTiles, const int widthTiles, const float tileSize, std::vector<glm::vec2> &vertices );
+
+void Terrain::init( const float tileSize, const int widthTiles,	const int heightTiles ) {
 	if ( (widthTiles <= 0) || (heightTiles <= 0)) {
 		return;
 	}
 
 	std::vector<glm::vec2> verticies;
-	int y = 0;
-	for (float y = 0; y < (tileSize * heightTiles + 1); y += tileSize){
-		for (float x = 0; x < (tileSize * (widthTiles + 1)); x += tileSize) {
-			verticies.push_back( glm::vec2(x, y) );
-		}
-	}
+	generateVertices( heightTiles, widthTiles, tileSize, verticies );
+	
 	glGenBuffers( 1, &vertexBuffer );
 	glBindBuffer( GL_ARRAY_BUFFER, vertexBuffer );
 	glBufferData( GL_ARRAY_BUFFER, verticies.size() * sizeof(glm::vec2), &verticies[0], GL_STATIC_DRAW );
 
 	std::vector<unsigned short> indices;
+	generateIndicies( heightTiles, widthTiles, indices );
+	
+	glGenBuffers( 1, &indexBuffer );
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof (unsigned short), &indices[0], GL_STATIC_DRAW );
+	indicesSize = indices.size();
+}
+
+void Terrain::render( const RenderContext &context ) {
+	glEnableVertexAttribArray(0);
+
+	glBindBuffer( GL_ARRAY_BUFFER, vertexBuffer );
+	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0 );
+
+	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+	glDrawElements( GL_TRIANGLE_STRIP, indicesSize, GL_UNSIGNED_SHORT, (void *) 0);
+
+	glDisableVertexAttribArray(0);
+}
+
+void generateVertices( const int heightTiles, const int widthTiles, const float tileSize, std::vector<glm::vec2> &vertices ) {
+	int y = 0;
+	for (float y = 0; y < (tileSize * heightTiles + 1); y += tileSize){
+		for (float x = 0; x < (tileSize * (widthTiles + 1)); x += tileSize) {
+			vertices.push_back( glm::vec2(x, y) );
+		}
+	}
+}
+
+void generateIndicies( const int heightTiles, const int widthTiles, std::vector<unsigned short> &indices ) {
 	int indidiesNeeded = heightTiles * (2 * (widthTiles + 1) - 1) + 1;  
 
 	indices.push_back(0);
@@ -50,20 +79,4 @@ void Terrain::init() {
 		}
 	}
 
-	glGenBuffers( 1, &indexBuffer );
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof (unsigned short), &indices[0], GL_STATIC_DRAW );
-	indicesSize = indices.size();
-}
-
-void Terrain::render( const RenderContext &context ) {
-	glEnableVertexAttribArray(0);
-
-	glBindBuffer( GL_ARRAY_BUFFER, vertexBuffer );
-	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0 );
-
-	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	glDrawElements( GL_TRIANGLE_STRIP, indicesSize, GL_UNSIGNED_SHORT, (void *) 0);
-
-	glDisableVertexAttribArray(0);
 }
