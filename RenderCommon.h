@@ -9,9 +9,13 @@ typedef unsigned int GLuint;
 
 struct RenderContext {
 	double timeDelta;
+
 	GLuint meshTextureUniformId;
 	GLuint meshMVPId;
+
 	GLuint terrainMVPId;
+	GLuint terrainMinMaxId;
+
 	glm::mat4 pv;
 };
 

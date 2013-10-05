@@ -40,6 +40,12 @@
     <ClCompile Include="Terrain.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="diamondGen.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
+    <ClCompile Include="commonMath.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Renderer.h">
@@ -74,6 +80,12 @@
     </ClInclude>
     <ClInclude Include="Terrain.h">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="diamondGen.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="commonMath.h">
+      <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

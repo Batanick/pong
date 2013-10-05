@@ -21,18 +21,20 @@ bool Renderer::init(){
 	VERIFY (shaderManager->init(), "Unable to initialise renderer", return false );
 
 	camera = std::shared_ptr<Camera>( new Camera() );
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS); 
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
 
 	terrain = std::shared_ptr<Terrain>( new Terrain() );
-	terrain->init( 1.0, 32, 32 );
+	terrain->init( 0.1f, 256 );
 
 	context.meshTextureUniformId = shaderManager->getParam( ShaderManager::ShaderType::MODEL_SHADER, "texture" );
 	context.meshMVPId = shaderManager->getParam( ShaderManager::ShaderType::MODEL_SHADER, "mvp" );
+
 	context.terrainMVPId = shaderManager->getParam( ShaderManager::ShaderType::TERRAIN_SHADER, "mvp" );
+	context.terrainMinMaxId = shaderManager->getParam( ShaderManager::ShaderType::TERRAIN_SHADER, "minMax" );
 
 #ifdef LOAD_TEST_MODEL
 	PMesh msh =  PMesh( new Mesh() );

@@ -7,65 +7,70 @@
 
 #include <glm.hpp>
 
-void generateIndicies( const int heightTiles, const int widthTiles, std::vector<unsigned short> &indices );
-void generateVertices( const int heightTiles, const int widthTiles, const float tileSize, std::vector<glm::vec2> &vertices );
+#include "logging.h"
+#include "commonMath.h"
+#include "diamondGen.h"
 
-void Terrain::init( const float tileSize, const int widthTiles,	const int heightTiles ) {
-	if ( (widthTiles <= 0) || (heightTiles <= 0)) {
-		return;
-	}
+void Terrain::init( const float tileSize, const int tiles ) {
+	VERIFY( isPower2( tiles ), "Width value is not a power of 2", return );
 
-	std::vector<glm::vec2> verticies;
-	generateVertices( heightTiles, widthTiles, tileSize, verticies );
+	std::vector<glm::vec3> verticies;
+	generateVertices( tiles, tileSize, verticies );
 	
 	glGenBuffers( 1, &vertexBuffer );
 	glBindBuffer( GL_ARRAY_BUFFER, vertexBuffer );
-	glBufferData( GL_ARRAY_BUFFER, verticies.size() * sizeof(glm::vec2), &verticies[0], GL_STATIC_DRAW );
+	glBufferData( GL_ARRAY_BUFFER, verticies.size() * sizeof(glm::vec3), &verticies[0], GL_STATIC_DRAW );
 
-	std::vector<unsigned short> indices;
-	generateIndicies( heightTiles, widthTiles, indices );
+	std::vector<unsigned int> indices;
+	generateIndicies( tiles, indices );
 	
 	glGenBuffers( 1, &indexBuffer );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof (unsigned short), &indices[0], GL_STATIC_DRAW );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof (unsigned int), &indices[0], GL_STATIC_DRAW );
 	indicesSize = indices.size();
 }
 
 void Terrain::render( const RenderContext &context ) {
+	glUniform2f( context.terrainMinMaxId, minHeight, maxHeight );
+
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer( GL_ARRAY_BUFFER, vertexBuffer );
-	glVertexAttribPointer( 0, 2, GL_FLOAT, GL_FALSE, 0, (void *) 0 );
+	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0 );
 
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-	glDrawElements( GL_TRIANGLE_STRIP, indicesSize, GL_UNSIGNED_SHORT, (void *) 0);
+	glDrawElements( GL_TRIANGLE_STRIP, indicesSize, GL_UNSIGNED_INT, (void *) 0);
 
 	glDisableVertexAttribArray(0);
 }
 
-void generateVertices( const int heightTiles, const int widthTiles, const float tileSize, std::vector<glm::vec2> &vertices ) {
-	int y = 0;
-	for (float y = 0; y < (tileSize * heightTiles + 1); y += tileSize){
-		for (float x = 0; x < (tileSize * (widthTiles + 1)); x += tileSize) {
-			vertices.push_back( glm::vec2(x, y) );
+void Terrain::generateVertices( const int res, const float tileSize, std::vector<glm::vec3> &vertices ) {
+	const HeightMap heightMap = HeightMap::create(0.0f, 0.0f, 0.0f, 0.0f, res + 1);
+
+	for ( int y = 0; y < res + 1; y++) {
+		for (int x = 0; x < res + 1; x++) {
+			vertices.push_back ( glm::vec3(x * tileSize, heightMap.getHeight(x, y), y * tileSize) );
 		}
 	}
+
+	minHeight = heightMap.getMinHeight();
+	maxHeight = heightMap.getMaxHeight();
 }
 
-void generateIndicies( const int heightTiles, const int widthTiles, std::vector<unsigned short> &indices ) {
-	int indidiesNeeded = heightTiles * (2 * (widthTiles + 1) - 1) + 1;  
+void Terrain::generateIndicies( const int res, std::vector<unsigned int> &indices ) {
+	int indidiesNeeded = res * (2 * (res + 1) - 1) + 1;  
 
 	indices.push_back(0);
 
-	int rowEndCounter = 2 * widthTiles + 1;
+	int rowEndCounter = 2 * res + 1;
 	bool forward = true;
 	bool right = true;
 	int current = 0;
 	for (int i = 1; i < indidiesNeeded ; i++){
 		if (forward) {
-			current += widthTiles + 1;
+			current += res + 1;
 		} else {
-			current -= widthTiles + 1;
+			current -= res + 1;
 			current += right ? 1 : -1;
 		}
 
@@ -75,7 +80,7 @@ void generateIndicies( const int heightTiles, const int widthTiles, std::vector<
 		if ( (--rowEndCounter) == 0 ) {
 			forward = true;
 			right = !right;
-			rowEndCounter = 2 * widthTiles + 1;
+			rowEndCounter = 2 * res + 1;
 		}
 	}
 

@@ -38,6 +38,7 @@ std::vector<ShaderDesc> buildShaders() {
 	//TERRAIN_SHADER
 	std::set<std::string> terrainShaderParams;
 	terrainShaderParams.insert( "mvp" );
+	terrainShaderParams.insert( "minMax" );
 
 	shaders.push_back( ShaderDesc( 
 		ShaderManager::ShaderType::TERRAIN_SHADER, 

@@ -2,6 +2,8 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <stdlib.h>  
+#include <time.h> 
 
 #include "Renderer.h"
 
@@ -55,12 +57,14 @@ Game::Game() {
 };
 
 bool Game::init() {
+	srand( (unsigned int)time(NULL) );
+
 	if (!glfwInit()) {
 		return false;
 	}
 
 	/* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(1280, 720, "C++ Playground", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return false;

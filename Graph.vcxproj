@@ -83,6 +83,8 @@
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="assetLoader.cpp" />
+    <ClCompile Include="diamondGen.cpp" />
+    <ClCompile Include="commonMath.cpp" />
     <ClCompile Include="Terrain.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +92,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="assetLoader.h" />
+    <ClInclude Include="diamondGen.h" />
+    <ClInclude Include="commonMath.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="logging.h" />
     <ClInclude Include="RenderCommon.h" />
