@@ -15,7 +15,7 @@
 
 #define LOAD_TEST_MONKEY
 
-bool Renderer::init(){
+bool Renderer::init() {
 	VERIFY (glewInit() == GLEW_OK, "Unable to initialize glew", return false);
 
 	textureManager = std::shared_ptr<TextureManager>( new TextureManager() );
@@ -47,7 +47,7 @@ bool Renderer::init(){
 	return true;
 }
 
-void Renderer::render( double timeDelta ){
+void Renderer::render( double timeDelta ) {
 	camera->onBeforeRender( window, timeDelta );
 
 	context.timeDelta = timeDelta;
@@ -90,4 +90,5 @@ void Renderer::shutdown() {
 	}
 
 	shaderManager->shutdown();
+	textureManager->shutdown();
 }
