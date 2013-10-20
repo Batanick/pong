@@ -7,8 +7,9 @@
 #include "logging.h"
 
 #include "RenderCommon.h"
+#include "TextureManager.h"
 
-void Mesh::init() {
+void Mesh::init( TextureManager &textureManager ) {
 	std::vector<glm::vec3> vertices;
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec2> uvs;
@@ -26,10 +27,10 @@ void Mesh::init() {
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof( unsigned short ), &indices[0], GL_STATIC_DRAW );
 	indicesSize = indices.size();
 
-	loadTexture( uvs );
+	loadTexture( textureManager, uvs );
 }
 
-void Mesh::loadTexture( std::vector<glm::vec2> &uvs ) {
+void Mesh::loadTexture( TextureManager &textureManager, std::vector<glm::vec2> &uvs ) {
 	if ( texturePath.empty() ) {
 		return;
 	}
@@ -42,11 +43,7 @@ void Mesh::loadTexture( std::vector<glm::vec2> &uvs ) {
 	glBindBuffer( GL_ARRAY_BUFFER, uvsBuffer );
 	glBufferData( GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
-	glPixelStorei(GL_UNPACK_ALIGNMENT,1);	
-
-	ASSERT ( loadDDS( texturePath ), "Unable to load texture" );
+	textureId = textureManager.loadTexture( texturePath );
 }
 
 void Mesh::render( const RenderContext &context ) {

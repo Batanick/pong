@@ -7,6 +7,8 @@ struct GLFWwindow;
 struct RenderContext;
 
 class ShaderManager;
+class TextureManager;
+
 class Mesh;
 class Terrain;
 class Camera;
@@ -28,6 +30,8 @@ private:
 	GLFWwindow* const window;
 	
 	std::shared_ptr<ShaderManager> shaderManager;
+	std::shared_ptr<TextureManager> textureManager;
+
 	std::shared_ptr<Camera> camera;
 	std::vector<PMesh> meshes; 
 	std::shared_ptr<Terrain> terrain;

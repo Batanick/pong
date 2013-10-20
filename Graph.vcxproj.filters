@@ -11,6 +11,9 @@
       <UniqueIdentifier>{289b0a5c-e8f5-4f10-996e-0435cf4e8260}</UniqueIdentifier>
       <Extensions>*.*shader</Extensions>
     </Filter>
+    <Filter Include="src\renderer">
+      <UniqueIdentifier>{8a53efdb-b9c1-4ac6-9a4b-f489ac407609}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -19,26 +22,11 @@
     <ClCompile Include="Game.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="fileUtils.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="ShaderManager.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="assetLoader.cpp">
       <Filter>src\common</Filter>
-    </ClCompile>
-    <ClCompile Include="Terrain.cpp">
-      <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="diamondGen.cpp">
       <Filter>src\common</Filter>
@@ -46,46 +34,67 @@
     <ClCompile Include="commonMath.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureManager.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Renderer.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="fileUtils.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderManager.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="logging.h">
       <Filter>src\common</Filter>
-    </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="Tickable.hpp">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="RenderCommon.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="assetLoader.h">
       <Filter>src\common</Filter>
-    </ClInclude>
-    <ClInclude Include="Terrain.h">
-      <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="diamondGen.h">
       <Filter>src\common</Filter>
     </ClInclude>
     <ClInclude Include="commonMath.h">
       <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderCommon.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureManager.h">
+      <Filter>src\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

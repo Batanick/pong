@@ -64,33 +64,21 @@ bool loadFromFile( const std::string fileName, std::vector<glm::vec3> &vertices,
 	return true;
 }
 
-/* 
-* Texture loading originally taken from http://www.opengl-tutorial.org/
-*/
-
-#define FOURCC_DXT1 0x31545844 // Equivalent to "DXT1" in ASCII
-#define FOURCC_DXT3 0x33545844 // Equivalent to "DXT3" in ASCII
-#define FOURCC_DXT5 0x35545844 // Equivalent to "DXT5" in ASCII
+static const int DDS_HEADER_SIZE_BYTES = 124;
+#define FOURCC_DXT1 0x31545844 
+#define FOURCC_DXT3 0x33545844 
+#define FOURCC_DXT5 0x35545844 
 
 bool loadDDS( const std::string fileName ) {
-	unsigned char header[124];
-
 	FILE *fp; 
- 
-	/* try to open the file */ 
-	errno_t err = fopen_s( &fp, fileName.c_str(), "rb" ); 
-	if (err != 0) 
-		return false; 
-   
-	/* verify the type of file */ 
+	const errno_t err = fopen_s( &fp, fileName.c_str(), "rb" ); 
+	VERIFY ( err == 0, "Unable to open texture file", return false; );
+	
 	char filecode[4]; 
 	fread(filecode, 1, 4, fp); 
-	if (strncmp(filecode, "DDS ", 4) != 0) { 
-		fclose(fp); 
-		return false; 
-	}
-	
-	/* get the surface desc */ 
+	VERIFY ( strncmp(filecode, "DDS ", 4) == 0, "Incorrect texture file",  return false; )
+
+	unsigned char header[DDS_HEADER_SIZE_BYTES];
 	fread(&header, 124, 1, fp); 
 
 	unsigned int height      = *(unsigned int*)&(header[8 ]);
@@ -98,15 +86,12 @@ bool loadDDS( const std::string fileName ) {
 	unsigned int linearSize	 = *(unsigned int*)&(header[16]);
 	unsigned int mipMapCount = *(unsigned int*)&(header[24]);
 	unsigned int fourCC      = *(unsigned int*)&(header[80]);
-
  
 	unsigned char * buffer;
 	unsigned int bufsize;
-	/* how big is it going to be including all mipmaps? */ 
 	bufsize = mipMapCount > 1 ? linearSize * 2 : linearSize; 
-	buffer = (unsigned char*)malloc(bufsize * sizeof(unsigned char)); 
+	buffer = new unsigned char[bufsize]; 
 	fread(buffer, 1, bufsize, fp); 
-	/* close the file pointer */ 
 	fclose(fp);
 
 	unsigned int components  = (fourCC == FOURCC_DXT1) ? 3 : 4; 
@@ -123,7 +108,7 @@ bool loadDDS( const std::string fileName ) {
 		format = GL_COMPRESSED_RGBA_S3TC_DXT5_EXT; 
 		break; 
 	default: 
-		free(buffer); 
+		delete[] buffer; 
 		return false; 
 	}
 

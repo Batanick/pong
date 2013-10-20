@@ -86,6 +86,7 @@
     <ClCompile Include="diamondGen.cpp" />
     <ClCompile Include="commonMath.cpp" />
     <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="fileUtils.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Terrain.h" />
+    <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Tickable.hpp" />
   </ItemGroup>
   <ItemGroup>

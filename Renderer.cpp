@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "ShaderManager.h"
+#include "TextureManager.h"
 #include "Mesh.h"
 #include "Terrain.h"
 #include "Camera.h"
@@ -12,11 +13,12 @@
 
 #include "logging.h"
 
-//#define LOAD_TEST_MODEL
+#define LOAD_TEST_MONKEY
 
 bool Renderer::init(){
 	VERIFY (glewInit() == GLEW_OK, "Unable to initialize glew", return false);
 
+	textureManager = std::shared_ptr<TextureManager>( new TextureManager() );
 	shaderManager = std::shared_ptr<ShaderManager>( new ShaderManager() );
 	VERIFY (shaderManager->init(), "Unable to initialise renderer", return false );
 
@@ -36,9 +38,9 @@ bool Renderer::init(){
 	context.terrainMVPId = shaderManager->getParam( ShaderManager::ShaderType::TERRAIN_SHADER, "mvp" );
 	context.terrainMinMaxId = shaderManager->getParam( ShaderManager::ShaderType::TERRAIN_SHADER, "minMax" );
 
-#ifdef LOAD_TEST_MODEL
+#ifdef LOAD_TEST_MONKEY
 	PMesh msh =  PMesh( new Mesh() );
-	msh->init();
+	msh->init( *textureManager );
 	meshes.push_back( msh );
 #endif
 
