@@ -13,8 +13,9 @@ class Mesh;
 class Terrain;
 class Camera;
 class Tickable;
+class Font;
 
-typedef std::shared_ptr<Mesh> PMesh;
+typedef std::shared_ptr<Renderable> PRenderable;
 
 class Renderer final {
 public:
@@ -33,12 +34,19 @@ private:
 	std::shared_ptr<TextureManager> textureManager;
 
 	std::shared_ptr<Camera> camera;
-	std::vector<PMesh> meshes; 
 	std::shared_ptr<Terrain> terrain;
+
+	std::shared_ptr<Font> defaultFont;
+
+	std::vector<PRenderable> renderables; 
+
 
 	RenderContext context;
 
+	void initContext();
+
 	void renderMeshes();
 	void renderTerrain();
+	void renderTexts();
 };
 

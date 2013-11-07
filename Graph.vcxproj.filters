@@ -52,6 +52,12 @@
     <ClCompile Include="TextureManager.cpp">
       <Filter>src\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Label.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -96,6 +102,12 @@
     <ClInclude Include="TextureManager.h">
       <Filter>src\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Label.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\MeshFragmentShader.fragmentshader">
@@ -108,6 +120,12 @@
       <Filter>src\shaders</Filter>
     </None>
     <None Include="shaders\TerrainVertexShader.vertexshader">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\FontFragmentShader.fragmentshader">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\FontVertexShader.vertexshader">
       <Filter>src\shaders</Filter>
     </None>
   </ItemGroup>

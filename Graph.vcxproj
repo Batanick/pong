@@ -77,7 +77,9 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="fileUtils.cpp" />
+    <ClCompile Include="Font.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -95,6 +97,8 @@
     <ClInclude Include="assetLoader.h" />
     <ClInclude Include="diamondGen.h" />
     <ClInclude Include="commonMath.h" />
+    <ClInclude Include="Font.h" />
+    <ClInclude Include="Label.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="logging.h" />
     <ClInclude Include="RenderCommon.h" />
@@ -105,6 +109,8 @@
     <ClInclude Include="Tickable.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\FontFragmentShader.fragmentshader" />
+    <None Include="shaders\FontVertexShader.vertexshader" />
     <None Include="shaders\MeshFragmentShader.fragmentshader" />
     <None Include="shaders\MeshVertexShader.vertexshader" />
     <None Include="shaders\TerrainFragmentShader.fragmentshader" />

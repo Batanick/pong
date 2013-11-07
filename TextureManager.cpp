@@ -12,7 +12,7 @@ GLuint TextureManager::loadTexture( std::string fileName ) {
 	glPixelStorei( GL_UNPACK_ALIGNMENT,1 );	
 
 	if ( !loadDDS( fileName ) ) {
-		LOG( "Unable to load texture [%s]", fileName );
+		LOG( "Unable to load texture [%s]", fileName.c_str() );
 		return GL_INVALID_VALUE;
 	}
 
@@ -24,7 +24,7 @@ GLuint TextureManager::loadTexture( std::string fileName ) {
 GLuint TextureManager::getTextureId( std::string fileName ) {
 	const auto texture = textures.find( fileName );
 	if ( texture == textures.end() ) {
-		LOG( "Unable to find texture id for: [%s]", fileName );
+		LOG( "Unable to find texture id for: [%s]", fileName.c_str() );
 		return GL_INVALID_VALUE;
 	}
 

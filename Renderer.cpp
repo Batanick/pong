@@ -8,19 +8,21 @@
 #include "Mesh.h"
 #include "Terrain.h"
 #include "Camera.h"
-
-#include <gtc\matrix_transform.hpp>
+#include "Label.h"
+#include "Font.h"
 
 #include "logging.h"
 
-#define LOAD_TEST_MONKEY
+//#define DRAW_TEST_MONKEY
 
 bool Renderer::init() {
 	VERIFY (glewInit() == GLEW_OK, "Unable to initialize glew", return false);
 
 	textureManager = std::shared_ptr<TextureManager>( new TextureManager() );
 	shaderManager = std::shared_ptr<ShaderManager>( new ShaderManager() );
-	VERIFY (shaderManager->init(), "Unable to initialise renderer", return false );
+	VERIFY ( shaderManager->init(), "Unable to initialise renderer", return false );
+
+	initContext();
 
 	camera = std::shared_ptr<Camera>( new Camera() );
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -32,19 +34,26 @@ bool Renderer::init() {
 	terrain = std::shared_ptr<Terrain>( new Terrain() );
 	terrain->init( 0.1f, 256 );
 
+#ifdef DRAW_TEST_MONKEY
+	std::shared_ptr<Mesh> msh( new Mesh( "../models/monkey.obj", "../textures/testChecker.DDS" ) );
+	msh->init( *textureManager );
+	renderables.push_back( msh );
+#endif
+
+	GLuint fontTexture = textureManager->loadTexture( "../textures/defaultFont.DDS_0.dds" );
+	defaultFont = std::shared_ptr<Font> (new Font( fontTexture ));
+
+	return true;
+}
+
+void Renderer::initContext() {
 	context.meshTextureUniformId = shaderManager->getParam( ShaderManager::ShaderType::MODEL_SHADER, "texture" );
 	context.meshMVPId = shaderManager->getParam( ShaderManager::ShaderType::MODEL_SHADER, "mvp" );
 
 	context.terrainMVPId = shaderManager->getParam( ShaderManager::ShaderType::TERRAIN_SHADER, "mvp" );
 	context.terrainMinMaxId = shaderManager->getParam( ShaderManager::ShaderType::TERRAIN_SHADER, "minMax" );
 
-#ifdef LOAD_TEST_MONKEY
-	PMesh msh =  PMesh( new Mesh() );
-	msh->init( *textureManager );
-	meshes.push_back( msh );
-#endif
-
-	return true;
+	context.fontTextureId = shaderManager->getParam( ShaderManager::ShaderType::FONT_SHADER, "texture" );
 }
 
 void Renderer::render( double timeDelta ) {
@@ -59,6 +68,7 @@ void Renderer::render( double timeDelta ) {
 	
 	renderTerrain();
 	renderMeshes();
+	renderTexts();
 
     glfwSwapBuffers(window);
 }
@@ -66,12 +76,8 @@ void Renderer::render( double timeDelta ) {
 void Renderer::renderMeshes() {
 	shaderManager->useProgram( ShaderManager::ShaderType::MODEL_SHADER );
 
-	static int frameNum = 0;
-	for (PMesh& mesh : meshes) {
-		const glm::mat4 mvp = context.pv* glm::rotate(glm::mat4(1), ((float) (frameNum++)), glm::vec3(0,1,0)); 
-		glUniformMatrix4fv( context.meshMVPId, 1, GL_FALSE, &mvp[0][0] );
-
-		mesh->render( context );
+	for (PRenderable& renderable : renderables) {
+		renderable->render( context );
 	}
 }
 
@@ -84,8 +90,25 @@ void Renderer::renderTerrain() {
 	terrain->render( context );
 }
 
+void Renderer::renderTexts() {
+	glDisable( GL_CULL_FACE );
+
+	shaderManager->useProgram( ShaderManager::ShaderType::FONT_SHADER );
+
+	glActiveTexture( GL_TEXTURE0 );
+	glBindTexture( GL_TEXTURE_2D, defaultFont->getTextureId() );
+	glUniform1i( context.meshTextureUniformId, 0 );
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+
+	glRectf(-0.75f,0.75f, 0.75f, -0.75f);
+
+	glEnable( GL_CULL_FACE );
+}
+
 void Renderer::shutdown() {
-	for ( PMesh& mesh : meshes ) {
+	for ( PRenderable& mesh : renderables ) {
 		mesh->shutdown();
 	}
 

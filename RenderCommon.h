@@ -16,12 +16,15 @@ struct RenderContext {
 	GLuint terrainMVPId;
 	GLuint terrainMinMaxId;
 
+	GLuint fontTextureId;
+
 	glm::mat4 pv;
 };
 
 class Renderable {
 public:
 	virtual void render( const RenderContext &context ) = 0;
+	virtual void shutdown() = 0;
 };
 
 #endif

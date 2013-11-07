@@ -40,11 +40,21 @@ std::vector<ShaderDesc> buildShaders() {
 	terrainShaderParams.insert( "mvp" );
 	terrainShaderParams.insert( "minMax" );
 
-	shaders.push_back( ShaderDesc( 
+	shaders.push_back( ShaderDesc(
 		ShaderManager::ShaderType::TERRAIN_SHADER, 
 		"TerrainVertexShader.vertexshader", 
 		"TerrainFragmentShader.fragmentshader", 
 		terrainShaderParams ) );
+
+	//FONT_SHADER
+	std::set<std::string> fontShaderParams;
+	fontShaderParams.insert( "texture" );
+
+	shaders.push_back( ShaderDesc(
+		ShaderManager::ShaderType::FONT_SHADER, 
+		"FontVertexShader.vertexshader", 
+		"FontFragmentShader.fragmentshader", 
+		fontShaderParams ) );
 
 	return shaders;
 }
@@ -141,7 +151,7 @@ void ShaderManager::useProgram( const ShaderManager::ShaderType shaderType ) {
 GLuint ShaderManager::getParam( const ShaderType shaderType, const ShaderParam param ) {
 	const auto paramsHolder = typeToParams.find( shaderType );
 	if ( paramsHolder == typeToParams.end() ) {
-		LOG( "Can't find params for shaderType: [%s]", shaderType );
+		LOG( "Can't find params for shaderType: [%d]", shaderType );
 		return GL_INVALID_VALUE;
 	}
 

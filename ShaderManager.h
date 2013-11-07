@@ -10,7 +10,7 @@ class ShaderManager final {
 
 public:
 	enum class ShaderType {
-		MODEL_SHADER, TERRAIN_SHADER
+		MODEL_SHADER, TERRAIN_SHADER, FONT_SHADER
 	};
 	
 	bool init();

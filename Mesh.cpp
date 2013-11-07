@@ -2,6 +2,8 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h> 
+#include <glm.hpp>
+#include <gtc\matrix_transform.hpp>
 
 #include "assetLoader.h"
 #include "logging.h"
@@ -47,6 +49,10 @@ void Mesh::loadTexture( TextureManager &textureManager, std::vector<glm::vec2> &
 }
 
 void Mesh::render( const RenderContext &context ) {
+	static int frameNum = 0;
+	const glm::mat4 mvp = context.pv* glm::rotate(glm::mat4(1), ((float) (frameNum++)), glm::vec3(0,1,0)); 
+	glUniformMatrix4fv( context.meshMVPId, 1, GL_FALSE, &mvp[0][0] );
+
 	glActiveTexture( GL_TEXTURE0 );
 	glBindTexture( GL_TEXTURE_2D, textureId );
 	glUniform1i( context.meshTextureUniformId, 0 );

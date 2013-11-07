@@ -4,7 +4,7 @@
 
 #include "RenderCommon.h"
 
-class TextureManager {
+class TextureManager final {
 
 public:
 	GLuint loadTexture( std::string fileName );

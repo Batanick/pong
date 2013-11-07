@@ -13,17 +13,9 @@ public:
 		indicesSize = 0;
 	}
 
-	Mesh( ):
-		modelPath( "../models/monkey.obj" ), 
-		texturePath( "../models/testTexture.DDS" ) {
-		indicesSize = 0;
-	}
-
-	~Mesh(){}
-
 	void init( TextureManager &textureManager );
 	virtual void render( const RenderContext &context );
-	void shutdown();
+	virtual void shutdown();
 
 private:
 	const std::string modelPath;

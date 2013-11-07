@@ -14,6 +14,7 @@ public:
 
 	void init( const float tileSize, const int tiles );
 	virtual void render( const RenderContext &context );
+	virtual void shutdown();
 
 private :
 	GLuint vertexBuffer;

@@ -1,5 +1,5 @@
-
 class HeightMap final {
+
 public:
 	~HeightMap() {
 		delete[] data;
