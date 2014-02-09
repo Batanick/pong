@@ -63,13 +63,14 @@ bool Game::init() {
 		return false;
 	}
 
+    glfwWindowHint( GLFW_RESIZABLE , GL_FALSE );
 	/* Create a windowed mode window and its OpenGL context */
     window = glfwCreateWindow(1280, 720, "C++ Playground", NULL, NULL);
     if (!window) {
         glfwTerminate();
         return false;
     }
-
+    
 	/* Make the window's context current */
     glfwMakeContextCurrent(window);
 

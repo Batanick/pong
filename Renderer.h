@@ -7,13 +7,12 @@ struct GLFWwindow;
 struct RenderContext;
 
 class ShaderManager;
-class TextureManager;
+class AssetManager;
 
 class Mesh;
 class Terrain;
 class Camera;
 class Tickable;
-class Font;
 
 typedef std::shared_ptr<Renderable> PRenderable;
 
@@ -27,19 +26,17 @@ public:
 	void shutdown();
 	
 	std::shared_ptr<Tickable> getTickable(); 
+
 private:
 	GLFWwindow* const window;
 	
 	std::shared_ptr<ShaderManager> shaderManager;
-	std::shared_ptr<TextureManager> textureManager;
+	std::shared_ptr<AssetManager> assetManager;
 
 	std::shared_ptr<Camera> camera;
 	std::shared_ptr<Terrain> terrain;
 
-	std::shared_ptr<Font> defaultFont;
-
 	std::vector<PRenderable> renderables; 
-
 
 	RenderContext context;
 

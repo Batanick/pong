@@ -4,12 +4,11 @@
 #include <GLFW/glfw3.h>
 
 #include "ShaderManager.h"
-#include "TextureManager.h"
+#include "AssetManager.h"
 #include "Mesh.h"
 #include "Terrain.h"
 #include "Camera.h"
 #include "Label.h"
-#include "Font.h"
 
 #include "logging.h"
 
@@ -18,9 +17,11 @@
 bool Renderer::init() {
 	VERIFY (glewInit() == GLEW_OK, "Unable to initialize glew", return false);
 
-	textureManager = std::shared_ptr<TextureManager>( new TextureManager() );
+    assetManager = std::shared_ptr<AssetManager>( new AssetManager() );
+    VERIFY ( assetManager->init(), "Unable to initialise asset manager", return false );
+
 	shaderManager = std::shared_ptr<ShaderManager>( new ShaderManager() );
-	VERIFY ( shaderManager->init(), "Unable to initialise renderer", return false );
+	VERIFY ( shaderManager->init(), "Unable to initialise shader manager", return false );
 
 	initContext();
 
@@ -40,9 +41,6 @@ bool Renderer::init() {
 	renderables.push_back( msh );
 #endif
 
-	GLuint fontTexture = textureManager->loadTexture( "../textures/defaultFont.DDS_0.dds" );
-	defaultFont = std::shared_ptr<Font> (new Font( fontTexture ));
-
 	return true;
 }
 
@@ -53,7 +51,13 @@ void Renderer::initContext() {
 	context.terrainMVPId = shaderManager->getParam( ShaderManager::ShaderType::TERRAIN_SHADER, "mvp" );
 	context.terrainMinMaxId = shaderManager->getParam( ShaderManager::ShaderType::TERRAIN_SHADER, "minMax" );
 
-	context.fontTextureId = shaderManager->getParam( ShaderManager::ShaderType::FONT_SHADER, "texture" );
+    context.fontTextureId = shaderManager->getParam( ShaderManager::ShaderType::FONT_SHADER, "texture" );
+    context.fontColorId = shaderManager->getParam( ShaderManager::ShaderType::FONT_SHADER, "fontColor" );
+
+    int windowW, windowH;
+	glfwGetWindowSize( window, &windowW, &windowH );
+    context.windowHeight = windowH;
+    context.windowWidth = windowW;
 }
 
 void Renderer::render( double timeDelta ) {
@@ -82,6 +86,10 @@ void Renderer::renderMeshes() {
 }
 
 void Renderer::renderTerrain() {
+    glEnable( GL_DEPTH_TEST );
+    glEnable( GL_CULL_FACE );
+    glDisable( GL_BLEND );
+
 	shaderManager->useProgram( ShaderManager::ShaderType::TERRAIN_SHADER );
 
 	const glm::mat4 mvp = camera->getProjection() * camera->getView();
@@ -91,20 +99,22 @@ void Renderer::renderTerrain() {
 }
 
 void Renderer::renderTexts() {
-	glDisable( GL_CULL_FACE );
-
+    static std::shared_ptr<Label> label( new Label(assetManager->getDefaultFont(), "NYA", 20, 20, glm::vec3(0,1,0)) );
+    
 	shaderManager->useProgram( ShaderManager::ShaderType::FONT_SHADER );
-
-	glActiveTexture( GL_TEXTURE0 );
-	glBindTexture( GL_TEXTURE_2D, defaultFont->getTextureId() );
-	glUniform1i( context.meshTextureUniformId, 0 );
-
+	glDisable( GL_CULL_FACE );
+    glDisable( GL_DEPTH_TEST );
+    
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glEnable( GL_BLEND );
+    glEnable( GL_COLOR_MATERIAL );
+    glColorMaterial( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+    glBlendEquation( GL_FUNC_ADD );
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-	glRectf(-0.75f,0.75f, 0.75f, -0.75f);
 
-	glEnable( GL_CULL_FACE );
+    label->render( context );
 }
 
 void Renderer::shutdown() {
@@ -113,5 +123,5 @@ void Renderer::shutdown() {
 	}
 
 	shaderManager->shutdown();
-	textureManager->shutdown();
+	assetManager->shutdown();
 }

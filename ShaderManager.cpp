@@ -49,6 +49,7 @@ std::vector<ShaderDesc> buildShaders() {
 	//FONT_SHADER
 	std::set<std::string> fontShaderParams;
 	fontShaderParams.insert( "texture" );
+    fontShaderParams.insert( "fontColor" );
 
 	shaders.push_back( ShaderDesc(
 		ShaderManager::ShaderType::FONT_SHADER, 
@@ -117,6 +118,8 @@ bool ShaderManager::loadShader( const ShaderDesc &shaderDesc ){
 		params.insert ( std::make_pair(param, paramId) );
 	}
 	typeToParams.insert( std::make_pair(shaderDesc.shaderType, params) );
+
+    printLog(programID);
 
 	//don't actually destroyed until program
 	glDeleteShader( fragmentShaderId );

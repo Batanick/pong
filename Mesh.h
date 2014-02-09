@@ -3,7 +3,7 @@
 #include <vector>
 #include <glm.hpp>
 
-class TextureManager;
+class AssetManager;
 
 class Mesh final : public Renderable {
 public:
@@ -13,9 +13,9 @@ public:
 		indicesSize = 0;
 	}
 
-	void init( TextureManager &textureManager );
-	virtual void render( const RenderContext &context );
-	virtual void shutdown();
+    void init( AssetManager &manager );
+    virtual void render( const RenderContext &context ) override;
+    virtual void shutdown() override;
 
 private:
 	const std::string modelPath;
@@ -28,5 +28,5 @@ private:
 
 	int indicesSize;
 
-	void Mesh::loadTexture( TextureManager &textureManager, std::vector<glm::vec2> &uvs );
+    void Mesh::loadTexture( AssetManager &manager, std::vector<glm::vec2> &uvs );
 };

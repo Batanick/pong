@@ -16,9 +16,43 @@ struct RenderContext {
 	GLuint terrainMVPId;
 	GLuint terrainMinMaxId;
 
-	GLuint fontTextureId;
+    GLuint fontTextureId;
+    GLuint fontColorId;
+
+    int windowHeight;
+    int windowWidth;
 
 	glm::mat4 pv;
+};
+
+struct Glyph {
+    Glyph() {
+    }
+    Glyph(int key, int x, int y, int width, int height):
+        key(key),
+        x(x), y(y),
+        width(width), 
+        height(height){
+    }
+
+    int key;
+    int x,y;
+    int width, height;
+};
+
+struct TextureInfo {
+    TextureInfo(){
+    }
+
+    TextureInfo(GLuint textureId, unsigned int width, unsigned int height):
+        textureId(textureId),
+        height(height),
+        width(width){
+    }
+
+    GLuint textureId;
+    unsigned int height;
+    unsigned int width;
 };
 
 class Renderable {

@@ -1,22 +1,28 @@
 #ifndef H_FONT
 #define H_FONT
 
+#include <map>
+
 #include "RenderCommon.h"
+#include "fontLoader.h"
 
 class Font final { 
 
 public:
-	Font( GLuint textureId ): 
-		textureId( textureId ) {
+    Font( TextureInfo info ): 
+        info( info ), 
+        distance (1) {
 	}
 
-	void init();
-	void shutdown();
-	GLuint getTextureId();
+    void init( std::vector<const Glyph> symbols );
+    const TextureInfo & getTextureInfo() const;
+    Glyph getGlyph(int code) const;
+    int getDistance() const;
 
 private:
-	const GLuint textureId;
-
+    const TextureInfo info;
+    std::map<int, const Glyph> symbols;
+    const int distance;
 };
 
 #endif

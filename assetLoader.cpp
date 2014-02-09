@@ -69,7 +69,7 @@ static const int DDS_HEADER_SIZE_BYTES = 124;
 #define FOURCC_DXT3 0x33545844 
 #define FOURCC_DXT5 0x35545844 
 
-bool loadDDS( const std::string fileName ) {
+bool loadDDS( const std::string fileName, unsigned int &w, unsigned int &h ) {
 	FILE *fp; 
 	const errno_t err = fopen_s( &fp, fileName.c_str(), "rb" ); 
 	VERIFY ( err == 0, "Unable to open texture file", return false; );
@@ -81,11 +81,14 @@ bool loadDDS( const std::string fileName ) {
 	unsigned char header[DDS_HEADER_SIZE_BYTES];
 	fread(&header, 124, 1, fp); 
 
-	unsigned int height      = *(unsigned int*)&(header[8 ]);
-	unsigned int width	     = *(unsigned int*)&(header[12]);
+	unsigned int height       = *(unsigned int*)&(header[8 ]);
+    unsigned int width      = *(unsigned int*)&(header[12]);
 	unsigned int linearSize	 = *(unsigned int*)&(header[16]);
 	unsigned int mipMapCount = *(unsigned int*)&(header[24]);
 	unsigned int fourCC      = *(unsigned int*)&(header[80]);
+
+    w = width;
+    h = height;
  
 	unsigned char * buffer;
 	unsigned int bufsize;

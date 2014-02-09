@@ -9,9 +9,9 @@
 #include "logging.h"
 
 #include "RenderCommon.h"
-#include "TextureManager.h"
+#include "AssetManager.h"
 
-void Mesh::init( TextureManager &textureManager ) {
+void Mesh::init( AssetManager &assetManager ) {
 	std::vector<glm::vec3> vertices;
 	std::vector<unsigned short> indices;
 	std::vector<glm::vec2> uvs;
@@ -29,10 +29,10 @@ void Mesh::init( TextureManager &textureManager ) {
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof( unsigned short ), &indices[0], GL_STATIC_DRAW );
 	indicesSize = indices.size();
 
-	loadTexture( textureManager, uvs );
+	loadTexture( assetManager, uvs );
 }
 
-void Mesh::loadTexture( TextureManager &textureManager, std::vector<glm::vec2> &uvs ) {
+void Mesh::loadTexture( AssetManager &manager, std::vector<glm::vec2> &uvs ) {
 	if ( texturePath.empty() ) {
 		return;
 	}
@@ -45,7 +45,7 @@ void Mesh::loadTexture( TextureManager &textureManager, std::vector<glm::vec2> &
 	glBindBuffer( GL_ARRAY_BUFFER, uvsBuffer );
 	glBufferData( GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
 
-	textureId = textureManager.loadTexture( texturePath );
+    textureId = manager.loadTexture( texturePath );
 }
 
 void Mesh::render( const RenderContext &context ) {
