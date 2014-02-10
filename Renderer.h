@@ -13,6 +13,7 @@ class Mesh;
 class Terrain;
 class Camera;
 class Tickable;
+class FpsCounter;
 
 typedef std::shared_ptr<Renderable> PRenderable;
 
@@ -29,7 +30,9 @@ public:
 
 private:
 	GLFWwindow* const window;
-	
+    
+	std::shared_ptr<FpsCounter> fpsCounter; 
+
 	std::shared_ptr<ShaderManager> shaderManager;
 	std::shared_ptr<AssetManager> assetManager;
 

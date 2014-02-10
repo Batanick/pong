@@ -9,6 +9,7 @@
 #include "Terrain.h"
 #include "Camera.h"
 #include "Label.h"
+#include "FpsCounter.h"
 
 #include "logging.h"
 
@@ -23,6 +24,8 @@ bool Renderer::init() {
 	shaderManager = std::shared_ptr<ShaderManager>( new ShaderManager() );
 	VERIFY ( shaderManager->init(), "Unable to initialise shader manager", return false );
 
+    fpsCounter = std::shared_ptr<FpsCounter>( new FpsCounter() );
+
 	initContext();
 
 	camera = std::shared_ptr<Camera>( new Camera() );
@@ -33,7 +36,7 @@ bool Renderer::init() {
 	glEnable(GL_CULL_FACE);
 
 	terrain = std::shared_ptr<Terrain>( new Terrain() );
-	terrain->init( 0.1f, 256 );
+	terrain->init( 0.1f, 16 );
 
 #ifdef DRAW_TEST_MONKEY
 	std::shared_ptr<Mesh> msh( new Mesh( "../models/monkey.obj", "../textures/testChecker.DDS" ) );
@@ -75,6 +78,8 @@ void Renderer::render( double timeDelta ) {
 	renderTexts();
 
     glfwSwapBuffers(window);
+
+    fpsCounter->onFrame();
 }
 
 void Renderer::renderMeshes() {
@@ -99,8 +104,6 @@ void Renderer::renderTerrain() {
 }
 
 void Renderer::renderTexts() {
-    static std::shared_ptr<Label> label( new Label(assetManager->getDefaultFont(), "NYA", 20, 20, glm::vec3(0,1,0)) );
-    
 	shaderManager->useProgram( ShaderManager::ShaderType::FONT_SHADER );
 	glDisable( GL_CULL_FACE );
     glDisable( GL_DEPTH_TEST );
@@ -113,8 +116,14 @@ void Renderer::renderTexts() {
     glBlendEquation( GL_FUNC_ADD );
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
+    //TODO: extract GUI to separate class 
+    static std::shared_ptr<Label> fpsLabel( new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 50, glm::vec3(0,1,0)) );
 
-    label->render( context );
+    char buff[20];
+    sprintf_s(buff, "FPS: %.2f", fpsCounter->getFps());
+
+    fpsLabel->setText(buff);
+    fpsLabel->render( context );
 }
 
 void Renderer::shutdown() {

@@ -78,6 +78,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="fileUtils.cpp" />
     <ClCompile Include="Font.cpp" />
+    <ClCompile Include="FpsCounter.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
@@ -104,6 +105,7 @@
     <ClInclude Include="commonMath.h" />
     <ClInclude Include="Font.h" />
     <ClInclude Include="fontLoader.h" />
+    <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="logging.h" />

@@ -76,6 +76,9 @@
     <ClCompile Include="AssetManager.cpp">
       <Filter>src\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="FpsCounter.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -134,6 +137,9 @@
     </ClInclude>
     <ClInclude Include="renderCommon.h">
       <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="FpsCounter.h">
+      <Filter>src\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

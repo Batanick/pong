@@ -101,6 +101,10 @@ void Label::shutdown() {
 }
 
 void Label::setText(std::string text) {
+    if (text == str) {
+        return;
+    }
+
     shutdown();
     str = text;
 }

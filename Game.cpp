@@ -11,49 +11,8 @@
 
 static int const SECOND = 1;
 
-class Game::Timer {
-public:
-	Timer() {
-		lastTickTime = 0;
-		fpsCounter = 0;
-		currentFps = 0;
-		timeCounter = 0;
-	}
-
-	double onTick() {
-		const double currentTime = glfwGetTime();
-		fpsCounter++;
-		
-		const double timeDelta = currentTime - lastTickTime;
-		timeCounter += timeDelta;
-		if ( timeCounter > SECOND ) {
-			currentFps = (fpsCounter) / timeCounter;
-
-			fpsCounter = 0;
-			timeCounter = 0;
-
-			LOG ( "FPS: %f", currentFps );
-		}
-
-		lastTickTime = currentTime;
-		return timeDelta;
-	}
-
-	double getFps() {
-		return currentFps;
-	}
-
-private :
-	double lastTickTime;
-
-	double currentFps;
-	int fpsCounter;
-	double timeCounter;
-};
-
 Game::Game() {
 	running = false;
-	timer = std::shared_ptr<Timer> ( new Timer() );
 };
 
 bool Game::init() {
@@ -98,10 +57,16 @@ void Game::shutdown() {
 }
 
 void Game::runMainLoop() {
-	while (running) {
-		const double deltaTime = timer->onTick();
+    double lastTickTime = glfwGetTime();
+    double currentTime = 0;
+    double timeDelta = 0;
 
-		renderer->render( deltaTime );
+	while (running) {
+        currentTime = glfwGetTime();
+        timeDelta =  currentTime - lastTickTime;
+        lastTickTime = currentTime;
+
+        renderer->render(timeDelta);
 	
         glfwPollEvents();
 

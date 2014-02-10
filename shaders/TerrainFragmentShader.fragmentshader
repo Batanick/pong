@@ -5,5 +5,5 @@ out vec3 color;
 in float heightScale;
 
 void main() {
-	color = vec3 (heightScale, 0, 1 - heightScale);
+	color = vec3 (heightScale * 0.4, heightScale, heightScale * 0.3);
 }

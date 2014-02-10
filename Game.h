@@ -27,9 +27,6 @@ private:
 	std::shared_ptr<Renderer> renderer;
 	std::vector<TickablePtr> tickables;
 	
-	class Timer;
-	std::shared_ptr<Timer> timer; 
-
 	void runMainLoop();
 	void onShutdown();
 	RenderContext createRenderContext();
