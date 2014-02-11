@@ -141,6 +141,9 @@
     <ClInclude Include="FpsCounter.h">
       <Filter>src\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Bush.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\MeshFragmentShader.fragmentshader">

@@ -31,6 +31,8 @@ void Terrain::init( const float tileSize, const int tiles ) {
 }
 
 void Terrain::render( const RenderContext &context ) {
+    glUniformMatrix4fv( context.terrainMVPId, 1, GL_FALSE, &context.pv[0][0] );
+
 	glUniform2f( context.terrainMinMaxId, minHeight, maxHeight );
 
 	glEnableVertexAttribArray(0);

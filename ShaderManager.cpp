@@ -1,30 +1,36 @@
 #include "ShaderManager.h"
 
-#include <vector>
-#include <set>
-
 #include "fileUtils.h"
 #include "logging.h"
 
 #include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-class ShaderDesc final {
-public:
-	ShaderDesc( ShaderManager::ShaderType shaderType, char * vertexShader, char * fragmentShader, std::set<ShaderParam> params):
-		vertexShaderFName(vertexShader), fragmentShaderFName(fragmentShader), shaderType(shaderType), params(params) { 
-	}
+void initTextShader() {
+    glDisable( GL_CULL_FACE );
+    glDisable( GL_DEPTH_TEST );
+    
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glEnable( GL_BLEND );
+    glEnable( GL_COLOR_MATERIAL );
+    glColorMaterial( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
+    glBlendEquation( GL_FUNC_ADD );
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+}
 
-	const std::string vertexShaderFName;
-	const std::string fragmentShaderFName;
-	 ShaderManager::ShaderType shaderType;	
-	const std::set<ShaderParam> params;
-};
+void initTerrainShader() {
+    glEnable( GL_DEPTH_TEST );
+    glEnable( GL_CULL_FACE );
+    glDisable( GL_BLEND );
+}
+
 
 // shaders list here
-std::vector<ShaderDesc> buildShaders() {
+std::vector<ShaderManager::ShaderDesc> ShaderManager::buildShaders() {
 	std::vector<ShaderDesc> shaders;
 
-	//MESH_SHADER
+	// ============== MESH_SHADER ================
 	std::set<std::string> meshShaderParams;
 	meshShaderParams.insert( "mvp" );
 	meshShaderParams.insert( "texture" );
@@ -33,9 +39,9 @@ std::vector<ShaderDesc> buildShaders() {
 		ShaderManager::ShaderType::MODEL_SHADER, 
 		"MeshVertexShader.vertexshader", 
 		"MeshFragmentShader.fragmentshader", 
-		meshShaderParams ) );
+        meshShaderParams, 0 ) );
 
-	//TERRAIN_SHADER
+	// ============== TERRAIN_SHADER ============== 
 	std::set<std::string> terrainShaderParams;
 	terrainShaderParams.insert( "mvp" );
 	terrainShaderParams.insert( "minMax" );
@@ -44,9 +50,9 @@ std::vector<ShaderDesc> buildShaders() {
 		ShaderManager::ShaderType::TERRAIN_SHADER, 
 		"TerrainVertexShader.vertexshader", 
 		"TerrainFragmentShader.fragmentshader", 
-		terrainShaderParams ) );
+		terrainShaderParams, &initTerrainShader ) );
 
-	//FONT_SHADER
+	// ============== FONT_SHADER ============== 
 	std::set<std::string> fontShaderParams;
 	fontShaderParams.insert( "texture" );
     fontShaderParams.insert( "fontColor" );
@@ -55,19 +61,20 @@ std::vector<ShaderDesc> buildShaders() {
 		ShaderManager::ShaderType::FONT_SHADER, 
 		"FontVertexShader.vertexshader", 
 		"FontFragmentShader.fragmentshader", 
-		fontShaderParams ) );
+		fontShaderParams,
+        &initTextShader) );
 
 	return shaders;
 }
 
 static const std::string SHADER_PATH = "../shaders/";
-static const std::vector<ShaderDesc> shaders = buildShaders();
 
 void loadShaderSource( GLuint shaderId, char const * source );
 void printLog( GLuint obj );
 
 bool ShaderManager::init() {
-	for ( ShaderDesc desc : shaders ) {
+    std::vector<ShaderManager::ShaderDesc> shaderDescs = buildShaders();
+    for ( ShaderDesc desc : shaderDescs ) {
 		if ( !loadShader(desc) ){
 			return false;
 		}
@@ -77,7 +84,7 @@ bool ShaderManager::init() {
 }
 
 bool ShaderManager::loadShader( const ShaderDesc &shaderDesc ){
-	if ( typeToProgramId.find( shaderDesc.shaderType ) != typeToProgramId.end() ){
+	if ( shaders.find( shaderDesc.shaderType ) != shaders.end() ){
 		LOG ( "Attempt to load more that one shader programm of the same type" );
 		return false;
 	}
@@ -106,7 +113,6 @@ bool ShaderManager::loadShader( const ShaderDesc &shaderDesc ){
 
 	printLog(programID);
 
-	typeToProgramId.insert( std::make_pair(shaderDesc.shaderType, programID) ) ;
 	ParamsHolder params;
 	for ( auto param : shaderDesc.params ) {
 		GLuint paramId = glGetUniformLocation( programID, param.c_str() );
@@ -117,9 +123,10 @@ bool ShaderManager::loadShader( const ShaderDesc &shaderDesc ){
 
 		params.insert ( std::make_pair(param, paramId) );
 	}
-	typeToParams.insert( std::make_pair(shaderDesc.shaderType, params) );
-
     printLog(programID);
+
+    ShaderManager::ShaderParams shaderParams(shaderDesc.shaderType, params, shaderDesc.initilizer, programID);
+	shaders.insert( std::make_pair(shaderDesc.shaderType, shaderParams) );
 
 	//don't actually destroyed until program
 	glDeleteShader( fragmentShaderId );
@@ -129,8 +136,8 @@ bool ShaderManager::loadShader( const ShaderDesc &shaderDesc ){
 }
 
 void ShaderManager::shutdown() {
-	for ( auto& entry :  typeToProgramId ) {
-		glDeleteProgram( entry.second );
+	for ( auto& entry : shaders ) {
+        glDeleteProgram( entry.second.programId );
 	}
 }
 
@@ -142,9 +149,13 @@ void loadShaderSource( GLuint shaderId, char const * source) {
 }
 
 void ShaderManager::useProgram( const ShaderManager::ShaderType shaderType ) {
-	auto result = typeToProgramId.find( shaderType );
-	if ( result != typeToProgramId.end() ) {
-		glUseProgram( result->second );
+	auto result = shaders.find( shaderType );
+	if ( result != shaders.end() ) {
+        if (result->second.initilizer) {
+            result->second.initilizer();
+        }
+
+        glUseProgram( result->second.programId );
 	} else {
 		LOG( "Unable to find program: [%d]", shaderType );
 		return;
@@ -152,14 +163,14 @@ void ShaderManager::useProgram( const ShaderManager::ShaderType shaderType ) {
 }
 
 GLuint ShaderManager::getParam( const ShaderType shaderType, const ShaderParam param ) {
-	const auto paramsHolder = typeToParams.find( shaderType );
-	if ( paramsHolder == typeToParams.end() ) {
+	const auto paramsHolder = shaders.find( shaderType );
+	if ( paramsHolder == shaders.end() ) {
 		LOG( "Can't find params for shaderType: [%d]", shaderType );
 		return GL_INVALID_VALUE;
 	}
 
-	auto paramId = paramsHolder->second.find( param );
-	if ( paramId == paramsHolder->second.end() ) {
+    auto paramId = paramsHolder->second.params.find( param );
+    if ( paramId == paramsHolder->second.params.end() ) {
 		LOG( "Can't find param id for [%s] in shader type [%s] params", shaderType, param );
 		return GL_INVALID_VALUE;
 	}
@@ -186,4 +197,3 @@ void printLog(GLuint obj) {
 	if (infologLength > 0)
 		LOG( "%s\n",infoLog );
 }
-

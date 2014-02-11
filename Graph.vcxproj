@@ -97,6 +97,7 @@
     <ClCompile Include="tinyXml\tinyxmlparser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bush.h" />
     <ClInclude Include="fileUtils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Camera.h" />

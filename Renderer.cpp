@@ -40,7 +40,7 @@ bool Renderer::init() {
 
 #ifdef DRAW_TEST_MONKEY
 	std::shared_ptr<Mesh> msh( new Mesh( "../models/monkey.obj", "../textures/testChecker.DDS" ) );
-	msh->init( *textureManager );
+    msh->init( *assetManager );
 	renderables.push_back( msh );
 #endif
 
@@ -91,30 +91,13 @@ void Renderer::renderMeshes() {
 }
 
 void Renderer::renderTerrain() {
-    glEnable( GL_DEPTH_TEST );
-    glEnable( GL_CULL_FACE );
-    glDisable( GL_BLEND );
-
 	shaderManager->useProgram( ShaderManager::ShaderType::TERRAIN_SHADER );
 
-	const glm::mat4 mvp = camera->getProjection() * camera->getView();
-	glUniformMatrix4fv( context.terrainMVPId, 1, GL_FALSE, &mvp[0][0] );
-	
 	terrain->render( context );
 }
 
 void Renderer::renderTexts() {
 	shaderManager->useProgram( ShaderManager::ShaderType::FONT_SHADER );
-	glDisable( GL_CULL_FACE );
-    glDisable( GL_DEPTH_TEST );
-    
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-    glEnable( GL_BLEND );
-    glEnable( GL_COLOR_MATERIAL );
-    glColorMaterial( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE );
-    glBlendEquation( GL_FUNC_ADD );
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
     //TODO: extract GUI to separate class 
     static std::shared_ptr<Label> fpsLabel( new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 50, glm::vec3(0,1,0)) );
