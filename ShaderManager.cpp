@@ -36,7 +36,7 @@ std::vector<ShaderManager::ShaderDesc> ShaderManager::buildShaders() {
 	meshShaderParams.insert( "texture" );
 
 	shaders.push_back( ShaderDesc( 
-		ShaderManager::ShaderType::MODEL_SHADER, 
+		ShaderType::MODEL_SHADER, 
 		"MeshVertexShader.vertexshader", 
 		"MeshFragmentShader.fragmentshader", 
         meshShaderParams, 0 ) );
@@ -47,7 +47,7 @@ std::vector<ShaderManager::ShaderDesc> ShaderManager::buildShaders() {
 	terrainShaderParams.insert( "minMax" );
 
 	shaders.push_back( ShaderDesc(
-		ShaderManager::ShaderType::TERRAIN_SHADER, 
+		ShaderType::TERRAIN_SHADER, 
 		"TerrainVertexShader.vertexshader", 
 		"TerrainFragmentShader.fragmentshader", 
 		terrainShaderParams, &initTerrainShader ) );
@@ -58,7 +58,7 @@ std::vector<ShaderManager::ShaderDesc> ShaderManager::buildShaders() {
     fontShaderParams.insert( "fontColor" );
 
 	shaders.push_back( ShaderDesc(
-		ShaderManager::ShaderType::FONT_SHADER, 
+		ShaderType::FONT_SHADER, 
 		"FontVertexShader.vertexshader", 
 		"FontFragmentShader.fragmentshader", 
 		fontShaderParams,
@@ -148,7 +148,7 @@ void loadShaderSource( GLuint shaderId, char const * source) {
 	printLog(shaderId);
 }
 
-void ShaderManager::useProgram( const ShaderManager::ShaderType shaderType ) {
+void ShaderManager::useProgram( const ShaderType shaderType ) {
 	auto result = shaders.find( shaderType );
 	if ( result != shaders.end() ) {
         if (result->second.initilizer) {

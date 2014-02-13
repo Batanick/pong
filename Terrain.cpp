@@ -89,5 +89,6 @@ void Terrain::generateIndicies( const int res, std::vector<unsigned int> &indice
 }
 
 void Terrain::shutdown() {
-	//nothing here
+    glDeleteBuffers ( 1, &vertexBuffer );
+    glDeleteBuffers ( 1, &indexBuffer );
 }

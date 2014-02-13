@@ -9,13 +9,13 @@ typedef std::map<ShaderParam, GLuint> ParamsHolder;
 class ShaderDesc;
 
 
+enum class ShaderType : unsigned int {
+    NONE, MODEL_SHADER, TERRAIN_SHADER, FONT_SHADER
+};
 
 class ShaderManager final {
 
 public:
-	enum class ShaderType {
-		MODEL_SHADER, TERRAIN_SHADER, FONT_SHADER
-	};
 	
 	bool init();
 	void shutdown();
@@ -26,7 +26,7 @@ public:
 private:
     typedef void (*ShaderInitializer) ();
     struct ShaderDesc {
-        ShaderDesc( ShaderManager::ShaderType shaderType, char * vertexShader, char * fragmentShader, std::set<ShaderParam> params, ShaderInitializer initilizer):
+        ShaderDesc( ShaderType shaderType, char * vertexShader, char * fragmentShader, std::set<ShaderParam> params, ShaderInitializer initilizer):
             vertexShaderFName(vertexShader), 
             fragmentShaderFName(fragmentShader), 
             shaderType(shaderType), 
@@ -36,7 +36,7 @@ private:
     
 	    const std::string vertexShaderFName;
 	    const std::string fragmentShaderFName;
-        ShaderManager::ShaderType shaderType;	
+        ShaderType shaderType;	
 	    const std::set<ShaderParam> params;
         ShaderInitializer initilizer;
     };
