@@ -10,6 +10,7 @@
 #include "logging.h"
 #include "commonMath.h"
 #include "diamondGen.h"
+#include "renderUtils.h"
 
 void Terrain::init( const float tileSize, const int tiles ) {
 	VERIFY( isPower2( tiles ), "Width value is not a power of 2", return );
@@ -22,7 +23,7 @@ void Terrain::init( const float tileSize, const int tiles ) {
 	glBufferData( GL_ARRAY_BUFFER, verticies.size() * sizeof(glm::vec3), &verticies[0], GL_STATIC_DRAW );
 
 	std::vector<unsigned int> indices;
-	generateIndicies( tiles, indices );
+    generateIndexTable( tiles, tiles, indices );
 	
 	glGenBuffers( 1, &indexBuffer );
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
@@ -59,34 +60,6 @@ void Terrain::generateVertices( const int res, const float tileSize, std::vector
 	maxHeight = heightMap.getMaxHeight();
 }
 
-void Terrain::generateIndicies( const int res, std::vector<unsigned int> &indices ) {
-	int indidiesNeeded = res * (2 * (res + 1) - 1) + 1;  
-
-	indices.push_back(0);
-
-	int rowEndCounter = 2 * res + 1;
-	bool forward = true;
-	bool right = true;
-	int current = 0;
-	for (int i = 1; i < indidiesNeeded ; i++){
-		if (forward) {
-			current += res + 1;
-		} else {
-			current -= res + 1;
-			current += right ? 1 : -1;
-		}
-
-		indices.push_back(current);
-		forward = !forward; 
-
-		if ( (--rowEndCounter) == 0 ) {
-			forward = true;
-			right = !right;
-			rowEndCounter = 2 * res + 1;
-		}
-	}
-
-}
 
 void Terrain::shutdown() {
     glDeleteBuffers ( 1, &vertexBuffer );

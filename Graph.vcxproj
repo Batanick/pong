@@ -75,6 +75,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bush.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="fileUtils.cpp" />
     <ClCompile Include="Font.cpp" />
@@ -84,6 +85,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
+    <ClCompile Include="renderUtils.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
     <ClCompile Include="assetLoader.cpp" />
     <ClCompile Include="diamondGen.cpp" />
@@ -112,6 +114,7 @@
     <ClInclude Include="logging.h" />
     <ClInclude Include="renderCommon.h" />
     <ClInclude Include="Renderer.h" />
+    <ClInclude Include="renderUtils.h" />
     <ClInclude Include="ShaderManager.h" />
     <ClInclude Include="Terrain.h" />
     <ClInclude Include="AssetManager.h" />
@@ -120,12 +123,16 @@
     <ClInclude Include="tinyXml\tinyxml.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="shaders\BushFragmentShader.fragmentshader" />
+    <None Include="shaders\BushVertexShader.vertexshader" />
     <None Include="shaders\FontFragmentShader.fragmentshader" />
     <None Include="shaders\FontVertexShader.vertexshader" />
     <None Include="shaders\MeshFragmentShader.fragmentshader" />
     <None Include="shaders\MeshVertexShader.vertexshader" />
     <None Include="shaders\TerrainFragmentShader.fragmentshader" />
     <None Include="shaders\TerrainVertexShader.vertexshader" />
+    <None Include="shaders\TestFragmentShader.fragmentshader" />
+    <None Include="shaders\TestVertexShader.vertexshader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

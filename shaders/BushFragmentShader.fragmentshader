@@ -1,0 +1,9 @@
+#version 330 core
+
+out vec3 color;
+
+in float heightScale;
+
+void main() {
+	color = vec3 (0,1,0);
+}

@@ -48,6 +48,7 @@ private:
 	RenderContext context;
 
 	void initContext();
+    void initScene();
 
 	void renderAll();
 };

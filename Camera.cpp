@@ -11,8 +11,8 @@ static const float CAMERA_MOVE_SPEED = 3.0f;
 static const float CAMERA_ROTATION_SPEED = 0.005f;
 
 Camera::Camera() {
-	horizontalAngle = 3.14f;
-	verticalAngle = 0;
+	horizontalAngle = 0.78f;
+	verticalAngle = -0.2f;
 	position = glm::vec3( 0, 1, 0 );
 }
 

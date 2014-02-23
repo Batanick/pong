@@ -7,13 +7,12 @@
 #include "AssetManager.h"
 #include "Mesh.h"
 #include "Terrain.h"
+#include "Bush.h"
 #include "Camera.h"
 #include "Label.h"
 #include "FpsCounter.h"
 
 #include "logging.h"
-
-//#define DRAW_TEST_MONKEY
 
 bool Renderer::init() {
 	VERIFY (glewInit() == GLEW_OK, "Unable to initialize glew", return false);
@@ -29,27 +28,29 @@ bool Renderer::init() {
 	initContext();
 
 	camera = std::shared_ptr<Camera>( new Camera() );
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClearColor(0.0f, 0.0f, 0.6f, 0.0f);
 
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS); 
 	glEnable(GL_CULL_FACE);
 
-    std::shared_ptr<Terrain> terrain = std::shared_ptr<Terrain>( new Terrain() );
-	terrain->init( 0.1f, 16 );
-    add( ShaderType::TERRAIN_SHADER ,terrain );
-
-#ifdef DRAW_TEST_MONKEY
-	std::shared_ptr<Mesh> msh( new Mesh( "../models/monkey.obj", "../textures/testChecker.DDS" ) );
-    msh->init( *assetManager );
-	renderables.push_back( msh );
-#endif
-
-    static std::shared_ptr<Label> fpsLabel( new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 50, glm::vec3(0,1,0)) );
-    this->fpsLabel = fpsLabel;
-    add( ShaderType::FONT_SHADER, fpsLabel );
+    initScene();
 
 	return true;
+}
+
+void Renderer::initScene() {
+    std::shared_ptr<Terrain> terrain = std::shared_ptr<Terrain>( new Terrain() );
+	terrain->init( 0.1f, 256 );
+    add( ShaderType::TERRAIN_SHADER ,terrain );
+
+    std::shared_ptr<Bush> bush = std::shared_ptr<Bush>( new Bush() ) ;
+    bush->init();
+    add ( ShaderType::BUSH_SHADER, bush );
+
+    std::shared_ptr<Label> fpsLabel( new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 50, glm::vec3(0,1,0)) );
+    this->fpsLabel = fpsLabel;
+    add( ShaderType::FONT_SHADER, fpsLabel );
 }
 
 void Renderer::initContext() {
@@ -61,6 +62,8 @@ void Renderer::initContext() {
 
     context.fontTextureId = shaderManager->getParam( ShaderType::FONT_SHADER, "texture" );
     context.fontColorId = shaderManager->getParam( ShaderType::FONT_SHADER, "fontColor" );
+
+    context.bushMVPId = shaderManager->getParam( ShaderType::BUSH_SHADER, "mvp" );
 
     int windowW, windowH;
 	glfwGetWindowSize( window, &windowW, &windowH );

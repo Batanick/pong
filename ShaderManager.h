@@ -10,7 +10,7 @@ class ShaderDesc;
 
 
 enum class ShaderType : unsigned int {
-    NONE, MODEL_SHADER, TERRAIN_SHADER, FONT_SHADER
+    NONE, MODEL_SHADER, TERRAIN_SHADER, BUSH_SHADER, FONT_SHADER, TEST_SHADER
 };
 
 class ShaderManager final {

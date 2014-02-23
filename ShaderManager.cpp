@@ -25,6 +25,18 @@ void initTerrainShader() {
     glDisable( GL_BLEND );
 }
 
+void initTestShader() {
+    glDisable( GL_DEPTH_TEST );
+    glDisable( GL_CULL_FACE );
+    glDisable( GL_BLEND );
+}
+
+void initBushShader() {
+    glDisable( GL_DEPTH_TEST );
+    glDisable( GL_CULL_FACE );
+    glDisable( GL_BLEND );
+}
+
 
 // shaders list here
 std::vector<ShaderManager::ShaderDesc> ShaderManager::buildShaders() {
@@ -52,6 +64,16 @@ std::vector<ShaderManager::ShaderDesc> ShaderManager::buildShaders() {
 		"TerrainFragmentShader.fragmentshader", 
 		terrainShaderParams, &initTerrainShader ) );
 
+    // ============== BUSH_SHADER ============== 
+	std::set<std::string> bushShaderParams;
+	bushShaderParams.insert( "mvp" );
+
+	shaders.push_back( ShaderDesc(
+        ShaderType::BUSH_SHADER, 
+		"BushVertexShader.vertexshader", 
+		"BushFragmentShader.fragmentshader", 
+		bushShaderParams, &initBushShader ) );
+
 	// ============== FONT_SHADER ============== 
 	std::set<std::string> fontShaderParams;
 	fontShaderParams.insert( "texture" );
@@ -63,6 +85,16 @@ std::vector<ShaderManager::ShaderDesc> ShaderManager::buildShaders() {
 		"FontFragmentShader.fragmentshader", 
 		fontShaderParams,
         &initTextShader) );
+
+    // ============== TEST_SHADER ============== 
+	std::set<std::string> testShaderParams;
+
+	shaders.push_back( ShaderDesc(
+        ShaderType::TEST_SHADER, 
+		"TestVertexShader.vertexshader", 
+		"TestFragmentShader.fragmentshader", 
+		testShaderParams,
+        initTestShader) );
 
 	return shaders;
 }

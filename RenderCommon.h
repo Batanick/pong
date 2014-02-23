@@ -19,6 +19,8 @@ struct RenderContext {
     GLuint fontTextureId;
     GLuint fontColorId;
 
+    GLuint bushMVPId;
+
     int windowHeight;
     int windowWidth;
 

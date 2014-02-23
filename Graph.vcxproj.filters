@@ -79,6 +79,12 @@
     <ClCompile Include="FpsCounter.cpp">
       <Filter>src\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Bush.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderUtils.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -144,6 +150,9 @@
     <ClInclude Include="Bush.h">
       <Filter>src\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderUtils.h">
+      <Filter>src\common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\MeshFragmentShader.fragmentshader">
@@ -162,6 +171,18 @@
       <Filter>src\shaders</Filter>
     </None>
     <None Include="shaders\FontVertexShader.vertexshader">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\TestFragmentShader.fragmentshader">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\TestVertexShader.vertexshader">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\BushFragmentShader.fragmentshader">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\BushVertexShader.vertexshader">
       <Filter>src\shaders</Filter>
     </None>
   </ItemGroup>

@@ -24,6 +24,5 @@ private :
 	float minHeight;
 	float maxHeight;
 
-	void generateIndicies( const int res, std::vector<unsigned int> &indices );
 	void generateVertices( const int res, const float tileSize, std::vector<glm::vec3> &vertices );
 };

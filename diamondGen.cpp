@@ -4,7 +4,7 @@
 #include "commonMath.h"
 
 static const int NOT_ASSIGNED = -1;
-static const float ROUGHNESS  = 0.01f;
+static const float ROUGHNESS  = 0.005f;
 
 float assignValueIfNeeded( float * val1, float * val2, int size ) {
 	if ( ((val2 - val2) % 2) != 0 ) {

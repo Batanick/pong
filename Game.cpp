@@ -30,8 +30,8 @@ bool Game::init() {
         return false;
     }
     
-	/* Make the window's context current */
     glfwMakeContextCurrent(window);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN );
 
 	renderer = std::shared_ptr<Renderer>(new Renderer(window));
 	VERIFY (renderer->init(), "Unable to initialize renderer", return false);
