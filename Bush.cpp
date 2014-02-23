@@ -8,10 +8,25 @@
 #include <gtx\transform.hpp>
 #include <gtx\euler_angles.hpp>
 
+#include "commonMath.h"
 #include "renderUtils.h"
 
+static char heightSegments = 16;
+
+static float const leafPosScatering = 1.0f; 
+static float const heightScatering = 0.3f;
+static float const maxRotationAngle = glm::pi<float>() / 8;
+static float const rotationAngleScatering = 0.3f;
+
 void Bush::init() {
-    leafs.push_back(createLeaf(glm::vec3(),glm::pi<float>() / 8, glm::pi<float>() / 8));
+    for ( int i = 0; i < leafsCount; i++ ) {
+        const float yaw = glm::pi<float>() * 2 * getRandomFloat();
+        const float height = (float)(this->height * ( 1 - heightScatering ) + this->height * heightScatering * getRandomFloat());
+        const float rotationAngle = maxRotationAngle * ( 1 - rotationAngleScatering ) + maxRotationAngle * rotationAngleScatering * getRandomFloat();
+        const glm::vec4 localPos = glm::eulerAngleY( glm::pi<float>() * 2 * getRandomFloat() ) * glm::vec4(leafPosScatering * getRandomFloat(),0,0, 0);
+
+        leafs.push_back( createLeaf(glm::vec3(localPos) + this->pos, height, rotationAngle, yaw) );
+    }
 }
 
 void Bush::render( const RenderContext &context ) {
@@ -42,7 +57,7 @@ void Bush::shutdown() {
     leafs.clear();
 }
 
-Bush::Leaf Bush::createLeaf( glm::vec3 pos, float maxRotationAngle, float localYaw ) {
+Bush::Leaf Bush::createLeaf( glm::vec3 pos, float height, float maxRotationAngle, float localYaw ) {
     glm::mat4 mainRotTranslation = glm::translate( pos ) * glm::eulerAngleY( localYaw );
 
     Bush::Leaf leaf;

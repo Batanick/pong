@@ -50,8 +50,8 @@ void build ( float * const data, int x1, int y1, int x2, int y2, int res ){
 	build( data, diamondX, diamondY, x2, y2, res ); 
 }
 
-HeightMap HeightMap::create( const float h1, const float h2, const float h3, const float h4, int resolution ) {
-	VERIFY( isPower2( resolution - 1 ), "Resoulution + 1 must be power of 2", return HeightMap( resolution, 0, 0.0, 0.0));
+HeightMap * HeightMap::create( const float h1, const float h2, const float h3, const float h4, int resolution ) {
+	VERIFY( isPower2( resolution - 1 ), "Resoulution + 1 must be power of 2", return 0);
 
 	float * const data = new float[resolution * resolution] ;
 	for (int i = 0; i < resolution * resolution; i++) {
@@ -72,7 +72,7 @@ HeightMap HeightMap::create( const float h1, const float h2, const float h3, con
 		 max = data[i] > max ? data[i] : max;
 	}
 
-	return HeightMap( resolution, data, min, max );
+	return new HeightMap( resolution, data, min, max );
 }
 
 float HeightMap::getHeight( int x, int y ) const {

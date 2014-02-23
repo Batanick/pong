@@ -4,12 +4,20 @@
 class Bush final : public Renderable {
 
 public:
-    Bush():
-        heightSegments(16),
-        height(1.0f),
-        width(0.05f), 
-        pos(glm::vec3(1,0.2,1)) {
+    Bush(glm::vec3 pos, int leafsCount, float height, float width):
+        pos(pos),
+        leafsCount(leafsCount),
+        height(height), 
+        width(width){
     }
+
+    Bush( glm::vec3 pos, int leafsCount ):
+        pos(pos),
+        leafsCount(leafsCount), 
+        height(0.5f), 
+        width(0.05f){
+    }
+
 
     virtual void render( const RenderContext &context ) override;
     virtual void shutdown() override;
@@ -26,9 +34,10 @@ private:
 
     std::vector<const Leaf> leafs;
 
-    char const heightSegments;
+    int const leafsCount;
+
     float const height;
     float const width;
 
-    Leaf createLeaf( glm::vec3 pos, float maxRotationAngle, float localYaw );
+    Leaf createLeaf( glm::vec3 pos, float height, float maxRotationAngle, float localYaw );
 };

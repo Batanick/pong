@@ -40,13 +40,19 @@ bool Renderer::init() {
 }
 
 void Renderer::initScene() {
-    std::shared_ptr<Terrain> terrain = std::shared_ptr<Terrain>( new Terrain() );
-	terrain->init( 0.1f, 256 );
+    static const int tiles = 128;
+
+    std::shared_ptr<Terrain> terrain = std::shared_ptr<Terrain>( new Terrain(tiles) );
+	terrain->init();
     add( ShaderType::TERRAIN_SHADER ,terrain );
 
-    std::shared_ptr<Bush> bush = std::shared_ptr<Bush>( new Bush() ) ;
-    bush->init();
-    add ( ShaderType::BUSH_SHADER, bush );
+    static const int bushes = tiles;
+    
+    for (int i = 0; i < bushes; i++) {
+        std::shared_ptr<Bush> bush = std::shared_ptr<Bush>( new Bush( terrain->getRandomPos(), 32 ) ) ;
+        bush->init();
+        add ( ShaderType::BUSH_SHADER, bush );
+    }
 
     std::shared_ptr<Label> fpsLabel( new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 50, glm::vec3(0,1,0)) );
     this->fpsLabel = fpsLabel;

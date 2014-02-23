@@ -12,7 +12,7 @@
 #include "diamondGen.h"
 #include "renderUtils.h"
 
-void Terrain::init( const float tileSize, const int tiles ) {
+void Terrain::init( ) {
 	VERIFY( isPower2( tiles ), "Width value is not a power of 2", return );
 
 	std::vector<glm::vec3> verticies;
@@ -34,7 +34,7 @@ void Terrain::init( const float tileSize, const int tiles ) {
 void Terrain::render( const RenderContext &context ) {
     glUniformMatrix4fv( context.terrainMVPId, 1, GL_FALSE, &context.pv[0][0] );
 
-	glUniform2f( context.terrainMinMaxId, minHeight, maxHeight );
+    glUniform2f( context.terrainMinMaxId, heightMap->getMinHeight(), heightMap->getMaxHeight() );
 
 	glEnableVertexAttribArray(0);
 
@@ -48,16 +48,29 @@ void Terrain::render( const RenderContext &context ) {
 }
 
 void Terrain::generateVertices( const int res, const float tileSize, std::vector<glm::vec3> &vertices ) {
-	const HeightMap heightMap = HeightMap::create(0.0f, 0.0f, 0.0f, 0.0f, res + 1);
+    heightMap = std::shared_ptr<HeightMap> (HeightMap::create(0.0f, 0.0f, 0.0f, 0.0f, res + 1));
 
 	for ( int y = 0; y < res + 1; y++) {
 		for (int x = 0; x < res + 1; x++) {
-			vertices.push_back ( glm::vec3(x * tileSize, heightMap.getHeight(x, y), y * tileSize) );
+			vertices.push_back ( glm::vec3(x * tileSize, heightMap->getHeight(x, y), y * tileSize) );
 		}
 	}
+}
 
-	minHeight = heightMap.getMinHeight();
-	maxHeight = heightMap.getMaxHeight();
+float Terrain::getHeight( float x, float y ) {
+    int const tileX = (int) (x / tileSize);
+    int const tileY = (int) (y / tileSize);
+
+    if ( tileX >= tiles || tileY >= tiles)
+        return - 1;
+
+    return (heightMap->getHeight(tileX, tileY) + heightMap->getHeight(tileX + 1, tileY + 1)) / 2;
+}
+
+glm::vec3 Terrain::getRandomPos() {
+    float x = tiles * tileSize * getRandomFloat();
+    float z = tiles * tileSize * getRandomFloat();
+    return glm::vec3( x, getHeight( x, z), z );
 }
 
 
