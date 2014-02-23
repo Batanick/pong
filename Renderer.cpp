@@ -46,10 +46,10 @@ void Renderer::initScene() {
 	terrain->init();
     add( ShaderType::TERRAIN_SHADER ,terrain );
 
-    static const int bushes = tiles;
+    static const int bushes = tiles * 4;
     
     for (int i = 0; i < bushes; i++) {
-        std::shared_ptr<Bush> bush = std::shared_ptr<Bush>( new Bush( terrain->getRandomPos(), 32 ) ) ;
+        std::shared_ptr<Bush> bush = std::shared_ptr<Bush>( new Bush( terrain->getRandomPos(), 64 ) ) ;
         bush->init();
         add ( ShaderType::BUSH_SHADER, bush );
     }

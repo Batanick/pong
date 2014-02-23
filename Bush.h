@@ -15,7 +15,7 @@ public:
         pos(pos),
         leafsCount(leafsCount), 
         height(0.5f), 
-        width(0.05f){
+        width(0.02f){
     }
 
 
@@ -25,19 +25,16 @@ public:
     void init();
 
 private:
-    struct Leaf {
-        GLuint vertexBuffer;
-	    GLuint indexBuffer;
-        unsigned int indexSize;
-    };
     glm::vec3 pos;
 
-    std::vector<const Leaf> leafs;
+    GLuint vertexBuffer;
+	GLuint indexBuffer;
+    unsigned int indicesSize;
 
     int const leafsCount;
 
     float const height;
     float const width;
 
-    Leaf createLeaf( glm::vec3 pos, float height, float maxRotationAngle, float localYaw );
+    void createLeaf( glm::vec3 pos, float height, float maxRotationAngle, float localYaw, std::vector<glm::vec3> &vertices, std::vector<unsigned int> &indices);
 };

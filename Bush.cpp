@@ -11,7 +11,7 @@
 #include "commonMath.h"
 #include "renderUtils.h"
 
-static char heightSegments = 16;
+static char heightSegments = 4;
 
 static float const leafPosScatering = 1.0f; 
 static float const heightScatering = 0.3f;
@@ -19,50 +19,54 @@ static float const maxRotationAngle = glm::pi<float>() / 8;
 static float const rotationAngleScatering = 0.3f;
 
 void Bush::init() {
+    std::vector<glm::vec3> vertices;
+    std::vector<unsigned int> indices;
+
     for ( int i = 0; i < leafsCount; i++ ) {
         const float yaw = glm::pi<float>() * 2 * getRandomFloat();
         const float height = (float)(this->height * ( 1 - heightScatering ) + this->height * heightScatering * getRandomFloat());
         const float rotationAngle = maxRotationAngle * ( 1 - rotationAngleScatering ) + maxRotationAngle * rotationAngleScatering * getRandomFloat();
         const glm::vec4 localPos = glm::eulerAngleY( glm::pi<float>() * 2 * getRandomFloat() ) * glm::vec4(leafPosScatering * getRandomFloat(),0,0, 0);
 
-        leafs.push_back( createLeaf(glm::vec3(localPos) + this->pos, height, rotationAngle, yaw) );
+        createLeaf(glm::vec3(localPos) + this->pos, height, rotationAngle, yaw, vertices, indices);
     }
+
+    indicesSize = indices.size();
+    
+    // generating leaf buffers
+    glGenBuffers( 1, &vertexBuffer );
+	glBindBuffer( GL_ARRAY_BUFFER, vertexBuffer );
+	glBufferData( GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW );
+
+    glGenBuffers( 1, &indexBuffer );
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
+	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof (unsigned int), &indices[0], GL_STATIC_DRAW );
 }
 
 void Bush::render( const RenderContext &context ) {
     glUniformMatrix4fv( context.bushMVPId, 1, GL_FALSE, &context.pv[0][0] );
 
-    for (unsigned int i = 0; i < leafs.size(); i++) {
-        Leaf &leaf = leafs[i];
+    glEnableVertexAttribArray(0);
+    
+    glBindBuffer( GL_ARRAY_BUFFER, vertexBuffer );
+    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0 );
 
-        glEnableVertexAttribArray(0);
+    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
+    glDrawElements( GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, (void *) 0);
 
-        glBindBuffer( GL_ARRAY_BUFFER, leaf.vertexBuffer );
-    	glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0 );
-
-        glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, leaf.indexBuffer);
-        glDrawElements( GL_TRIANGLE_STRIP, leaf.indexSize, GL_UNSIGNED_INT, (void *) 0);
-
-	    glDisableVertexAttribArray(0);
-    }
+    glDisableVertexAttribArray(0);
 }
  
 void Bush::shutdown() {
-    for (unsigned int i = 0; i < leafs.size(); i++) {
-        Leaf &leaf = leafs[i];
-        glDeleteBuffers ( 1, &leaf.indexBuffer );
-        glDeleteBuffers ( 1, &leaf.vertexBuffer );
-    }
-
-    leafs.clear();
+    glDeleteBuffers ( 1, &indexBuffer );
+    glDeleteBuffers ( 1, &vertexBuffer );
 }
 
-Bush::Leaf Bush::createLeaf( glm::vec3 pos, float height, float maxRotationAngle, float localYaw ) {
-    glm::mat4 mainRotTranslation = glm::translate( pos ) * glm::eulerAngleY( localYaw );
+void Bush::createLeaf( glm::vec3 pos, float height, float maxRotationAngle, float localYaw, 
+                      std::vector<glm::vec3> &vertices, std::vector<unsigned int> &indices) {
+    const int startIndex = vertices.size();
 
-    Bush::Leaf leaf;
-
-    std::vector<glm::vec3> verticies;
+    const glm::mat4 mainRotTranslation = glm::translate( pos ) * glm::eulerAngleY( localYaw );
 
     const float widthDelta = width / ( 2 * heightSegments);
     const float segmentHeight = height / ( heightSegments );
@@ -75,26 +79,23 @@ Bush::Leaf Bush::createLeaf( glm::vec3 pos, float height, float maxRotationAngle
 
             glm::vec4 point (x, y, 0, 1);
             glm::vec4 rotated = mainRotTranslation * glm::eulerAngleX(row * rotationSegmentDelta) *  point;
-            verticies.push_back( glm::vec3(rotated) ) ;
+            vertices.push_back( glm::vec3(rotated) ) ;
         }
     }
+    vertices.push_back( glm::vec3( mainRotTranslation * glm::eulerAngleX(maxRotationAngle) * glm::vec4( width / 2, height, 0, 1) ));
 
-    verticies.push_back( glm::vec3( mainRotTranslation * glm::eulerAngleX(maxRotationAngle) * glm::vec4( width / 2, height, 0, 1) ));
+    for (int i = 0; i < heightSegments - 1; i++) {
+        indices.push_back( i + startIndex );
+        indices.push_back( i + startIndex + 1 );
+        indices.push_back( i + heightSegments + startIndex );
 
-    std::vector<unsigned int> indices;
-    generateIndexTable( 1, heightSegments - 1, indices );
-    indices.push_back(verticies.size() - 1);
-    leaf.indexSize = indices.size();
-
-    // generating leaf buffers
-    glGenBuffers( 1, &leaf.vertexBuffer );
-	glBindBuffer( GL_ARRAY_BUFFER, leaf.vertexBuffer );
-	glBufferData( GL_ARRAY_BUFFER, verticies.size() * sizeof(glm::vec3), &verticies[0], GL_STATIC_DRAW );
-
-    glGenBuffers( 1, &leaf.indexBuffer );
-    glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, leaf.indexBuffer );
-	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof (unsigned int), &indices[0], GL_STATIC_DRAW );
-
-    return leaf;
+        indices.push_back( i + startIndex + 1 );
+        indices.push_back( i + heightSegments + startIndex );
+        indices.push_back( i + heightSegments + startIndex + 1 );
+    }
+ 
+    indices.push_back( heightSegments - 1 + startIndex );
+    indices.push_back( heightSegments * 2 - 1 + startIndex );
+    indices.push_back( heightSegments * 2 + startIndex );
 }
 
