@@ -26,7 +26,7 @@ void Bush::init() {
         const float yaw = glm::pi<float>() * 2 * getRandomFloat();
         const float height = (float)(this->height * ( 1 - heightScatering ) + this->height * heightScatering * getRandomFloat());
         const float rotationAngle = maxRotationAngle * ( 1 - rotationAngleScatering ) + maxRotationAngle * rotationAngleScatering * getRandomFloat();
-        const glm::vec4 localPos = glm::eulerAngleY( glm::pi<float>() * 2 * getRandomFloat() ) * glm::vec4(leafPosScatering * getRandomFloat(),0,0, 0);
+        const glm::vec4 localPos = glm::eulerAngleY( glm::pi<float>() * 2 * getRandomFloat() ) * glm::vec4(leafPosScatering * getRandomFloat(), 0, 0, 0 );
 
         createLeaf(glm::vec3(localPos) + this->pos, height, rotationAngle, yaw, vertices, indices);
     }
@@ -65,7 +65,6 @@ void Bush::shutdown() {
 void Bush::createLeaf( glm::vec3 pos, float height, float maxRotationAngle, float localYaw, 
                       std::vector<glm::vec3> &vertices, std::vector<unsigned int> &indices) {
     const int startIndex = vertices.size();
-
     const glm::mat4 mainRotTranslation = glm::translate( pos ) * glm::eulerAngleY( localYaw );
 
     const float widthDelta = width / ( 2 * heightSegments);
@@ -84,16 +83,8 @@ void Bush::createLeaf( glm::vec3 pos, float height, float maxRotationAngle, floa
     }
     vertices.push_back( glm::vec3( mainRotTranslation * glm::eulerAngleX(maxRotationAngle) * glm::vec4( width / 2, height, 0, 1) ));
 
-    for (int i = 0; i < heightSegments - 1; i++) {
-        indices.push_back( i + startIndex );
-        indices.push_back( i + startIndex + 1 );
-        indices.push_back( i + heightSegments + startIndex );
+    generateRowIndices( startIndex, heightSegments - 1,  indices );
 
-        indices.push_back( i + startIndex + 1 );
-        indices.push_back( i + heightSegments + startIndex );
-        indices.push_back( i + heightSegments + startIndex + 1 );
-    }
- 
     indices.push_back( heightSegments - 1 + startIndex );
     indices.push_back( heightSegments * 2 - 1 + startIndex );
     indices.push_back( heightSegments * 2 + startIndex );

@@ -25,6 +25,7 @@ void Camera::onBeforeRender( GLFWwindow * const window, double deltaTime ) {
 	glfwGetCursorPos( window, &mouseXPos, &mouseYPos );
 	int windowHeight, windowWidth;
 	glfwGetWindowSize( window, &windowWidth, &windowHeight );
+    projection = glm::perspective(45.0f, ((float)windowWidth) / windowHeight, 0.1f, 100.0f);
 
 	glfwSetCursorPos(window, windowWidth/2, windowHeight/2);
 
@@ -82,6 +83,5 @@ glm::mat4 Camera::getView() {
 }
 
 glm::mat4 Camera::getProjection() {
-	static const glm::mat4 perspective = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-	return perspective;
+    return projection;
 }

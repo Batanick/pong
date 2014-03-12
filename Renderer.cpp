@@ -8,11 +8,18 @@
 #include "Mesh.h"
 #include "Terrain.h"
 #include "Bush.h"
+#include "Tree.h"
 #include "Camera.h"
 #include "Label.h"
 #include "FpsCounter.h"
 
 #include "logging.h"
+
+#define SHOW_FPS
+
+#define DRAW_TERRAIN
+//#define DRAW_GRASS
+#define DRAW_TREES
 
 bool Renderer::init() {
 	VERIFY (glewInit() == GLEW_OK, "Unable to initialize glew", return false);
@@ -41,22 +48,33 @@ bool Renderer::init() {
 
 void Renderer::initScene() {
     static const int tiles = 128;
-
     std::shared_ptr<Terrain> terrain = std::shared_ptr<Terrain>( new Terrain(tiles) );
 	terrain->init();
-    add( ShaderType::TERRAIN_SHADER ,terrain );
 
+#ifdef DRAW_TERRAIN
+    add( ShaderType::TERRAIN_SHADER ,terrain );
+#endif
+      
+#ifdef DRAW_GRASS
     static const int bushes = tiles * 4;
-    
     for (int i = 0; i < bushes; i++) {
         std::shared_ptr<Bush> bush = std::shared_ptr<Bush>( new Bush( terrain->getRandomPos(), 64 ) ) ;
         bush->init();
         add ( ShaderType::BUSH_SHADER, bush );
     }
+#endif
 
+#ifdef DRAW_TREES
+    std::shared_ptr<Tree> tree = std::shared_ptr<Tree> ( new Tree() );
+    tree->init();
+    add ( ShaderType::BUSH_SHADER, tree );
+#endif
+
+#ifdef SHOW_FPS
     std::shared_ptr<Label> fpsLabel( new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 50, glm::vec3(0,1,0)) );
     this->fpsLabel = fpsLabel;
     add( ShaderType::FONT_SHADER, fpsLabel );
+#endif
 }
 
 void Renderer::initContext() {

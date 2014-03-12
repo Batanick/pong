@@ -29,3 +29,15 @@ void generateIndexTable( const int rows, const int cols, std::vector<unsigned in
 	}
 
 }
+
+void generateRowIndices( const int offset, const int cols, std::vector<unsigned int> &indices) {
+    for (int i = offset; i < offset + cols; i++) {
+        indices.push_back( i );
+        indices.push_back( i + 1 );
+        indices.push_back( i + cols + 1 );
+
+        indices.push_back( i + 1 );
+        indices.push_back( i + cols + 1);
+        indices.push_back( i + cols + 2 );
+    }
+}

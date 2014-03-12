@@ -91,6 +91,7 @@
     <ClCompile Include="diamondGen.cpp" />
     <ClCompile Include="commonMath.cpp" />
     <ClCompile Include="fontLoader.cpp" />
+    <ClCompile Include="Tree.cpp" />
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="tinyXml\tinystr.cpp" />
@@ -121,6 +122,7 @@
     <ClInclude Include="Tickable.hpp" />
     <ClInclude Include="tinyXml\tinystr.h" />
     <ClInclude Include="tinyXml\tinyxml.h" />
+    <ClInclude Include="Tree.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\BushFragmentShader.fragmentshader" />
