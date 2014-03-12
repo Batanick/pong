@@ -2,6 +2,10 @@
 
 #include <cstdlib>
 
+static const glm::vec3 X_AXIS( 1.0f, 0.0f, 0.0f );
+static const glm::vec3 Y_AXIS( 0.0f, 1.0f, 0.0f );
+static const glm::vec3 Z_AXIS( 0.0f, 0.0f, 1.0f );
+
 bool isPower2(int x) {
 	return ( (x > 0) && ((x & (x - 1)) == 0) );
 }
@@ -49,4 +53,10 @@ glm::quat getRotation( glm::vec3 start, glm::vec3 dest ){
         rotationAxis.z * invs
     );
  
+}
+
+glm::vec3 findPerpendicular( glm::vec3 base ) {
+    base = glm::normalize(base);
+    glm::vec3 result = glm::cross( base, X_AXIS );
+    return glm::length(result) < 0.01 ? glm::cross( base, Y_AXIS) : result;
 }

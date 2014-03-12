@@ -16,11 +16,12 @@ void Tree::init() {
     std::vector<unsigned int> indices;
 
     StemParams params;
-    params.direction = glm::normalize(glm::vec3(0, 1, 0));
+    params.direction = glm::normalize( glm::vec3(0, 1, 0) );
+    params.rotationAxis = glm::normalize( glm::vec3(0, 0, 1) );
     params.length = 1;
-    params.radius = 0.005f;
-    params.resolution = 16;
-    params.segments = 128;
+    params.radius = 0.5f;
+    params.resolution = 8;
+    params.segments = 4;
     params.curve = glm::pi<float>();
     params.weist = 1.0f;
     params.baseSize = 0.4f;
@@ -57,18 +58,17 @@ void Tree::drawStem( const StemParams stem, std::vector<const glm::vec3> &vertic
 
     // ================== VERTICES ================
     float yaw = 0;
+    glm::vec3 pos = stem.pos;
+    glm::vec3 increment = glm::normalize(stem.direction) * segmentHeight;
     for ( int row = 0; row <= stem.segments; row++) {
-        for ( int col = 0; col <= stem.resolution; col++ ) {                            // Building a cylinder here.
-            
-            const glm::vec4 value = glm::eulerAngleY( yaw )                             // rotation around X axis
-                * glm::vec4(stem.radius * (1 - radiusWaistFactor * row ), 0, 0, 1 )     // with schrinking radius
-                + glm::vec4( 0, row * segmentHeight, 0, 0 );                            // adding height here
+        glm::vec3 rotor = glm::normalize( findPerpendicular( increment ) ) * stem.radius * (1 - radiusWaistFactor * row );
+        for ( int col = 0; col <= stem.resolution; col++ ) {
 
-            const glm::quat curveTransform = glm::angleAxis( glm::degrees(curveAngle) * row , axis );
-
-            vertices.push_back( glm::vec3( translation * glm::toMat4( rotation * curveTransform ) * value ));
+            const glm::vec3 current = pos + glm::vec3( glm::angleAxis( glm::degrees(yaw) ,glm::normalize(increment) ) * rotor);
+            vertices.push_back( current );
             yaw += yawDelta;
         }
+        pos += increment;
     }
 
     // ================== INDICES ================
