@@ -16,7 +16,7 @@ public:
 private:
     struct StemParams {
         glm::vec3 direction;
-        glm::vec3 rotationAxis;
+        glm::vec3 curveAxis;
         glm::vec3 pos;
         int segments;
         int resolution;

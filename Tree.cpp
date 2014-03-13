@@ -17,11 +17,11 @@ void Tree::init() {
 
     StemParams params;
     params.direction = glm::normalize( glm::vec3(0, 1, 0) );
-    params.rotationAxis = glm::normalize( glm::vec3(0, 0, 1) );
+    params.curveAxis = glm::normalize( glm::vec3(0, 0, 1) );
     params.length = 1;
-    params.radius = 0.5f;
-    params.resolution = 8;
-    params.segments = 4;
+    params.radius = 0.05f;
+    params.resolution = 16;
+    params.segments = 16;
     params.curve = glm::pi<float>();
     params.weist = 1.0f;
     params.baseSize = 0.4f;
@@ -43,31 +43,28 @@ void Tree::init() {
 
 
 void Tree::drawStem( const StemParams stem, std::vector<const glm::vec3> &vertices, std::vector<unsigned int> &indices ) {
-    const glm::quat rotation = getRotation( glm::vec3(0, 1, 0), stem.direction );
-    const glm::vec3 axis = glm::axis( rotation );
-    const glm::mat4 translation = glm::translate(glm::mat4(), stem.pos );
-    
     const int offset = vertices.size();
-    const float segmentWidth = 2 * stem.radius * glm::sin(glm::radians(glm::pi<float>() ));
     const float segmentHeight = stem.length / stem.segments;
-
     const float yawDelta = glm::pi<float>() * 2 / stem.resolution;
     const float radiusWaistFactor = ( 1 - stem.weist ) / stem.segments;
 
-    const float curveAngle = stem.curve / (stem.segments * 2);
+    const float curveAngle = stem.curve / (stem.segments);
 
     // ================== VERTICES ================
     float yaw = 0;
     glm::vec3 pos = stem.pos;
     glm::vec3 increment = glm::normalize(stem.direction) * segmentHeight;
     for ( int row = 0; row <= stem.segments; row++) {
-        glm::vec3 rotor = glm::normalize( findPerpendicular( increment ) ) * stem.radius * (1 - radiusWaistFactor * row );
+        glm::vec3 rotor = stem.curveAxis * stem.radius * (1 - radiusWaistFactor * row );
+        
         for ( int col = 0; col <= stem.resolution; col++ ) {
 
-            const glm::vec3 current = pos + glm::vec3( glm::angleAxis( glm::degrees(yaw) ,glm::normalize(increment) ) * rotor);
+            const glm::vec3 current = pos + glm::vec3( glm::angleAxis( glm::degrees(yaw), glm::normalize(increment) ) * rotor );
             vertices.push_back( current );
             yaw += yawDelta;
         }
+        ;
+        increment = glm::angleAxis( glm::degrees(- curveAngle) ,glm::normalize(stem.curveAxis) ) * increment;
         pos += increment;
     }
 
