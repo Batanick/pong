@@ -15,6 +15,8 @@ void Tree::init() {
     std::vector<const glm::vec3> vertices;
     std::vector<unsigned int> indices;
 
+
+
     StemParams params;
     params.direction = glm::normalize( glm::vec3(0, 1, 0) );
     params.curveAxis = glm::normalize( glm::vec3(0, 0, 1) );
@@ -128,6 +130,23 @@ void Tree::render( const RenderContext &context ) {
 void Tree::shutdown() {
     glDeleteBuffers ( 1, &indexBuffer );
     glDeleteBuffers ( 1, &vertexBuffer );
+}
+
+const Tree::TreeParams Tree::getParams() {
+    std::vector<const TreeLevelParams> levelParams;
+    levelParams.push_back( TreeLevelParams( glm::radians(30.0f), glm::radians(80.0f), 40, 0.8f, 1.0f, 10, glm::radians(40.0f), glm::radians(-70.0f)) );
+    levelParams.push_back( TreeLevelParams( glm::radians(45.0f), glm::radians(140.0f), 120, 0.2f, 1.0f, 3, glm::radians(0.0f), glm::radians(-30.0f)) );
+    levelParams.push_back( TreeLevelParams( glm::radians(45.0f), glm::radians(140.0f), 0, 0.4f, 1.0f, 1, glm::radians(0.0f), glm::radians(0.0f)) );
+
+    TreeParams params(levelParams);
+    params.ratio = 0.018f;
+    params.ratioPower = 1.3f;
+    params.rootLength = 1.0f;
+    params.rootCurveRes = 8;
+    params.rootCurve = 0.0f;
+    params.rootCurveBack = 0;
+
+    return params;
 }
 
  
