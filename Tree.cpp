@@ -31,27 +31,31 @@ void Tree::init() {
 
     const TreeLevelParams levelParams = treeParams.getParams(1);
     const float baseSize = treeParams.baseSize * rootParams.length;
-    const int branchesCount = 5;//(int)glm::round(levelParams.branches * (0.2f + 0.8f * ( levelParams.length / rootParams.length  )));
+    const int branchesCount = (int)glm::round(levelParams.branches * (0.2f + 0.8f * ( levelParams.length / rootParams.length  )));
     const float branchesDistance = (rootParams.length * ( 1 - treeParams.baseSize) ) / branchesCount;
     const float downAngle = levelParams.downAngle;
     const float offsetLength = rootParams.length - baseSize;
 
     float rotation = 0;
     for (int i = 0; i < branchesCount; i++) {
-        const float offsetFactor = ((float) i + 1) / (branchesCount + 1);
+        const float offsetFactor = ((float) i) / (branchesCount + 1);
         const float offset = offsetLength * offsetFactor;
 
         StemParams childParams;
         childParams.curve = levelParams.curve;
+
         const glm::mat3 rotationMat = glm::toMat3( glm::angleAxis( glm::degrees(rotation), rootParams.direction) * glm::angleAxis( glm::degrees( downAngle ) , rootParams.curveAxis )  );
         childParams.direction = glm::normalize( rotationMat * rootParams.direction);
+
         childParams.curveAxis = glm::normalize(glm::cross(childParams.direction, rootParams.direction));
-        childParams.length = levelParams.length * ( rootParams.length - 0.6f * offset );
+
+        const float shapeRatio = 0.2f + 0.8f * glm::sin(0.5f * glm::pi<float>() * (1 - offsetFactor));
+        childParams.length = levelParams.length * rootParams.length * shapeRatio;
         childParams.pos = rootParams.direction * ( baseSize + offset );
         childParams.radius = rootParams.radius * glm::pow( childParams.length / rootParams.length, treeParams.ratioPower );
         childParams.resolution = rootParams.resolution;
         childParams.segments = levelParams.curveRes;
-        childParams.weist = 0.5;
+        childParams.weist = 1- levelParams.taper;
 
         drawStem(childParams, vertices, indices);
         rotation += levelParams.rotate;
@@ -132,7 +136,7 @@ void Tree::shutdown() {
 
 const Tree::TreeParams Tree::getParams() {
     std::vector<const TreeLevelParams> levelParams;
-    levelParams.push_back( TreeLevelParams( glm::radians(30.0f), glm::radians(80.0f), 40, 0.8f, 1.0f, 10, glm::radians(40.0f), glm::radians(-70.0f)) );
+    levelParams.push_back( TreeLevelParams( glm::radians(-30.0f), glm::radians(80.0f), 40, 0.8f, 1.0f, 10, glm::radians(40.0f), glm::radians(-70.0f)) );
     levelParams.push_back( TreeLevelParams( glm::radians(45.0f), glm::radians(140.0f), 120, 0.2f, 1.0f, 3, glm::radians(0.0f), glm::radians(-30.0f)) );
     levelParams.push_back( TreeLevelParams( glm::radians(45.0f), glm::radians(140.0f), 0, 0.4f, 1.0f, 1, glm::radians(0.0f), glm::radians(0.0f)) );
 
