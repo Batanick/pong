@@ -15,22 +15,48 @@ void Tree::init() {
     std::vector<const glm::vec3> vertices;
     std::vector<unsigned int> indices;
 
+    const TreeParams treeParams = getParams();
+    StemParams rootParams;
+    rootParams.direction = glm::normalize( glm::vec3(0, 1, 0) );
+    rootParams.curveAxis = glm::normalize( glm::vec3(0, 0, 1) );
+    rootParams.length = treeParams.rootLength * treeParams.scale;
+    rootParams.radius = rootParams.length * treeParams.scale * treeParams.ratio;
+    rootParams.resolution = 16;
+    rootParams.segments = treeParams.rootCurveRes;
+    rootParams.curve = treeParams.rootCurve;
+    rootParams.weist = 1 - treeParams.rootTaper;
+    rootParams.pos = glm::vec3(0,0,0);
 
+    drawStem( rootParams, vertices, indices );
 
-    StemParams params;
-    params.direction = glm::normalize( glm::vec3(0, 1, 0) );
-    params.curveAxis = glm::normalize( glm::vec3(0, 0, 1) );
-    params.length = 1;
-    params.radius = 0.05f;
-    params.resolution = 16;
-    params.segments = 16;
-    params.curve = glm::pi<float>();
-    params.weist = 1.0f;
-    params.baseSize = 0.4f;
-    params.pos = glm::vec3(0,0,0);
-    params.maxBranches = 3;
+    const TreeLevelParams levelParams = treeParams.getParams(1);
+    const float baseSize = treeParams.baseSize * rootParams.length;
+    const int branchesCount = 5;//(int)glm::round(levelParams.branches * (0.2f + 0.8f * ( levelParams.length / rootParams.length  )));
+    const float branchesDistance = (rootParams.length * ( 1 - treeParams.baseSize) ) / branchesCount;
+    const float downAngle = levelParams.downAngle;
+    const float offsetLength = rootParams.length - baseSize;
 
-    drawStem( params, vertices, indices );
+    float rotation = 0;
+    for (int i = 0; i < branchesCount; i++) {
+        const float offsetFactor = ((float) i + 1) / (branchesCount + 1);
+        const float offset = offsetLength * offsetFactor;
+
+        StemParams childParams;
+        childParams.curve = levelParams.curve;
+        const glm::mat3 rotationMat = glm::toMat3( glm::angleAxis( glm::degrees(rotation), rootParams.direction) * glm::angleAxis( glm::degrees( downAngle ) , rootParams.curveAxis )  );
+        childParams.direction = glm::normalize( rotationMat * rootParams.direction);
+        childParams.curveAxis = glm::normalize(glm::cross(childParams.direction, rootParams.direction));
+        childParams.length = levelParams.length * ( rootParams.length - 0.6f * offset );
+        childParams.pos = rootParams.direction * ( baseSize + offset );
+        childParams.radius = rootParams.radius * glm::pow( childParams.length / rootParams.length, treeParams.ratioPower );
+        childParams.resolution = rootParams.resolution;
+        childParams.segments = levelParams.curveRes;
+        childParams.weist = 0.5;
+
+        drawStem(childParams, vertices, indices);
+        rotation += levelParams.rotate;
+    }
+    
 
     indicesCount = indices.size();
     // generating leaf buffers
@@ -44,7 +70,7 @@ void Tree::init() {
 }
 
 
-void Tree::drawStem( const StemParams stem, std::vector<const glm::vec3> &vertices, std::vector<unsigned int> &indices ) {
+void Tree::drawStem( const StemParams &stem, std::vector<const glm::vec3> &vertices, std::vector<unsigned int> &indices ) {
     const int offset = vertices.size();
     const float segmentHeight = stem.length / stem.segments;
     const float yawDelta = glm::pi<float>() * 2 / stem.resolution;
@@ -66,50 +92,22 @@ void Tree::drawStem( const StemParams stem, std::vector<const glm::vec3> &vertic
             yaw += yawDelta;
         }
         ;
-        increment = glm::angleAxis( glm::degrees(- curveAngle) ,glm::normalize(stem.curveAxis) ) * increment;
+        increment = glm::angleAxis( glm::degrees(curveAngle) ,glm::normalize(stem.curveAxis) ) * increment;
         pos += increment;
     }
 
     // ================== INDICES ================
     for ( int row = 0; row < stem.segments; row++) {
         for ( int col = 0; col < stem.resolution; col++ ) {
-            indices.push_back( col + row * (stem.resolution + 1) );
-            indices.push_back( col + row * (stem.resolution + 1) + 1);
-            indices.push_back( col + (row + 1) * (stem.resolution + 1) );
+            indices.push_back( col + row * (stem.resolution + 1) + offset );
+            indices.push_back( col + row * (stem.resolution + 1) + 1 + offset);
+            indices.push_back( col + (row + 1) * (stem.resolution + 1) + offset );
             
-            indices.push_back( col + row * (stem.resolution + 1) + 1);
-            indices.push_back( col + (row + 1) * (stem.resolution + 1) + 1 );
-            indices.push_back( col + (row + 1) * (stem.resolution + 1) );
+            indices.push_back( col + row * (stem.resolution + 1) + 1 + offset);
+            indices.push_back( col + (row + 1) * (stem.resolution + 1) + 1 + offset);
+            indices.push_back( col + (row + 1) * (stem.resolution + 1) + offset);
         }
     }
-
-   /*
-   static bool first (true);
-   if (!first) 
-        return;
-
-    first = false;
-    
-    float ratio = 0.015f;
-    float ratioPower = 1.2f;
-
-    StemParams params;
-    params.length = (float) (stem.length * ( 0.2f + 0.8f * ratio) * 0.5);
-    params.direction = stem.direction * glm::angleAxis ( glm::degrees(60.0f), axis );
-    
-    params.radius = stem.radius * (params.length / stem.length);
-    params.resolution = stem.resolution;
-    params.segments = stem.segments;
-    params.curve = glm::pi<float>() / 18;
-    params.weist = 0.0f;
-    params.baseSize = 0.4f;
-
-
-    params.pos = glm::vec3(0,0,0);
-    params.maxBranches = 3;
-
-
-    drawStem( params, vertices, indices );*/
 
 }
 
@@ -145,6 +143,9 @@ const Tree::TreeParams Tree::getParams() {
     params.rootCurveRes = 8;
     params.rootCurve = 0.0f;
     params.rootCurveBack = 0;
+    params.scale = 1.0f;
+    params.rootTaper = 0.95f;
+    params.baseSize = 0.25f;
 
     return params;
 }

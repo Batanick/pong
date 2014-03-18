@@ -51,11 +51,14 @@ private:
         int rootCurveRes;
         float rootCurve;
         float rootCurveBack;
-
+        float rootTaper;
+        float scale;
+        float baseSize;
+        
         const std::vector<const TreeLevelParams> levelsList;
 
-        const TreeLevelParams getParams(unsigned int level) {
-            return levelsList.size() < (level - 1) ? levelsList[level - 1] : TreeLevelParams();
+        const TreeLevelParams getParams(unsigned int level) const {
+            return levelsList.size() > (level - 1) ? levelsList[level - 1] : TreeLevelParams();
         }
     };
 
@@ -69,12 +72,10 @@ private:
         float radius;
         float length;
         float weist;
-        float baseSize;
-        int maxBranches;
     };
 
     const glm::vec3 pos;
-    void drawStem( const StemParams stem, std::vector<const glm::vec3> &vertices, std::vector<unsigned int> &indices );
+    void drawStem( const StemParams &stem, std::vector<const glm::vec3> &vertices, std::vector<unsigned int> &indices );
     static const TreeParams getParams();
 
     unsigned int indicesCount;
