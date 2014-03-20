@@ -5,7 +5,8 @@
 class Tree : public Renderable {
 public:
     Tree(): 
-        pos(glm::vec3()) {
+        pos(glm::vec3()),
+        treeParams(getParams()) {
     }
 
     virtual void render( const RenderContext &context ) override;
@@ -74,8 +75,15 @@ private:
         float weist;
     };
 
+    const TreeParams treeParams;
     const glm::vec3 pos;
-    void drawStem( const StemParams &stem, std::vector<const glm::vec3> &vertices, std::vector<unsigned int> &indices );
+    void drawStem( const StemParams &stem, std::vector<const glm::vec3> &vertices, std::vector<unsigned int> &indices, const int level, const float baseSize );
+
+    const StemParams generateChild( 
+        const StemParams &parentParams, const TreeLevelParams &levelParams, 
+        const glm::vec3 pos, const glm::vec3 parentDirection, 
+        const float offsetFactor, const float rotation );
+
     static const TreeParams getParams();
 
     unsigned int indicesCount;
