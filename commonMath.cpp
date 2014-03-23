@@ -22,6 +22,11 @@ float getRandomFloat() {
 	return (float)rand()/(float)RAND_MAX;
 }
 
+float random( float baseValue, float disp ) {
+    const float random = ((float) rand()) / (RAND_MAX / 2) - 1;
+    return baseValue + (disp * random);
+}
+
 glm::quat getRotation( glm::vec3 start, glm::vec3 dest ){
     start = glm::normalize(start);
     dest = glm::normalize(dest);

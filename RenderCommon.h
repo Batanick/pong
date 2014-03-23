@@ -59,8 +59,8 @@ struct TextureInfo {
 
 class Renderable {
 public:
-	virtual void render( const RenderContext &context ) = 0;
-	virtual void shutdown() = 0;
+    virtual void render( const RenderContext &context ) {};
+    virtual void shutdown() {};
 };
 
 #endif

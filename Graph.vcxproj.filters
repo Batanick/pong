@@ -43,9 +43,6 @@
     <ClCompile Include="Camera.cpp">
       <Filter>src\renderer</Filter>
     </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
       <Filter>src\renderer</Filter>
     </ClCompile>
@@ -86,6 +83,12 @@
       <Filter>src\common</Filter>
     </ClCompile>
     <ClCompile Include="Tree.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableMesh.cpp">
       <Filter>src\renderer</Filter>
     </ClCompile>
   </ItemGroup>
@@ -157,6 +160,9 @@
       <Filter>src\common</Filter>
     </ClInclude>
     <ClInclude Include="Tree.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableMesh.h">
       <Filter>src\renderer</Filter>
     </ClInclude>
   </ItemGroup>

@@ -84,6 +84,7 @@
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="RenderableMesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="renderUtils.cpp" />
     <ClCompile Include="ShaderManager.cpp" />
@@ -113,6 +114,7 @@
     <ClInclude Include="Label.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="logging.h" />
+    <ClInclude Include="RenderableMesh.h" />
     <ClInclude Include="renderCommon.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="renderUtils.h" />
