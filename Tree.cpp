@@ -25,6 +25,7 @@ void Tree::initMesh (
     rootParams.resolution = 8; 
     rootParams.segments = treeParams.rootCurveRes;
     rootParams.curve = treeParams.rootCurve;
+    rootParams.curveBack = treeParams.rootCurveBack;
     rootParams.weist = 1 - treeParams.rootTaper;
     rootParams.pos = glm::vec3(0,0,0);
 
@@ -51,7 +52,6 @@ void Tree::drawStem( const StemParams &stem, std::vector<const glm::vec3> &verti
     float segmentOffsetLength = (1 + baseSize) / ( stem.segments +1);
     float offsetPerChild = ( branchesCount > 0 ) ? 1 / branchesCount : 0;
     std::vector<const StemParams> childs;
-    
 
     for ( int row = 0; row <= stem.segments; row++) {
         glm::vec3 rotor = stem.curveAxis * stem.radius * (1 - radiusWaistFactor * row );
@@ -76,7 +76,11 @@ void Tree::drawStem( const StemParams &stem, std::vector<const glm::vec3> &verti
             rotation += levelParams.rotate;
         }
 
-        increment = glm::angleAxis( glm::degrees(curveAngle) ,glm::normalize(stem.curveAxis) ) * increment;
+        const float curveAngleActual = glm::abs(stem.curveBack) < 0.01 
+            ? curveAngle 
+            : ( (row > (stem.segments / 2)) ? (curveAngle * 2) : (stem.curveBack * 2 / stem.segments) );
+
+        increment = glm::angleAxis( glm::degrees(curveAngleActual) ,glm::normalize(stem.curveAxis) ) * increment;
         pos += increment;
     }
 
@@ -124,6 +128,7 @@ const Tree::StemParams Tree::generateChild(
     childParams.resolution = parentParams.resolution / 2;
     childParams.segments = levelParams.curveRes;
     childParams.weist = 1- levelParams.taper;
+    childParams.curveBack = levelParams.curveBack;
 
     return childParams;
 }
@@ -162,7 +167,7 @@ const Tree::TreeParams Tree::blackTupelo() {
     params.rootLength = 1.0f;
     params.rootCurveRes = 10;
     params.rootCurve = 0.0f;
-    params.rootCurveBack = 0;
+    params.rootCurveBack = 0.0f;
     params.scale = 1.0f;
     params.rootTaper = 1.0f;
     params.baseSize = 0.4f;
@@ -195,7 +200,7 @@ const Tree::TreeParams Tree::blackOak() {
     params.rootLength = 1.0f;
     params.rootCurveRes = 10;
     params.rootCurve = 0.0f;
-    params.rootCurveBack = 0;
+    params.rootCurveBack = 0.0f;
     params.scale = 1.0f;
     params.rootTaper = 1.0f;
     params.baseSize = 0.4f;
