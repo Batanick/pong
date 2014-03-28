@@ -183,7 +183,7 @@ const Tree::TreeParams Tree::blackOak() {
     TreeLevelParams level1 (glm::radians(30.0f), glm::radians(80.0f), 40, 0.8f, 1.0f, 10, glm::radians(40.0f), glm::radians(-70.0f)) ;
     level1.initVars( glm::radians(-30.0f), 0.0f, 0.01f, glm::radians(150.0f) );
 
-    TreeLevelParams level2 (glm::radians(45.0f), glm::radians(140.0f), 120, 0.2f, 1.0f, 3, glm::radians(0.0f), glm::radians(0.0f)) ;
+    TreeLevelParams level2 (glm::radians(45.0f), glm::radians(140.0f), 120, 0.2f, 1.0f, 3, glm::radians(0.0f), glm::radians(-30.0f)) ;
     level2.initVars( glm::radians(10.0f), 0.0f, 0.05f, glm::radians(-30.0f) );
 
     TreeLevelParams level3 (glm::radians(45.0f), glm::radians(140.0f), 0, 0.4f, 1.0f, 1, glm::radians(0.0f), glm::radians(0.0f));

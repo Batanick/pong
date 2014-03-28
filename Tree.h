@@ -7,7 +7,7 @@ class Tree final : public RenderableMesh  {
 public:
     Tree(): 
         pos(glm::vec3()),
-        treeParams(blackOak()) {
+        treeParams(blackTupelo()) {
     }
 
 protected:

@@ -18,7 +18,7 @@
 #define SHOW_FPS
 
 #define DRAW_TERRAIN
-//#define DRAW_GRASS
+#define DRAW_GRASS
 #define DRAW_TREES
 
 bool Renderer::init() {
