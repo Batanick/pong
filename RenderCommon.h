@@ -10,17 +10,6 @@ typedef unsigned int GLuint;
 struct RenderContext {
 	double timeDelta;
 
-	GLuint meshTextureUniformId;
-	GLuint meshMVPId;
-
-	GLuint terrainMVPId;
-	GLuint terrainMinMaxId;
-
-    GLuint fontTextureId;
-    GLuint fontColorId;
-
-    GLuint bushMVPId;
-
     int windowHeight;
     int windowWidth;
 
@@ -59,8 +48,9 @@ struct TextureInfo {
 
 class Renderable {
 public:
-    virtual void render( const RenderContext &context ) {};
-    virtual void shutdown() {};
+    virtual void render( const RenderContext &context ) = 0;
+    virtual void shutdown() = 0;
+    virtual void init( const GLuint shaderId ) = 0;
 };
 
 #endif

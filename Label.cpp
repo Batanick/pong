@@ -6,14 +6,14 @@
 
 void Label::render( const RenderContext &context ) {
     if ( !loaded ) {
-        init(context);
+        initVertices( context );
     }
 
-    glUniform3f( context.fontColorId, color.r, color.g, color.b );
+    glUniform3f( fontColorId, color.r, color.g, color.b );
     
     glActiveTexture( GL_TEXTURE0 );
     glBindTexture( GL_TEXTURE_2D, font->getTextureInfo().textureId );
-    glUniform1i( context.fontTextureId, 0 );
+    glUniform1i( fontTextureId, 0 );
 
     glEnableVertexAttribArray(0);
 	glBindBuffer( GL_ARRAY_BUFFER, vertexBuffer );
@@ -40,7 +40,23 @@ glm::mat3 convertToViewMatrix( float scaleX, float scaleY, int translateX, int t
     return proj; 
 }
 
-void Label::init( const RenderContext &context ) {
+void Label::init( const GLuint shaderId ) {
+    fontColorId = glGetUniformLocation( shaderId, "fontColor" );
+    fontTextureId = glGetUniformLocation( shaderId, "texture" );
+
+    glGenBuffers( 1, &vertexBuffer );
+    glGenBuffers( 1, &uvBuffer );
+}
+
+void Label::shutdown() {
+    if (loaded) {
+        loaded = false;
+        glDeleteBuffers (1, &vertexBuffer);
+        glDeleteBuffers (1, &uvBuffer);
+    }
+}
+
+void Label::initVertices( const RenderContext &context ) {
     //screen coords to view
     glm::mat3 const proj = convertToViewMatrix( 2 / (float) context.windowWidth, 2 / (float) context.windowHeight, -1, -1 );
 
@@ -81,23 +97,13 @@ void Label::init( const RenderContext &context ) {
         currentX += gl.width + font->getDistance();
     }
 
-    glGenBuffers( 1, &vertexBuffer );
 	glBindBuffer( GL_ARRAY_BUFFER, vertexBuffer );
-    glBufferData( GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec2), &vertices[0], GL_STATIC_DRAW );
+    glBufferData( GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec2), &vertices[0], GL_DYNAMIC_DRAW );
 
-    glGenBuffers( 1, &uvBuffer );
 	glBindBuffer( GL_ARRAY_BUFFER, uvBuffer );
-	glBufferData( GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_STATIC_DRAW);
+    glBufferData( GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_DYNAMIC_DRAW );
 
     loaded = true;
-}
-
-void Label::shutdown() {
-    if (loaded) {
-        loaded = false;
-        glDeleteBuffers (1, &vertexBuffer);
-        glDeleteBuffers (1, &uvBuffer);
-    }
 }
 
 void Label::setText(std::string text) {

@@ -21,14 +21,16 @@ public:
 
     virtual void render( const RenderContext &context ) override;
     virtual void shutdown() override;
-
-    void init();
+    virtual void init( const GLuint shaderId ) override;
 
 private:
     glm::vec3 pos;
 
     GLuint vertexBuffer;
 	GLuint indexBuffer;
+
+    GLuint mvpId;
+
     unsigned int indicesSize;
 
     int const leafsCount;

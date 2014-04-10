@@ -5,9 +5,7 @@
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 
-void RenderableMesh::init() {
-    textureId = GL_INVALID_VALUE;
-
+void RenderableMesh::init( const GLuint shaderId ) {
     std::vector<const glm::vec3> vertices;
 	std::vector<const unsigned int> indices;
     std::vector<const glm::vec2> uvs;
@@ -24,41 +22,28 @@ void RenderableMesh::init() {
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof( unsigned int ), &indices[0], GL_STATIC_DRAW );
 	indicesSize = indices.size();
 
-    initTexture( textureId );
+    mvpId = glGetUniformLocation( shaderId, "mvp" );
 }
 
 void RenderableMesh::render( const RenderContext &context ) {
-    glUniformMatrix4fv( context.meshMVPId, 1, GL_FALSE, &context.pv[0][0] );
+    glUniformMatrix4fv( mvpId, 1, GL_FALSE, &context.pv[0][0] );
+    glUniformMatrix4fv( mvpId, 1, GL_FALSE, &context.pv[0][0] );
 
   	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 	glVertexAttribPointer ( 0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0 );
 
-    if ( textureId != GL_INVALID_VALUE  ) {
-        glActiveTexture( GL_TEXTURE0 );
-    	glBindTexture( GL_TEXTURE_2D, textureId );
-	    glUniform1i( context.meshTextureUniformId, 0 );
-
-        glEnableVertexAttribArray(1);
-    	glBindBuffer( GL_ARRAY_BUFFER, uvsBuffer );
-	    glVertexAttribPointer( 1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0 );
-    }
-	
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
     glDrawElements(GL_TRIANGLES, indicesSize, GL_UNSIGNED_INT, (void *) 0); 
 
 	glDisableVertexAttribArray(0);
-
-    if ( textureId != GL_INVALID_VALUE ) {
-	    glDisableVertexAttribArray(1);
-    }
 }
 
 void RenderableMesh::shutdown() {
     glDeleteBuffers ( 1, &vertexBuffer );
 	glDeleteBuffers ( 1, &indexBuffer );
+}
 
-    if ( textureId != GL_INVALID_VALUE ) {
-	    glDeleteBuffers ( 1, &uvsBuffer );
-    }
+void RenderableMesh::setColor( float r, float g, float b ) {
+    color = glm::vec3( r, g, b );
 }

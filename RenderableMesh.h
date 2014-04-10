@@ -8,12 +8,10 @@
 #include "RenderCommon.h"
 
 class RenderableMesh : public Renderable {
-public:
-
-    void init();
-    
+public:   
     virtual void render( const RenderContext &context ) override;
     virtual void shutdown() override;
+    virtual void init( const GLuint shaderId ) override;
 
 protected: 
     virtual void initMesh( 
@@ -21,15 +19,16 @@ protected:
         std::vector<const unsigned int> &indices,
         std::vector<const glm::vec2> &uvs) = 0;
     
-    virtual void initTexture( GLuint textureId ) = 0;
+    void setColor( float r, float g, float b );
 
 private:
 
     GLuint vertexBuffer;
 	GLuint indexBuffer;
 
-	GLuint uvsBuffer;
-	GLuint textureId;
+    GLuint mvpId;
+
+    glm::vec3 color;
 
 	int indicesSize;
 

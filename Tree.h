@@ -16,8 +16,6 @@ protected:
         std::vector<const unsigned int> &indices,
         std::vector<const glm::vec2> &uvs) override;
 
-    virtual void initTexture( GLuint textureId );
-
 private:
 
     struct TreeLevelParams {

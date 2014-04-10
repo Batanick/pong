@@ -15,15 +15,19 @@ public:
         tiles (tiles) {
 	}
 
-	void init();
-	virtual void render( const RenderContext &context );
-	virtual void shutdown();
+    virtual void init( const GLuint shaderId ) override;
+    virtual void render( const RenderContext &context ) override;
+    virtual void shutdown() override;
     
     glm::vec3 getRandomPos();
 
 private :
 	GLuint vertexBuffer;
 	GLuint indexBuffer;
+
+    GLuint mvpId;
+    GLuint minMaxHeight;
+
 	int indicesSize;
 
     float const tileSize;

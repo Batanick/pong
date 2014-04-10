@@ -42,58 +42,32 @@ void initBushShader() {
 std::vector<ShaderManager::ShaderDesc> ShaderManager::buildShaders() {
 	std::vector<ShaderDesc> shaders;
 
-	// ============== MESH_SHADER ================
-	std::set<std::string> meshShaderParams;
-	meshShaderParams.insert( "mvp" );
-	meshShaderParams.insert( "texture" );
-
-	shaders.push_back( ShaderDesc( 
-		ShaderType::MODEL_SHADER, 
-		"MeshVertexShader.vertexshader", 
-		"MeshFragmentShader.fragmentshader", 
-        meshShaderParams, 0 ) );
-
 	// ============== TERRAIN_SHADER ============== 
-	std::set<std::string> terrainShaderParams;
-	terrainShaderParams.insert( "mvp" );
-	terrainShaderParams.insert( "minMax" );
-
 	shaders.push_back( ShaderDesc(
 		ShaderType::TERRAIN_SHADER, 
 		"TerrainVertexShader.vertexshader", 
 		"TerrainFragmentShader.fragmentshader", 
-		terrainShaderParams, &initTerrainShader ) );
+		&initTerrainShader ) );
 
     // ============== BUSH_SHADER ============== 
-	std::set<std::string> bushShaderParams;
-	bushShaderParams.insert( "mvp" );
-
 	shaders.push_back( ShaderDesc(
         ShaderType::BUSH_SHADER, 
 		"BushVertexShader.vertexshader", 
 		"BushFragmentShader.fragmentshader", 
-		bushShaderParams, &initBushShader ) );
+        &initBushShader ) );
 
 	// ============== FONT_SHADER ============== 
-	std::set<std::string> fontShaderParams;
-	fontShaderParams.insert( "texture" );
-    fontShaderParams.insert( "fontColor" );
-
 	shaders.push_back( ShaderDesc(
 		ShaderType::FONT_SHADER, 
 		"FontVertexShader.vertexshader", 
 		"FontFragmentShader.fragmentshader", 
-		fontShaderParams,
         &initTextShader) );
 
     // ============== TEST_SHADER ============== 
-	std::set<std::string> testShaderParams;
-
 	shaders.push_back( ShaderDesc(
         ShaderType::TEST_SHADER, 
 		"TestVertexShader.vertexshader", 
 		"TestFragmentShader.fragmentshader", 
-		testShaderParams,
         initTestShader) );
 
 	return shaders;
@@ -123,16 +97,20 @@ bool ShaderManager::loadShader( const ShaderDesc &shaderDesc ){
 
 	//Vertex shader
 	std::string vertexShaderContent;
-	VERIFY( loadContent( ( SHADER_PATH + shaderDesc.vertexShaderFName).c_str(), vertexShaderContent ), 
-		"Unable to load fragment vertex program", return false);
+    if ( !loadContent( (SHADER_PATH + shaderDesc.vertexShaderFName).c_str(), vertexShaderContent ) ) {
+        LOG( "Unable to load: [%s]", shaderDesc.vertexShaderFName.c_str() );
+        return false;
+    }
 
 	const GLuint vertextShaderId = glCreateShader(GL_VERTEX_SHADER);
 	loadShaderSource(vertextShaderId, vertexShaderContent.c_str());
 
 	//Fragment shader
 	std::string fragmentShaderContent;
-	VERIFY( loadContent( (SHADER_PATH + shaderDesc.fragmentShaderFName).c_str(), fragmentShaderContent) , 
-		"Unable to load fragment shader program", return false);
+	if ( !loadContent( (SHADER_PATH + shaderDesc.fragmentShaderFName).c_str(), fragmentShaderContent) ) {
+        LOG( "Unable to load: [%s]", shaderDesc.fragmentShaderFName.c_str() );
+        return false;
+    }
 
 	const GLuint fragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
 	loadShaderSource( fragmentShaderId, fragmentShaderContent.c_str());
@@ -145,19 +123,7 @@ bool ShaderManager::loadShader( const ShaderDesc &shaderDesc ){
 
 	printLog(programID);
 
-	ParamsHolder params;
-	for ( auto param : shaderDesc.params ) {
-		GLuint paramId = glGetUniformLocation( programID, param.c_str() );
-		if ( paramId == GL_INVALID_VALUE ) {
-			LOG( "Incorrect shader parameter name: [%s]", param );
-			continue;
-		}
-
-		params.insert ( std::make_pair(param, paramId) );
-	}
-    printLog(programID);
-
-    ShaderManager::ShaderParams shaderParams(shaderDesc.shaderType, params, shaderDesc.initilizer, programID);
+    ShaderManager::ShaderParams shaderParams(shaderDesc.shaderType, shaderDesc.initilizer, programID);
 	shaders.insert( std::make_pair(shaderDesc.shaderType, shaderParams) );
 
 	//don't actually destroyed until program
@@ -180,6 +146,16 @@ void loadShaderSource( GLuint shaderId, char const * source) {
 	printLog(shaderId);
 }
 
+GLuint ShaderManager::getProgramId( const ShaderType shaderType ) {
+    auto result = shaders.find( shaderType );
+    if ( result == shaders.end() ) {
+        LOG( "Can't find info for shader: [%d]", shaderType );
+        return GL_INVALID_VALUE;
+    }
+
+    return result->second.programId;
+}
+
 void ShaderManager::useProgram( const ShaderType shaderType ) {
 	auto result = shaders.find( shaderType );
 	if ( result != shaders.end() ) {
@@ -192,22 +168,6 @@ void ShaderManager::useProgram( const ShaderType shaderType ) {
 		LOG( "Unable to find program: [%d]", shaderType );
 		return;
 	}
-}
-
-GLuint ShaderManager::getParam( const ShaderType shaderType, const ShaderParam param ) {
-	const auto paramsHolder = shaders.find( shaderType );
-	if ( paramsHolder == shaders.end() ) {
-		LOG( "Can't find params for shaderType: [%d]", shaderType );
-		return GL_INVALID_VALUE;
-	}
-
-    auto paramId = paramsHolder->second.params.find( param );
-    if ( paramId == paramsHolder->second.params.end() ) {
-		LOG( "Can't find param id for [%s] in shader type [%s] params", shaderType, param );
-		return GL_INVALID_VALUE;
-	}
-
-	return paramId->second;
 }
 
 void printLog(GLuint obj) {

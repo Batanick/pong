@@ -37,9 +37,6 @@
     <ClCompile Include="commonMath.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="Mesh.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>src\renderer</Filter>
     </ClCompile>
@@ -114,9 +111,6 @@
     <ClInclude Include="commonMath.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="Mesh.h">
-      <Filter>src\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>src\renderer</Filter>
     </ClInclude>
@@ -167,12 +161,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\MeshFragmentShader.fragmentshader">
-      <Filter>src\shaders</Filter>
-    </None>
-    <None Include="shaders\MeshVertexShader.vertexshader">
-      <Filter>src\shaders</Filter>
-    </None>
     <None Include="shaders\TerrainFragmentShader.fragmentshader">
       <Filter>src\shaders</Filter>
     </None>

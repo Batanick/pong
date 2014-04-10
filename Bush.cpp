@@ -18,7 +18,7 @@ static float const heightScatering = 0.3f;
 static float const maxRotationAngle = glm::pi<float>() / 8;
 static float const rotationAngleScatering = 0.3f;
 
-void Bush::init() {
+void Bush::init( const GLuint shaderId ) {
     std::vector<glm::vec3> vertices;
     std::vector<unsigned int> indices;
 
@@ -41,10 +41,12 @@ void Bush::init() {
     glGenBuffers( 1, &indexBuffer );
     glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof (unsigned int), &indices[0], GL_STATIC_DRAW );
+
+    mvpId = glGetUniformLocation( shaderId, "mvp" );
 }
 
 void Bush::render( const RenderContext &context ) {
-    glUniformMatrix4fv( context.bushMVPId, 1, GL_FALSE, &context.pv[0][0] );
+    glUniformMatrix4fv( mvpId, 1, GL_FALSE, &context.pv[0][0] );
 
     glEnableVertexAttribArray(0);
     

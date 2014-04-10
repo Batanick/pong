@@ -4,7 +4,6 @@
 
 typedef unsigned int GLuint;
 typedef std::string ShaderParam;
-typedef std::map<ShaderParam, GLuint> ParamsHolder;
 
 class ShaderDesc;
 
@@ -21,38 +20,34 @@ public:
 	void shutdown();
 
 	void useProgram( const ShaderType shaderType );
-	GLuint getParam( const ShaderType shaderType, const ShaderParam param );
+    GLuint getProgramId( const ShaderType shaderType );
 	
 private:
     typedef void (*ShaderInitializer) ();
     struct ShaderDesc {
-        ShaderDesc( ShaderType shaderType, char * vertexShader, char * fragmentShader, std::set<ShaderParam> params, ShaderInitializer initilizer):
+        ShaderDesc( ShaderType shaderType, char * vertexShader, char * fragmentShader, ShaderInitializer initilizer):
             vertexShaderFName(vertexShader), 
             fragmentShaderFName(fragmentShader), 
             shaderType(shaderType), 
-            params(params), 
             initilizer(initilizer) { 
     	}
     
 	    const std::string vertexShaderFName;
 	    const std::string fragmentShaderFName;
         ShaderType shaderType;	
-	    const std::set<ShaderParam> params;
         ShaderInitializer initilizer;
     };
 
 
     struct ShaderParams {
-        ShaderParams( ShaderType type, ParamsHolder &holder, ShaderInitializer initilizer, GLuint id ):
+        ShaderParams( ShaderType type, ShaderInitializer initilizer, GLuint id ):
             type(type),
-            params(holder),
             initilizer(initilizer),
             programId (id) {
         }
 
         GLuint programId;
         ShaderType type;
-        ParamsHolder params;
         ShaderInitializer initilizer;
     };
 

@@ -17,6 +17,7 @@ public:
 
 	virtual void render( const RenderContext &context ) override;
     virtual void shutdown() override;
+    virtual void init( const GLuint shaderId ) override;
 
     void setText(std::string text);
 private :
@@ -28,7 +29,11 @@ private :
     GLuint vertexBuffer;
     GLuint uvBuffer;
 
+    GLuint fontColorId;
+    GLuint fontTextureId;
+
     bool loaded;
 
-    void init( const RenderContext &context );
+    void initVertices( const RenderContext &context );
+
 };

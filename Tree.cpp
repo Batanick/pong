@@ -16,7 +16,7 @@ void Tree::initMesh (
     std::vector<const glm::vec3> &vertices, 
     std::vector<const unsigned int> &indices,
     std::vector<const glm::vec2> &uvs ) {
-    
+
     StemParams rootParams;
     rootParams.direction = glm::normalize( glm::vec3(0, 1, 0) );
     rootParams.curveAxis = glm::normalize( glm::vec3(0, 0, 1) );
@@ -31,7 +31,6 @@ void Tree::initMesh (
 
     drawStem( rootParams, vertices, indices, 0, treeParams.baseSize );
 }
-
 
 void Tree::drawStem( const StemParams &stem, std::vector<const glm::vec3> &vertices, std::vector<const unsigned int> &indices, const int level, const float baseSize ) {
     const int indicesOffset = vertices.size();
@@ -131,10 +130,6 @@ const Tree::StemParams Tree::generateChild(
     childParams.curveBack = levelParams.curveBack;
 
     return childParams;
-}
-
-void Tree::initTexture( GLuint textureId ) {
-
 }
 
 // ====================================================================================================================

@@ -8,8 +8,6 @@ struct GLFWwindow;
 struct RenderContext;
 
 class AssetManager;
-
-class Mesh;
 class Terrain;
 class Camera;
 class Tickable;

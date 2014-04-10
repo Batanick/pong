@@ -12,7 +12,7 @@
 #include "diamondGen.h"
 #include "renderUtils.h"
 
-void Terrain::init( ) {
+void Terrain::init( const GLuint shaderId ) {
 	VERIFY( isPower2( tiles ), "Width value is not a power of 2", return );
 
 	std::vector<glm::vec3> verticies;
@@ -29,12 +29,15 @@ void Terrain::init( ) {
 	glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer );
 	glBufferData( GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof (unsigned int), &indices[0], GL_STATIC_DRAW );
 	indicesSize = indices.size();
+
+    mvpId = glGetUniformLocation( shaderId, "mvp" );
+    minMaxHeight = glGetUniformLocation( shaderId, "minMax" );
 }
 
 void Terrain::render( const RenderContext &context ) {
-    glUniformMatrix4fv( context.terrainMVPId, 1, GL_FALSE, &context.pv[0][0] );
+    glUniformMatrix4fv( mvpId, 1, GL_FALSE, &context.pv[0][0] );
 
-    glUniform2f( context.terrainMinMaxId, heightMap->getMinHeight(), heightMap->getMaxHeight() );
+    glUniform2f( minMaxHeight, heightMap->getMinHeight(), heightMap->getMaxHeight() );
 
 	glEnableVertexAttribArray(0);
 

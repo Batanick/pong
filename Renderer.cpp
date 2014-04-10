@@ -5,7 +5,6 @@
 
 #include "ShaderManager.h"
 #include "AssetManager.h"
-#include "Mesh.h"
 #include "Terrain.h"
 #include "Bush.h"
 #include "Tree.h"
@@ -18,8 +17,8 @@
 #define SHOW_FPS
 
 #define DRAW_TERRAIN
-#define DRAW_GRASS
-#define DRAW_TREES
+//#define DRAW_GRASS
+//#define DRAW_TREES
 
 bool Renderer::init() {
 	VERIFY (glewInit() == GLEW_OK, "Unable to initialize glew", return false);
@@ -47,11 +46,9 @@ bool Renderer::init() {
 }
 
 void Renderer::initScene() {
+#ifdef DRAW_TERRAIN
     static const int tiles = 128;
     std::shared_ptr<Terrain> terrain = std::shared_ptr<Terrain>( new Terrain(tiles) );
-	terrain->init();
-
-#ifdef DRAW_TERRAIN
     add( ShaderType::TERRAIN_SHADER ,terrain );
 #endif
       
@@ -59,14 +56,12 @@ void Renderer::initScene() {
     static const int bushes = tiles * 4;
     for (int i = 0; i < bushes; i++) {
         std::shared_ptr<Bush> bush = std::shared_ptr<Bush>( new Bush( terrain->getRandomPos(), 64 ) ) ;
-        bush->init();
         add ( ShaderType::BUSH_SHADER, bush );
     }
 #endif
 
 #ifdef DRAW_TREES
     std::shared_ptr<Tree> tree = std::shared_ptr<Tree> ( new Tree() );
-    tree->init();
     add ( ShaderType::BUSH_SHADER, tree );
 #endif
 
@@ -78,17 +73,6 @@ void Renderer::initScene() {
 }
 
 void Renderer::initContext() {
-	context.meshTextureUniformId = shaderManager->getParam( ShaderType::MODEL_SHADER, "texture" );
-	context.meshMVPId = shaderManager->getParam( ShaderType::MODEL_SHADER, "mvp" );
-
-	context.terrainMVPId = shaderManager->getParam( ShaderType::TERRAIN_SHADER, "mvp" );
-	context.terrainMinMaxId = shaderManager->getParam( ShaderType::TERRAIN_SHADER, "minMax" );
-
-    context.fontTextureId = shaderManager->getParam( ShaderType::FONT_SHADER, "texture" );
-    context.fontColorId = shaderManager->getParam( ShaderType::FONT_SHADER, "fontColor" );
-
-    context.bushMVPId = shaderManager->getParam( ShaderType::BUSH_SHADER, "mvp" );
-
     int windowW, windowH;
 	glfwGetWindowSize( window, &windowW, &windowH );
     context.windowHeight = windowH;
@@ -116,6 +100,9 @@ void Renderer::render( double timeDelta ) {
 }
 
 void Renderer::add( ShaderType type, PRenderable renderable ) {
+    const GLuint shaderId = shaderManager->getProgramId(type);
+    renderable->init(shaderId);
+
     renderables.insert( std::make_pair(type, renderable) );
 }
 
