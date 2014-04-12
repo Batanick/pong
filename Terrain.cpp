@@ -51,7 +51,7 @@ void Terrain::render( const RenderContext &context ) {
 }
 
 void Terrain::generateVertices( const int res, const float tileSize, std::vector<glm::vec3> &vertices ) {
-    heightMap = std::shared_ptr<HeightMap> (HeightMap::create(0.0f, 0.0f, 0.0f, 0.0f, res + 1));
+    heightMap = std::shared_ptr<HeightMap> (HeightMap::create(0.0f, 0.0f, 3.0f, 0.0f, res + 1));
 
     const float offset = res * tileSize / 2;
 
@@ -63,22 +63,22 @@ void Terrain::generateVertices( const int res, const float tileSize, std::vector
 }
 
 float Terrain::getHeight( float x, float y ) {
-    const int tileX = (int) (x / tileSize);
-    const int tileY = (int) (y / tileSize);
+    const int tileX = (int) ((x + offset) / tileSize);
+    const int tileY = (int) ((y + offset) / tileSize);
 
     if ( tileX >= tiles || tileY >= tiles)
         return - 1;
+
+
 
     return (heightMap->getHeight(tileX, tileY) + heightMap->getHeight(tileX + 1, tileY + 1)) / 2;
 }
 
 glm::vec3 Terrain::getRandomPos() {
-    const float x = tiles * tileSize * getRandomFloat();
-    const float z = tiles * tileSize * getRandomFloat();
-
-    const float offset = tiles * tileSize / 2;
+    const float x = tiles * tileSize * getRandomFloat() - offset;
+    const float z = tiles * tileSize * getRandomFloat() - offset;
     
-    return glm::vec3( x - offset, getHeight( x, z), z - offset );
+    return glm::vec3( x, getHeight( x, z ), z );
 }
 
 

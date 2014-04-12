@@ -179,7 +179,7 @@ void printLog(GLuint obj) {
 	else
 		glGetProgramiv(obj,GL_INFO_LOG_LENGTH,&maxLength);
 
-	char infoLog[1024];
+	char infoLog[128 * 1024];
 
 	if (glIsShader(obj))
 		glGetShaderInfoLog(obj, maxLength, &infologLength, infoLog);

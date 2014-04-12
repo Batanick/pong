@@ -65,3 +65,7 @@ glm::vec3 findPerpendicular( glm::vec3 base ) {
     glm::vec3 result = glm::cross( base, X_AXIS );
     return glm::length(result) < 0.01 ? glm::cross( base, Y_AXIS) : result;
 }
+
+inline float interpolate( float a, float b, float x ) {
+    return a * (1 - x) + b * x;
+}

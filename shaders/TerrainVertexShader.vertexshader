@@ -3,16 +3,7 @@
 layout (location = 0) in vec3 vertexPosition;
 
 uniform mat4 mvp;
-uniform vec2 minMax;
 
-out float heightScale;
- 
 void main(){
-    vec4 v = vec4( vertexPosition, 1 ); 
-	heightScale = (vertexPosition.y - minMax.x) / (minMax.y - minMax.x);
-	if ( v.y < 0 ) {
-		v.y = v.y / 5;	
-	}
-
-	gl_Position = mvp * v;
+	gl_Position = mvp * vec4(vertexPosition, 1);
 }

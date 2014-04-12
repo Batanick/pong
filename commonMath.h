@@ -12,3 +12,5 @@ glm::vec3 findPerpendicular( glm::vec3  vector );
 float getRandomFloat();
 
 float random( float baseValue, float disp );
+
+inline float interpolate( float a, float b, float x );
