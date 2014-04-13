@@ -66,9 +66,11 @@ void Renderer::initScene() {
 #endif
 
 #ifdef SHOW_FPS
-    std::shared_ptr<Label> fpsLabel( new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 50, glm::vec3(0,1,0)) );
-    this->fpsLabel = fpsLabel;
+    this->fpsLabel = std::shared_ptr<Label> (new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 50, glm::vec3(0,1,0)) );
     add( ShaderType::FONT_SHADER, fpsLabel );
+
+    this->cameraCoords = std::shared_ptr<Label> (new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 80, glm::vec3(0,1,0)) );
+    add( ShaderType::FONT_SHADER, cameraCoords );
 #endif
 }
 
@@ -97,6 +99,10 @@ void Renderer::render( double timeDelta ) {
     char buff[20];
     sprintf_s(buff, "FPS: %.2f", fpsCounter->getFps());
     fpsLabel->setText(buff);
+
+    const glm::vec3 pos = camera->getPosition();
+    sprintf_s(buff, "%.2f, %.2f, %.2f", pos.x, pos.y, pos.z);
+    cameraCoords->setText(buff);
 }
 
 void Renderer::add( ShaderType type, PRenderable renderable ) {

@@ -76,6 +76,10 @@ glm::vec3 Camera::getDirection() {
 	);
 }
 
+glm::vec3 Camera::getPosition() {
+    return position;
+}
+
 glm::mat4 Camera::getView() {
 	const glm::vec3 direction = getDirection();
 	const glm::vec3 up = glm::cross( getRight(), direction );

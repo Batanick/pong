@@ -12,6 +12,7 @@ public:
 	void Camera::onBeforeRender( GLFWwindow * const window, double timeDelta );
 	glm::mat4 Camera::getView();
 	glm::mat4 Camera::getProjection();
+    glm::vec3 getPosition();
 
 private:
 	float horizontalAngle;
