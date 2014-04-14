@@ -1,6 +1,5 @@
 #include "renderUtils.h"
 
-
 void generateIndexTable( const int rows, const int cols, std::vector<unsigned int> &indices ) {
 	int indidiesNeeded = rows * (2 * (cols + 1) - 1) + 1;  
 
