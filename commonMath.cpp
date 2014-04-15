@@ -18,6 +18,8 @@ int trim( int min, int max, int value) {
 	return value > max ? max : value;
 }
 
+
+
 float getRandomFloat() {
 	return (float)rand()/(float)RAND_MAX;
 }

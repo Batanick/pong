@@ -1,13 +1,23 @@
 #include "noise.h"
 
 #include <math.h>
+#include "commonMath.h"
 
-static const int OCTAVES = 1;
+static const int OCTAVES = 2;
+
+inline int signum(int n) {
+    if (n < 0) 
+        return -1;
+    if (n > 0) 
+        return 1;
+    return 0;
+}
 
 float rand( int x, int y ) {
     int n = x + y * 57;
     n = (n << 13) ^ n;
-    return static_cast<float>( 1.0 - ( (n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);    
+    int nn = (n * (n * n * 60493 + 19990303) + 1376312589) & 0x7fffffff;
+    return static_cast<float>( 1.0 - ((double)nn / 1073741824.0) );
 }
 
 float smooth(int x, int y) {
@@ -22,16 +32,18 @@ float interpolate( float min, float max, float x ) {
 }
 
 float interpolatedNoise(float x, float y) {
-    const int intX = static_cast<int>(x);
-    const float fractX = x - intX;
+    const int intX1 = static_cast<int>(x);
+    const int intX2 = intX1 + 1 * signum(intX1);
+    const float fractX = abs(x - intX1);
 
-    const int intY = static_cast<int>(y);
-    const float fractY = y - intY;
+    const int intY1 = static_cast<int>(y);
+    const int intY2 = intY1 + 1 * signum(intY1);
+    const float fractY = abs(y - intY1);
 
-    const float v1 = smooth( intX, intY );
-    const float v2 = smooth( intX + 1, intY );
-    const float v3 = smooth( intX, intY + 1);
-    const float v4 = smooth( intX + 1, intY + 1 );
+    const float v1 = smooth( intX1, intY1 );
+    const float v2 = smooth( intX2, intY1 );
+    const float v3 = smooth( intX1, intY2);
+    const float v4 = smooth( intX2, intY2 );
 
     const float i1 = interpolate(v1 , v2 , fractX);
     const float i2 = interpolate(v3 , v4 , fractX);
