@@ -88,6 +88,9 @@
     <ClCompile Include="RenderableMesh.cpp">
       <Filter>src\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="noise.cpp">
+      <Filter>src\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -158,6 +161,9 @@
     </ClInclude>
     <ClInclude Include="RenderableMesh.h">
       <Filter>src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="noise.h">
+      <Filter>src\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

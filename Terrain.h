@@ -2,8 +2,6 @@
 #include <vector>
 #include <memory>
 
-class HeightMap;
-
 class Terrain final : public Renderable {
 
 public:
@@ -28,15 +26,12 @@ private :
 	GLuint indexBuffer;
 
     GLuint mvpId;
-    GLuint minMaxHeight;
 
-	int indicesSize;
+    int indicesSize;
 
     float const tileSize;
     float const offset;
     int const tiles;
-
-    std::shared_ptr<HeightMap> heightMap;
 
 	void generateVertices( const int res, const float tileSize, std::vector<glm::vec3> &vertices );
 };

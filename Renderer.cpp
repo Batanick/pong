@@ -47,7 +47,7 @@ bool Renderer::init() {
 
 void Renderer::initScene() {
 #ifdef DRAW_TERRAIN
-    static const int tiles = 32;
+    static const int tiles = 512;
     std::shared_ptr<Terrain> terrain = std::shared_ptr<Terrain>( new Terrain(tiles) );
     add( ShaderType::TERRAIN_SHADER ,terrain );
 #endif

@@ -7,10 +7,10 @@ static const int OCTAVES = 1;
 float rand( int x, int y ) {
     int n = x + y * 57;
     n = (n << 13) ^ n;
-    return ( 1.0 - ( (n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);    
+    return static_cast<float>( 1.0 - ( (n * (n * n * 15731 + 789221) + 1376312589) & 0x7fffffff) / 1073741824.0);    
 }
 
-float smooth(float x, float y) {
+float smooth(int x, int y) {
     const float corners = ( rand(x-1, y-1) + rand(x+1, y-1) + rand(x-1, y+1) + rand(x+1, y+1) ) / 16;
     const float sides = ( rand(x-1, y) + rand(x+1, y) + rand(x, y-1) + rand(x, y+1) ) / 8;
     const float center = rand(x, y) / 4;
