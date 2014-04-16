@@ -3,9 +3,9 @@
 #include <math.h>
 #include "commonMath.h"
 
-static const int OCTAVES = 2;
+static const int OCTAVES = 4;
 
-inline int signum(int n) {
+inline float signum(float n) {
     if (n < 0) 
         return -1;
     if (n > 0) 
@@ -33,11 +33,11 @@ float interpolate( float min, float max, float x ) {
 
 float interpolatedNoise(float x, float y) {
     const int intX1 = static_cast<int>(x);
-    const int intX2 = intX1 + 1 * signum(intX1);
+    const int intX2 = intX1 + static_cast<int>( signum(x) );
     const float fractX = abs(x - intX1);
 
     const int intY1 = static_cast<int>(y);
-    const int intY2 = intY1 + 1 * signum(intY1);
+    const int intY2 = intY1 + static_cast<int>( signum(y) );
     const float fractY = abs(y - intY1);
 
     const float v1 = smooth( intX1, intY1 );
