@@ -58,7 +58,7 @@ void Terrain::generateVertices( const int res, const float tileSize, std::vector
 }
 
 float Terrain::getHeight( float x, float y ) {
-    return noise( x ,y );
+    return noise( x / 2 ,y / 2 );
 }
 
 glm::vec3 Terrain::getRandomPos() {
