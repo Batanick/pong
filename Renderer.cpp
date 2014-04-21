@@ -31,8 +31,6 @@ bool Renderer::init() {
 
     fpsCounter = std::shared_ptr<FpsCounter>( new FpsCounter() );
 
-	initContext();
-
 	camera = std::shared_ptr<Camera>( new Camera() );
 	glClearColor(0.0f, 0.0f, 0.6f, 0.0f);
 
@@ -40,6 +38,7 @@ bool Renderer::init() {
 	glDepthFunc(GL_LESS); 
 	glEnable(GL_CULL_FACE);
 
+    initContext();
     initScene();
 
 	return true;
@@ -85,6 +84,8 @@ void Renderer::render( double timeDelta ) {
 	camera->onBeforeRender( window, timeDelta );
 
 	context.timeDelta = timeDelta;
+    context.cameraPos = camera->getPosition();
+
 	const glm::mat4 view = camera->getView();
 	const glm::mat4 projection = camera->getProjection();
 	context.pv = projection * view;

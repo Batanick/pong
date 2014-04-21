@@ -22,6 +22,11 @@ public:
     float getHeight( float x, float y );
 
 private :
+    struct Patch {
+        GLuint vertexBuffer;
+	    GLuint indexBuffer;
+    };
+
 	GLuint vertexBuffer;
 	GLuint indexBuffer;
 

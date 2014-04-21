@@ -14,6 +14,7 @@ struct RenderContext {
     int windowWidth;
 
 	glm::mat4 pv;
+    glm::vec3 cameraPos;
 };
 
 struct Glyph {
