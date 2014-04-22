@@ -34,7 +34,7 @@ void Terrain::init( const GLuint shaderId ) {
 void Terrain::reinitPatch( const GLuint &patch, const int x, const int y ) {
     std::vector<glm::vec3> vertices;
 
-    const glm::vec2 offset( position.x + x * PATCH_SIZE_METERS + TERRAIN_OFFSET, position.y + y * PATCH_SIZE_METERS + TERRAIN_OFFSET );
+    const glm::vec2 offset( position.x + x * PATCH_SIZE_METERS + TERRAIN_OFFSET, position.z + y * PATCH_SIZE_METERS + TERRAIN_OFFSET );
     generateVertices( offset, vertices );
 
     glBindBuffer( GL_ARRAY_BUFFER, patch );
@@ -42,6 +42,8 @@ void Terrain::reinitPatch( const GLuint &patch, const int x, const int y ) {
 }
 
 void Terrain::render( const RenderContext &context ) {
+    refresh(context);
+
     glUniformMatrix4fv( mvpId, 1, GL_FALSE, &context.pv[0][0] );
     
     glEnableVertexAttribArray(0);
@@ -56,6 +58,28 @@ void Terrain::render( const RenderContext &context ) {
     glDisableVertexAttribArray(0);
 }
 
+void Terrain::refresh( const RenderContext &context ) {
+    const glm::vec3 cameraPos = context.cameraPos;
+    const float dx = cameraPos.x - position.x;
+    const float dz = cameraPos.z - position.z;
+
+    if ( (abs(dx) < PATCH_SIZE_METERS) && (abs(dz) < PATCH_SIZE_METERS) ) {
+        return;
+    }
+
+    LOG("MOVING");
+    const float actualDx = glm::round(dx / PATCH_SIZE_METERS) * PATCH_SIZE_METERS;
+    const float actualDz = glm::round(dz / PATCH_SIZE_METERS) * PATCH_SIZE_METERS;
+
+    position = position + glm::vec3(actualDx, 0, actualDz);
+   
+    for ( int x = 0; x < PATCHES_COUNT_SQRT; x++ ) 
+        for ( int y = 0; y < PATCHES_COUNT_SQRT; y++ ) {
+            const GLuint bufferId = patches[x + y * PATCHES_COUNT_SQRT];
+            reinitPatch( bufferId, x, y );
+        }
+}
+
 void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices ) {
 	for ( int y = 0; y < TILES_IN_PATCH_SQRT + 1; y++) {
 		for (int x = 0; x < TILES_IN_PATCH_SQRT + 1; x++) {
@@ -67,8 +91,8 @@ void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &
 }
 
 float Terrain::getHeight( float x, float y ) {
-    return 0.0f;
-    //return noise( x / 2 ,y / 2 );
+    //return 0.0f;
+    return 2.0f * noise( x / 2 ,y / 2 );
 }
 
 glm::vec3 Terrain::getRandomPos() {

@@ -96,7 +96,7 @@ void Renderer::render( double timeDelta ) {
     glfwSwapBuffers(window);
 
     fpsCounter->onFrame();
-    char buff[20];
+    char buff[128];
     sprintf_s(buff, "FPS: %.2f", fpsCounter->getFps());
     fpsLabel->setText(buff);
 
