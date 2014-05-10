@@ -15,6 +15,8 @@
 //#define DEBUG_TERRAIN_REINIT
 //#define STATIC_TERRAIN
 
+int countLevelOfDetail( const int &x, const int &y );
+
 void Terrain::init( const GLuint shaderId ) {
     indexBuffers.resize(LOD_LEVELS_COUNT);
     std::vector<GLuint> iBuffers( LOD_LEVELS_COUNT );
@@ -25,6 +27,7 @@ void Terrain::init( const GLuint shaderId ) {
         std::vector<unsigned int> indices;
 
         generateIndexTable( size, size, indices );
+        LOG("Lod %d: [%d] elements", i, size);
         size = size >> LOD_REDUCTION;
 
         indexBuffers[i].id = iBuffers[i];
@@ -35,30 +38,29 @@ void Terrain::init( const GLuint shaderId ) {
     }
         
     patches.resize( PATCHES_COUNT );
+    indexToLod.resize( PATCHES_COUNT );
+
     std::vector<GLuint> vBuffers( PATCHES_COUNT );
     glGenBuffers( PATCHES_COUNT, &vBuffers[0] );
     for ( int i = 0; i < PATCHES_COUNT; i++ ) {
         Patch &patch = patches[i];
         patch.id = vBuffers[i];
-        patch.lod = 0;
 
-        reinitPatch( patch, i % PATCHES_COUNT_SQRT, i / PATCHES_COUNT_SQRT, true );
+        const int row = i / PATCHES_COUNT_SQRT;
+        const int column = i % PATCHES_COUNT_SQRT;
+
+        const int lod = countLevelOfDetail( column, row );
+        patch.lod = lod;
+        indexToLod[i] = lod;
+
+        reinitPatch( patch, column, row, lod );
     }
     
     mvpId = glGetUniformLocation( shaderId, "mvp" );
 }
 
-bool Terrain::reinitPatch( Patch &patch, const int x, const int y, bool force ) {
-    static const float indexOffset = PATCHES_COUNT_SQRT / 2 - 0.5;
-    const float floatLod =  glm::max( glm::abs(static_cast<float>(x) - indexOffset), glm::abs(static_cast<float>(y) - indexOffset) ) / LOD_STEP;
-    const int lod = static_cast<int>(floatLod);
-    
-    if (!force && patch.lod == lod) {
-        return false;
-    }
-
-    patch.lod = glm::min( glm::max(0, lod), LOD_LEVELS_COUNT - 1 );
-
+bool Terrain::reinitPatch( Patch &patch, const int x, const int y, int lod ) {
+    patch.lod = lod;
     std::vector<glm::vec3> vertices;
     const glm::vec2 offset( position.x + x * PATCH_SIZE_METERS + TERRAIN_OFFSET, position.z + y * PATCH_SIZE_METERS + TERRAIN_OFFSET );
     generateVertices( offset, vertices, patch.lod );
@@ -97,10 +99,30 @@ void Terrain::refresh( const RenderContext &context ) {
     const float dx = cameraPos.x - position.x;
     const float dz = cameraPos.z - position.z;
 
-    if ( (abs(dx) < PATCH_SIZE_METERS) && (abs(dz) < PATCH_SIZE_METERS) ) {
+    if ( (abs(dx) < PATCH_SIZE_METERS * 0.66) && (abs(dz) < PATCH_SIZE_METERS * 0.66) ) {
+
+        int reinitCounter = 0;
+        for (int i = 0; i < PATCHES_COUNT; i++) {
+            Patch &patch = patches[i];
+            if (patch.lod != indexToLod[i]) {
+                reinitPatch( patch, i % PATCHES_COUNT_SQRT, i / PATCHES_COUNT_SQRT, indexToLod[i] );
+                reinitCounter++;
+
+                if (reinitCounter >= LOD_REINIT_LIMIT)
+                    break;
+            }
+        }
+
+        if (reinitCounter > 0 ) {
+            LOG( "Lod update. Reinited:[%d]", reinitCounter );
+        }
         return;
     }
 
+    rebuildTerrain(dx, dz);
+}
+
+void Terrain::rebuildTerrain( const float &dx, const float &dz) {
     const int dxPatches = static_cast<int>( glm::round(dx / PATCH_SIZE_METERS) );
     const float dxActual = dxPatches * PATCH_SIZE_METERS;
     const int dzPatches = static_cast<int>( glm::round(dz / PATCH_SIZE_METERS) );
@@ -112,7 +134,7 @@ void Terrain::refresh( const RenderContext &context ) {
     LOG("Partial rebuild dx:%d dz:%d", dxPatches, dzPatches);
 #endif
     
-    int reinitCounter = 0;
+    int reinitedCounter = 0;
     std::vector<Patch> patchesCopy(patches.begin(), patches.end());
     for (int i = 0; i < PATCHES_COUNT; i++) {
         const int column = i % PATCHES_COUNT_SQRT;
@@ -138,13 +160,14 @@ void Terrain::refresh( const RenderContext &context ) {
         LOG("%d<-%d:%s", i, oldIndex, needReinit ? "reinit" : "");
 #endif
       
-        const bool reinited = reinitPatch(patches[i], column, row, needReinit);
-        if (reinited) {
-            reinitCounter++;
+        if (needReinit) {
+            reinitPatch( patches[i], column, row, LOD_LEVELS_COUNT - 1);
+            reinitedCounter++;
         }
+
     }
 
-    LOG("Partial terrain rebuild. Reinited:[%d] of [%d]", reinitCounter, PATCHES_COUNT);
+    LOG( "Partial terrain rebuild. Reinited:[%d]", reinitedCounter );
 }
 
 void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod ) {
@@ -181,4 +204,11 @@ void Terrain::shutdown() {
     for (const auto patch : patches ) {
         glDeleteBuffers ( 1, &patch.id );
     }
+}
+
+int countLevelOfDetail( const int &x, const int &y ) {
+    static const float indexOffset = PATCHES_COUNT_SQRT / 2 - 0.5;
+    const float floatLod =  glm::max( glm::abs(static_cast<float>(x) - indexOffset), glm::abs(static_cast<float>(y) - indexOffset) ) / LOD_STEP;
+    const int lod = glm::min( glm::max(0, static_cast<int>(floatLod)), LOD_LEVELS_COUNT - 1 );
+    return lod;
 }
