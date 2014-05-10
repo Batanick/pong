@@ -18,8 +18,6 @@ double FpsCounter::onFrame() {
         
         fpsCounter = 0;
 		timeCounter = 0;
-
-		LOG ( "FPS: %f", currentFps );
 	}
 
 	lastTickTime = currentTime;

@@ -10,7 +10,9 @@
 #include "logging.h"
 #include "commonMath.h"
 #include "noise.h"
-#include "renderUtils.h" 
+#include "renderUtils.h"
+
+//#define DEBUG_TERRAIN_REINIT
 
 void Terrain::init( const GLuint shaderId ) {
     std::vector<unsigned int> indices;
@@ -22,11 +24,10 @@ void Terrain::init( const GLuint shaderId ) {
     
     patches.resize( PATCHES_COUNT );
     glGenBuffers( PATCHES_COUNT, &patches[0] );
-    for ( int x = 0; x < PATCHES_COUNT_SQRT; x++ ) 
-        for ( int y = 0; y < PATCHES_COUNT_SQRT; y++ ) {
-            const GLuint bufferId = patches[x + y * PATCHES_COUNT_SQRT];
-            reinitPatch( bufferId, x, y );
-        }
+    for ( int i = 0; i < PATCHES_COUNT; i++ ) {
+        const GLuint bufferId = patches[i];
+        reinitPatch( bufferId, i % PATCHES_COUNT_SQRT, i / PATCHES_COUNT_SQRT );
+    }
     
     mvpId = glGetUniformLocation( shaderId, "mvp" );
 }
@@ -67,17 +68,65 @@ void Terrain::refresh( const RenderContext &context ) {
         return;
     }
 
-    LOG("MOVING");
-    const float actualDx = glm::round(dx / PATCH_SIZE_METERS) * PATCH_SIZE_METERS;
-    const float actualDz = glm::round(dz / PATCH_SIZE_METERS) * PATCH_SIZE_METERS;
-
-    position = position + glm::vec3(actualDx, 0, actualDz);
+    const int dxPatches = static_cast<int>( glm::round(dx / PATCH_SIZE_METERS) );
+    const float dxActual = dxPatches * PATCH_SIZE_METERS;
+    const int dzPatches = static_cast<int>( glm::round(dz / PATCH_SIZE_METERS) );
+    const float dzActual = dzPatches * PATCH_SIZE_METERS;
+    
+    position = position + glm::vec3(dxActual, 0, dzActual);
    
-    for ( int x = 0; x < PATCHES_COUNT_SQRT; x++ ) 
-        for ( int y = 0; y < PATCHES_COUNT_SQRT; y++ ) {
-            const GLuint bufferId = patches[x + y * PATCHES_COUNT_SQRT];
-            reinitPatch( bufferId, x, y );
+    // Full terrain rebuild (rare case)
+    if ( (abs(dxActual) >= TERRAIN_SIZE_HALF) && (abs(dzActual) >= TERRAIN_SIZE_HALF) ) {
+#ifdef DEBUG_TERRAIN_REINIT
+        LOG("Full terrain rebuild")
+#endif
+
+        for ( int x = 0; x < PATCHES_COUNT_SQRT; x++ ) {
+            for ( int y = 0; y < PATCHES_COUNT_SQRT; y++ ) {
+                const GLuint bufferId = patches[x + y * PATCHES_COUNT_SQRT];
+                reinitPatch( bufferId, x, y );
+            }
         }
+        return;
+    }
+
+#ifdef DEBUG_TERRAIN_REINIT
+    LOG("Partial rebuild dx:%d dz:%d", dxPatches, dzPatches);
+#endif
+    
+    std::vector<GLuint> patchesCopy(patches.begin(), patches.end());
+    std::vector<GLuint> freeId;
+    std::vector<int> reinitIndices;
+
+    for (int i = 0; i < PATCHES_COUNT; i++) {
+        const int column = i % PATCHES_COUNT_SQRT;
+        const int row = i / PATCHES_COUNT_SQRT; 
+        bool needReinit = false;
+
+        int oldColumn = column + dxPatches;
+        if (oldColumn < 0 || oldColumn >= PATCHES_COUNT_SQRT) {
+            oldColumn = (oldColumn + PATCHES_COUNT) % PATCHES_COUNT_SQRT;
+            needReinit = true;
+        }
+        
+        int oldRow = row + dzPatches;
+        if (oldRow < 0 || oldRow >= PATCHES_COUNT_SQRT) {
+            oldRow = (oldRow + PATCHES_COUNT) % PATCHES_COUNT_SQRT;
+            needReinit = true;
+        }
+        
+        const int oldIndex = oldColumn + oldRow * PATCHES_COUNT_SQRT;
+        patches[i] = patchesCopy[oldIndex];
+
+#ifdef DEBUG_TERRAIN_REINIT
+        LOG("%d<-%d:%s", i, oldIndex, needReinit ? "reinit" : "");
+#endif
+      
+        if (needReinit) {
+            reinitPatch(patches[i], column, row);
+        }
+    }
+
 }
 
 void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices ) {
@@ -91,7 +140,6 @@ void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &
 }
 
 float Terrain::getHeight( float x, float y ) {
-    //return 0.0f;
     return 2.0f * noise( x / 2 ,y / 2 );
 }
 

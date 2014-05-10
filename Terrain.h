@@ -4,14 +4,18 @@
 
 static const float PATCH_SIZE_METERS = 16;
 
-static const int PATCHES_COUNT_SQRT = 4;
+static const int PATCHES_COUNT_SQRT = 16;
 static const int PATCHES_COUNT = PATCHES_COUNT_SQRT * PATCHES_COUNT_SQRT;
 
 static const int TILES_IN_PATCH_SQRT = 32;
 static const int TILES_IN_PATCH = TILES_IN_PATCH_SQRT * TILES_IN_PATCH_SQRT;
 
 static const float TILE_SIZE = PATCH_SIZE_METERS / TILES_IN_PATCH_SQRT;
-static const float TERRAIN_OFFSET = - PATCH_SIZE_METERS * PATCHES_COUNT_SQRT / 2;
+
+static const float TERRAIN_SIZE = PATCH_SIZE_METERS * PATCHES_COUNT_SQRT;
+static const float TERRAIN_SIZE_HALF = TERRAIN_SIZE / 2;
+static const float TERRAIN_OFFSET = - TERRAIN_SIZE_HALF;
+
 
 class Terrain final : public Renderable {
 
