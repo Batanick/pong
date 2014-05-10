@@ -7,13 +7,13 @@
 
 #include "logging.h"
 
-static const float CAMERA_MOVE_SPEED = 10.0f; 
+static const float CAMERA_MOVE_SPEED = 40.0f; 
 static const float CAMERA_ROTATION_SPEED = 0.005f;
 
 Camera::Camera() {
 	horizontalAngle = 0.78f;
 	verticalAngle = -0.2f;
-	position = glm::vec3( 0, 1, 0 );
+	position = glm::vec3( 0, 30, 0 );
 }
 
 void Camera::onBeforeRender( GLFWwindow * const window, double deltaTime ) {
@@ -25,7 +25,7 @@ void Camera::onBeforeRender( GLFWwindow * const window, double deltaTime ) {
 	glfwGetCursorPos( window, &mouseXPos, &mouseYPos );
 	int windowHeight, windowWidth;
 	glfwGetWindowSize( window, &windowWidth, &windowHeight );
-    projection = glm::perspective(45.0f, ((float)windowWidth) / windowHeight, 0.1f, 100.0f);
+    projection = glm::perspective(45.0f, ((float)windowWidth) / windowHeight, 1.0f, 5000.0f);
 
 	glfwSetCursorPos(window, windowWidth/2, windowHeight/2);
 

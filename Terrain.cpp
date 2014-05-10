@@ -13,6 +13,7 @@
 #include "renderUtils.h"
 
 //#define DEBUG_TERRAIN_REINIT
+#define STATIC_TERRAIN
 
 void Terrain::init( const GLuint shaderId ) {
     std::vector<unsigned int> indices;
@@ -60,6 +61,10 @@ void Terrain::render( const RenderContext &context ) {
 }
 
 void Terrain::refresh( const RenderContext &context ) {
+#ifdef STATIC_TERRAIN
+    if (true) return ;
+#endif
+
     const glm::vec3 cameraPos = context.cameraPos;
     const float dx = cameraPos.x - position.x;
     const float dz = cameraPos.z - position.z;
@@ -75,21 +80,6 @@ void Terrain::refresh( const RenderContext &context ) {
     
     position = position + glm::vec3(dxActual, 0, dzActual);
    
-    // Full terrain rebuild (rare case)
-    if ( (abs(dxActual) >= TERRAIN_SIZE_HALF) && (abs(dzActual) >= TERRAIN_SIZE_HALF) ) {
-#ifdef DEBUG_TERRAIN_REINIT
-        LOG("Full terrain rebuild")
-#endif
-
-        for ( int x = 0; x < PATCHES_COUNT_SQRT; x++ ) {
-            for ( int y = 0; y < PATCHES_COUNT_SQRT; y++ ) {
-                const GLuint bufferId = patches[x + y * PATCHES_COUNT_SQRT];
-                reinitPatch( bufferId, x, y );
-            }
-        }
-        return;
-    }
-
 #ifdef DEBUG_TERRAIN_REINIT
     LOG("Partial rebuild dx:%d dz:%d", dxPatches, dzPatches);
 #endif
@@ -140,7 +130,7 @@ void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &
 }
 
 float Terrain::getHeight( float x, float y ) {
-    return 2.0f * noise( x / 2 ,y / 2 );
+    return MAX_HEIGHT * noise( x / 128 , y  / 128);
 }
 
 glm::vec3 Terrain::getRandomPos() {
