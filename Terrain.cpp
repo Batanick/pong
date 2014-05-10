@@ -13,7 +13,7 @@
 #include "renderUtils.h"
 
 //#define DEBUG_TERRAIN_REINIT
-#define STATIC_TERRAIN
+//#define STATIC_TERRAIN
 
 void Terrain::init( const GLuint shaderId ) {
     indexBuffers.resize(LOD_LEVELS_COUNT);
@@ -25,7 +25,7 @@ void Terrain::init( const GLuint shaderId ) {
         std::vector<unsigned int> indices;
 
         generateIndexTable( size, size, indices );
-        size = size >> 1;
+        size = size >> LOD_REDUCTION;
 
         indexBuffers[i].id = iBuffers[i];
         indexBuffers[i].length = indices.size();
@@ -42,26 +42,31 @@ void Terrain::init( const GLuint shaderId ) {
         patch.id = vBuffers[i];
         patch.lod = 0;
 
-        reinitPatch( patch, i % PATCHES_COUNT_SQRT, i / PATCHES_COUNT_SQRT );
+        reinitPatch( patch, i % PATCHES_COUNT_SQRT, i / PATCHES_COUNT_SQRT, true );
     }
     
     mvpId = glGetUniformLocation( shaderId, "mvp" );
 }
 
-void Terrain::reinitPatch( Patch &patch, const int x, const int y ) {
-    std::vector<glm::vec3> vertices;
-
-    const glm::vec2 offset( position.x + x * PATCH_SIZE_METERS + TERRAIN_OFFSET, position.z + y * PATCH_SIZE_METERS + TERRAIN_OFFSET );
-
-    static const float posOffset = PATCHES_COUNT_SQRT / 2 - 0.5;
-    const float floatLod =  glm::max( glm::abs(static_cast<float>(x) - posOffset), glm::abs(static_cast<float>(y) - posOffset) ) / LOD_STEP;
+bool Terrain::reinitPatch( Patch &patch, const int x, const int y, bool force ) {
+    static const float indexOffset = PATCHES_COUNT_SQRT / 2 - 0.5;
+    const float floatLod =  glm::max( glm::abs(static_cast<float>(x) - indexOffset), glm::abs(static_cast<float>(y) - indexOffset) ) / LOD_STEP;
     const int lod = static_cast<int>(floatLod);
+    
+    if (!force && patch.lod == lod) {
+        return false;
+    }
+
     patch.lod = glm::min( glm::max(0, lod), LOD_LEVELS_COUNT - 1 );
 
+    std::vector<glm::vec3> vertices;
+    const glm::vec2 offset( position.x + x * PATCH_SIZE_METERS + TERRAIN_OFFSET, position.z + y * PATCH_SIZE_METERS + TERRAIN_OFFSET );
     generateVertices( offset, vertices, patch.lod );
 
     glBindBuffer( GL_ARRAY_BUFFER, patch.id );
     glBufferData( GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_DYNAMIC_DRAW );
+
+    return true;
 }
 
 void Terrain::render( const RenderContext &context ) {
@@ -107,6 +112,7 @@ void Terrain::refresh( const RenderContext &context ) {
     LOG("Partial rebuild dx:%d dz:%d", dxPatches, dzPatches);
 #endif
     
+    int reinitCounter = 0;
     std::vector<Patch> patchesCopy(patches.begin(), patches.end());
     for (int i = 0; i < PATCHES_COUNT; i++) {
         const int column = i % PATCHES_COUNT_SQRT;
@@ -132,16 +138,19 @@ void Terrain::refresh( const RenderContext &context ) {
         LOG("%d<-%d:%s", i, oldIndex, needReinit ? "reinit" : "");
 #endif
       
-        if (needReinit) {
-            reinitPatch(patches[i], column, row);
+        const bool reinited = reinitPatch(patches[i], column, row, needReinit);
+        if (reinited) {
+            reinitCounter++;
         }
     }
 
+    LOG("Partial terrain rebuild. Reinited:[%d] of [%d]", reinitCounter, PATCHES_COUNT);
 }
 
 void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod ) {
-    const float tileSize = TILE_SIZE * glm::pow(2.0f , (float)lod);
-    const int tilesCount = TILES_IN_PATCH_SQRT >> lod;
+    const int factor = glm::min(TILES_IN_PATCH_SQRT, 1 << lod * LOD_REDUCTION);
+    const float tileSize = TILE_SIZE * factor;
+    const int tilesCount = TILES_IN_PATCH_SQRT / factor;
 
     for ( int y = 0; y < tilesCount + 1; y++) {
         for (int x = 0; x < tilesCount + 1; x++) {
@@ -153,7 +162,7 @@ void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &
 }
 
 float Terrain::getHeight( float x, float y ) {
-    return MAX_HEIGHT * noise( x / 128 , y  / 128);
+    return 0.0f;//MAX_HEIGHT * noise( x / 128 , y  / 128);
 }
 
 glm::vec3 Terrain::getRandomPos() {

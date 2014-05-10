@@ -7,7 +7,7 @@
 
 #include "logging.h"
 
-static const float CAMERA_MOVE_SPEED = 40.0f; 
+static const float CAMERA_MOVE_SPEED = 100.0f; 
 static const float CAMERA_ROTATION_SPEED = 0.005f;
 
 Camera::Camera() {
