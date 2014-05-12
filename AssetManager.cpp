@@ -62,7 +62,7 @@ void AssetManager::shutdown() {
 
 bool AssetManager::init() {
     defaultFont = loadFont( "../textures/arial.xml" );
-    return defaultFont;
+    return true;
 }
 
 std::shared_ptr<Font> AssetManager::getDefaultFont() {
