@@ -12,9 +12,6 @@
 #include "noise.h"
 #include "renderUtils.h"
 
-//#define DEBUG_TERRAIN_REINIT
-//#define STATIC_TERRAIN
-
 int countLevelOfDetail( const int &x, const int &y );
 
 void Terrain::init( const GLuint shaderId ) {
@@ -84,6 +81,10 @@ void Terrain::render( const RenderContext &context ) {
     glEnableVertexAttribArray(0);
     for (int i = 0; i < PATCHES_COUNT; i++) {
         const Patch &patch = patches[i];
+		if (patch.lod == -1) {
+			continue;
+		}
+
         glBindBuffer( GL_ARRAY_BUFFER, patch.id );
 	    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0 );
 
@@ -96,35 +97,25 @@ void Terrain::render( const RenderContext &context ) {
 }
 
 void Terrain::refresh( const RenderContext &context ) {
-#ifdef STATIC_TERRAIN
-    if (true) return ;
-#endif
-
     const glm::vec3 cameraPos = context.cameraPos;
     const float dx = cameraPos.x - position.x;
     const float dz = cameraPos.z - position.z;
 
-    if ( (abs(dx) < PATCH_SIZE_METERS * 0.66) && (abs(dz) < PATCH_SIZE_METERS * 0.66) ) {
-
-        int reinitCounter = 0;
-        for (int i = 0; i < PATCHES_COUNT; i++) {
-            Patch &patch = patches[i];
-            if (patch.lod != indexToLod[i]) {
-                reinitPatch( patch, i % PATCHES_COUNT_SQRT, i / PATCHES_COUNT_SQRT, indexToLod[i] );
-                reinitCounter++;
-
-                if (reinitCounter >= LOD_REINIT_LIMIT)
-                    break;
-            }
-        }
-
-        if (reinitCounter > 0 ) {
-            LOG( "Lod update. Reinited:[%d]", reinitCounter );
-        }
-        return;
+    if ( (abs(dx) > PATCH_SIZE_METERS * 0.66) || (abs(dz) > PATCH_SIZE_METERS * 0.66) ) {
+		rebuildTerrain(dx, dz);
     }
 
-    rebuildTerrain(dx, dz);
+	int reinitCounter = 0;
+	for (int i = 0; i < PATCHES_COUNT; i++) {
+		Patch &patch = patches[i];
+		if (patch.lod != indexToLod[i]) {
+			reinitPatch(patch, i % PATCHES_COUNT_SQRT, i / PATCHES_COUNT_SQRT, indexToLod[i]);
+			reinitCounter++;
+
+			if (reinitCounter >= LOD_REINIT_LIMIT)
+				break;
+		}
+	}
 }
 
 void Terrain::rebuildTerrain( const float &dx, const float &dz) {
@@ -134,11 +125,7 @@ void Terrain::rebuildTerrain( const float &dx, const float &dz) {
     const float dzActual = dzPatches * PATCH_SIZE_METERS;
     
     position = position + glm::vec3(dxActual, 0, dzActual);
-   
-#ifdef DEBUG_TERRAIN_REINIT
-    LOG("Partial rebuild dx:%d dz:%d", dxPatches, dzPatches);
-#endif
-    
+       
     int reinitedCounter = 0;
     std::vector<Patch> patchesCopy(patches.begin(), patches.end());
     for (int i = 0; i < PATCHES_COUNT; i++) {
@@ -161,15 +148,9 @@ void Terrain::rebuildTerrain( const float &dx, const float &dz) {
         const int oldIndex = oldColumn + oldRow * PATCHES_COUNT_SQRT;
         patches[i] = patchesCopy[oldIndex];
 
-#ifdef DEBUG_TERRAIN_REINIT
-        LOG("%d<-%d:%s", i, oldIndex, needReinit ? "reinit" : "");
-#endif
-      
-        if (needReinit) {
-            reinitPatch( patches[i], column, row, LOD_LEVELS_COUNT - 1);
-            reinitedCounter++;
-        }
-
+		if (needReinit) {
+			patches[i].lod = -1; // don't render until refresh_patch
+		}
     }
 
     LOG( "Partial terrain rebuild. Reinited:[%d]", reinitedCounter );
@@ -190,7 +171,7 @@ void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &
 }
 
 float Terrain::getHeight( float x, float y ) {
-    return MAX_HEIGHT * noise( x / 128 , y  / 128);
+	return 0.0f;// MAX_HEIGHT * noise(x / 128, y / 128);
 }
 
 glm::vec3 Terrain::getRandomPos() {
