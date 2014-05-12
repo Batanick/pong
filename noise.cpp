@@ -3,7 +3,7 @@
 #include <math.h>
 #include "commonMath.h"
 
-static const int OCTAVES = 16;
+static const int OCTAVES = 4;
 
 inline float signum(float n) {
     if (n < 0) 
@@ -61,7 +61,7 @@ float interpolatedNoise(float x, float y) {
 
 float noise(float x, float y) {
     float result = 0;
-    const float persistence = 0.5f;
+    const float persistence = 0.2f;
     
     for (int i = 0; i < OCTAVES; i++) {
         const float frequency = pow( 2.0f, i );

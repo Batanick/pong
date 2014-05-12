@@ -9,6 +9,10 @@ void Label::render( const RenderContext &context ) {
         initVertices( context );
     }
 
+    GLint currentMode[2]; //front and back value
+	glGetIntegerv( GL_POLYGON_MODE, &currentMode[0] );
+	glPolygonMode( GL_FRONT_AND_BACK,  GL_FILL );
+    
     glUniform3f( fontColorId, color.r, color.g, color.b );
     
     glActiveTexture( GL_TEXTURE0 );
@@ -27,6 +31,8 @@ void Label::render( const RenderContext &context ) {
 
 	glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
+
+    glPolygonMode( GL_FRONT_AND_BACK,  currentMode[0] == GL_LINE ? GL_LINE : GL_FILL );
 }
 
 glm::mat3 convertToViewMatrix( float scaleX, float scaleY, int translateX, int translateY) {
