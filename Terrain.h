@@ -19,7 +19,7 @@ static const float TERRAIN_SIZE = PATCH_SIZE_METERS * PATCHES_COUNT_SQRT;
 static const float TERRAIN_SIZE_HALF = TERRAIN_SIZE / 2; 
 static const float TERRAIN_OFFSET = - TERRAIN_SIZE_HALF;
 
-static const int LOD_LEVELS_COUNT = 5; 
+static const int LOD_LEVELS_COUNT = 4; 
 static const int LOD_STEP = 2;
 static const int LOD_REDUCTION = 2;
 

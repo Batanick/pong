@@ -27,6 +27,7 @@ void Camera::onBeforeRender( GLFWwindow * const window, double deltaTime ) {
 	glfwGetWindowSize( window, &windowWidth, &windowHeight );
     projection = glm::perspective(45.0f, ((float)windowWidth) / windowHeight, 1.0f, 5000.0f);
 
+	//TODO: Move this from here!!!
 	glfwSetCursorPos(window, windowWidth/2, windowHeight/2);
 
 	horizontalAngle += CAMERA_ROTATION_SPEED * float( windowWidth/2 - mouseXPos );

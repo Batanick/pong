@@ -34,6 +34,7 @@ bool Renderer::init() {
 	camera = std::shared_ptr<Camera>( new Camera() );
 	glClearColor(0.0f, 0.0f, 0.6f, 0.0f);
 
+	glfwSwapInterval(1);
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS); 
 	glEnable(GL_CULL_FACE);
@@ -96,7 +97,7 @@ void Renderer::render( double timeDelta ) {
 
     glfwSwapBuffers(window);
 
-    fpsCounter->onFrame();
+	fpsCounter->onFrame();
     char buff[128];
     sprintf_s(buff, "FPS: %.2f", fpsCounter->getFps());
     fpsLabel->setText(buff);

@@ -3,7 +3,7 @@
 #include <math.h>
 #include "commonMath.h"
 
-static const int OCTAVES = 4;
+static const int OCTAVES = 0;
 
 inline float signum(float n) {
     if (n < 0) 
@@ -42,11 +42,6 @@ float interpolatedNoise(float x, float y) {
     const int intY2 = intY1 + static_cast<int>( signum(y) );
     const float fractY = abs(y - intY1);
 
-    /*const float v1 = smooth( intX1, intY1 );
-    const float v2 = smooth( intX2, intY1 );
-    const float v3 = smooth( intX1, intY2);
-    const float v4 = smooth( intX2, intY2 );
-    */
     const float v1 = rand( intX1, intY1 );
     const float v2 = rand( intX2, intY1 );
     const float v3 = rand( intX1, intY2);
@@ -61,7 +56,7 @@ float interpolatedNoise(float x, float y) {
 
 float noise(float x, float y) {
     float result = 0;
-    const float persistence = 0.2f;
+    const float persistence = 0.5f;
     
     for (int i = 0; i < OCTAVES; i++) {
         const float frequency = pow( 2.0f, i );

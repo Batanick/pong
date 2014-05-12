@@ -171,7 +171,7 @@ void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &
 }
 
 float Terrain::getHeight( float x, float y ) {
-	return 0.0f;// MAX_HEIGHT * noise(x / 128, y / 128);
+	return MAX_HEIGHT * noise(x / 128, y / 128);
 }
 
 glm::vec3 Terrain::getRandomPos() {
