@@ -50,8 +50,14 @@ struct TextureInfo {
 class Renderable {
 public:
     virtual void render( const RenderContext &context ) = 0;
-    virtual void shutdown() = 0;
-    virtual void init( const GLuint shaderId ) = 0;
+	virtual void shutdown() = 0;
+	virtual void init(const GLuint shaderId) = 0;
+
+	/*
+		Return true if no work is done and we can continue other refhreshes.
+	*/
+	virtual bool refresh(const RenderContext &context) { return true; };
+    
 };
 
 #endif

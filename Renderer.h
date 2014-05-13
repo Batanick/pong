@@ -24,6 +24,7 @@ public:
 	}
 
 	void render( double timeDelta );
+	void refreshSome();
 	bool init();
 	void shutdown();
 	

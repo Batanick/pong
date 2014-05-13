@@ -74,8 +74,6 @@ bool Terrain::reinitPatch( Patch &patch, const int x, const int y, int lod ) {
 }
 
 void Terrain::render( const RenderContext &context ) {
-    refresh(context);
-
     glUniformMatrix4fv( mvpId, 1, GL_FALSE, &context.pv[0][0] );
     
     glEnableVertexAttribArray(0);
@@ -96,7 +94,7 @@ void Terrain::render( const RenderContext &context ) {
     glDisableVertexAttribArray(0);
 }
 
-void Terrain::refresh( const RenderContext &context ) {
+bool Terrain::refresh( const RenderContext &context ) {
     const glm::vec3 cameraPos = context.cameraPos;
     const float dx = cameraPos.x - position.x;
     const float dz = cameraPos.z - position.z;
@@ -107,15 +105,19 @@ void Terrain::refresh( const RenderContext &context ) {
 
 	int reinitCounter = 0;
 	for (int i = 0; i < PATCHES_COUNT; i++) {
-		Patch &patch = patches[i];
-		if (patch.lod != indexToLod[i]) {
-			reinitPatch(patch, i % PATCHES_COUNT_SQRT, i / PATCHES_COUNT_SQRT, indexToLod[i]);
+		// using global index here to avoid sittuation where some patches refresh more often then others
+		refreshPos = (refreshPos + 1) % PATCHES_COUNT;
+		Patch &patch = patches[refreshPos];
+		if (patch.lod != indexToLod[refreshPos]) {
+			reinitPatch(patch, refreshPos % PATCHES_COUNT_SQRT, refreshPos / PATCHES_COUNT_SQRT, indexToLod[refreshPos]);
 			reinitCounter++;
 
 			if (reinitCounter >= LOD_REINIT_LIMIT)
-				break;
+				return false;
 		}
 	}
+	
+	return reinitCounter <= 0;
 }
 
 void Terrain::rebuildTerrain( const float &dx, const float &dz) {

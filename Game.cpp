@@ -66,6 +66,7 @@ void Game::runMainLoop() {
         timeDelta =  currentTime - lastTickTime;
         lastTickTime = currentTime;
 
+		renderer->refreshSome();
         renderer->render(timeDelta);
 		glFinish();
 	

@@ -30,11 +30,13 @@ class Terrain final : public Renderable {
 public:
     Terrain() {
         position = glm::vec3();
+		refreshPos = 0;
 	}
 
     virtual void init( const GLuint shaderId ) override;
     virtual void render( const RenderContext &context ) override;
     virtual void shutdown() override;
+	virtual bool refresh( const RenderContext &context ) override;
     
     glm::vec3 getRandomPos();
     float getHeight( float x, float y );
@@ -58,9 +60,10 @@ private :
     
     GLuint mvpId;
 
-	void generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod );
+	unsigned int refreshPos;
 
-    void refresh( const RenderContext &context );
+	void generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod );
+	
     void rebuildTerrain( const float &dx, const float &dz);
     bool reinitPatch( Patch &patch, const int x, const int y, int lod );
 };

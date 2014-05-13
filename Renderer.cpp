@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <algorithm>
+
 #include "ShaderManager.h"
 #include "AssetManager.h"
 #include "Terrain.h"
@@ -123,6 +125,21 @@ void Renderer::renderAll() {
 
         iterator->second->render( context );
     }
+}
+
+void Renderer::refreshSome() {
+	std::vector<PRenderable> renderablesCopy;
+	renderablesCopy.reserve(renderables.size());
+	for (auto iterator = renderables.begin(); iterator != renderables.end(); iterator++) {
+		renderablesCopy.push_back( iterator->second );
+	}
+	std::random_shuffle(renderablesCopy.begin(), renderablesCopy.end());
+
+	for (auto renderable : renderablesCopy) {
+		if (!renderable->refresh(context)) {
+			return;
+		}
+	}
 }
 
 void Renderer::shutdown() {
