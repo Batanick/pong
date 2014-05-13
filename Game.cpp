@@ -67,7 +67,9 @@ void Game::runMainLoop() {
         lastTickTime = currentTime;
 
         renderer->render(timeDelta);
+		glFinish();
 	
+		glfwSwapBuffers(window);
         glfwPollEvents();
 
 		running = running & (!glfwWindowShouldClose(window));

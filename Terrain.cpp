@@ -126,7 +126,6 @@ void Terrain::rebuildTerrain( const float &dx, const float &dz) {
     
     position = position + glm::vec3(dxActual, 0, dzActual);
        
-    int reinitedCounter = 0;
     std::vector<Patch> patchesCopy(patches.begin(), patches.end());
     for (int i = 0; i < PATCHES_COUNT; i++) {
         const int column = i % PATCHES_COUNT_SQRT;
@@ -152,8 +151,6 @@ void Terrain::rebuildTerrain( const float &dx, const float &dz) {
 			patches[i].lod = -1; // don't render until refresh_patch
 		}
     }
-
-    LOG( "Partial terrain rebuild. Reinited:[%d]", reinitedCounter );
 }
 
 void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod ) {
