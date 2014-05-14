@@ -5,6 +5,9 @@
 #include <stdlib.h>  
 #include <time.h> 
 
+#include <thread>
+#include <chrono>
+
 #include "Renderer.h"
 
 #include "logging.h"
@@ -56,29 +59,46 @@ void Game::shutdown() {
     glfwTerminate();
 }
 
+void Game::refreshThread() {
+	while (running) {
+		if (renderLock.try_lock()){
+			renderer->refreshSome();
+			renderLock.unlock();
+			std::this_thread::sleep_for(std::chrono::milliseconds(20));
+		}
+	}
+	
+}
+
 void Game::runMainLoop() {
     double lastTickTime = glfwGetTime();
     double currentTime = 0;
     double timeDelta = 0;
 
+	std::thread refreshThread( &Game::refreshThread, this );
 	while (running) {
         currentTime = glfwGetTime();
         timeDelta =  currentTime - lastTickTime;
         lastTickTime = currentTime;
 
-		renderer->refreshSome();
+		renderLock.lock();
         renderer->render(timeDelta);
-		glFinish();
-	
+		renderLock.unlock();
+		
 		glfwSwapBuffers(window);
         glfwPollEvents();
 
 		running = running & (!glfwWindowShouldClose(window));
     }
 
+	refreshThread.join();
 	onShutdown();
 }
 
 void Game::onShutdown() {
 	renderer->shutdown();
+}
+
+bool Game::isRunning() {
+	return running;
 }

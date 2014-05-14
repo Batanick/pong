@@ -1,5 +1,6 @@
 #include <memory>
 #include <vector>
+#include <mutex>
 
 #include "Tickable.hpp"
 
@@ -17,17 +18,21 @@ public:
 	bool init();
 	void start();
 	void shutdown();
+	bool isRunning();
 	
 private:
 	bool running;
 	
 	GLFWwindow* window;
 	double lastTick;
+	std::mutex renderLock;
 
 	std::shared_ptr<Renderer> renderer;
 	std::vector<TickablePtr> tickables;
 	
 	void runMainLoop();
 	void onShutdown();
+	void refreshThread();
+	
 	RenderContext createRenderContext();
 };

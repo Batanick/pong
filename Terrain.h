@@ -23,7 +23,8 @@ static const int LOD_LEVELS_COUNT = 4;
 static const int LOD_STEP = 2;
 static const int LOD_REDUCTION = 2;
 
-static const int LOD_REINIT_LIMIT = 1;
+static const int PATCH_REINIT_LIMIT = 2;
+static const int PATCH_MEMORY_UPDATE_LIMIT = 1;
 
 class Terrain final : public Renderable {
 
@@ -48,8 +49,15 @@ private :
     };
 
     struct Patch {
+		Patch() {
+			x = -1;
+			y = -1;
+		}
+
         GLuint id;
         int lod;
+		std::vector<glm::vec3> vertices;
+		int x, y;
     };
 
     std::vector<Patch> patches;
@@ -65,5 +73,5 @@ private :
 	void generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod );
 	
     void rebuildTerrain( const float &dx, const float &dz);
-    bool reinitPatch( Patch &patch, const int x, const int y, int lod );
+    void reinitPatch( Patch &patch, const int x, const int y, int lod );
 };

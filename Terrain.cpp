@@ -57,30 +57,35 @@ void Terrain::init( const GLuint shaderId ) {
 
         reinitPatch( patch, column, row, LOD_LEVELS_COUNT - 1 );
     }
-    
-    mvpId = glGetUniformLocation( shaderId, "mvp" );
+
+	mvpId = glGetUniformLocation( shaderId, "mvp" );
 }
 
-bool Terrain::reinitPatch( Patch &patch, const int x, const int y, int lod ) {
-    patch.lod = lod;
-    std::vector<glm::vec3> vertices;
-    const glm::vec2 offset( position.x + x * PATCH_SIZE_METERS + TERRAIN_OFFSET, position.z + y * PATCH_SIZE_METERS + TERRAIN_OFFSET );
-    generateVertices( offset, vertices, patch.lod );
+void Terrain::reinitPatch( Patch &patch, const int x, const int y, int lod ) {
+    //patch.lod = lod;
+	patch.x = x;
+	patch.y = y;
 
-    glBindBuffer( GL_ARRAY_BUFFER, patch.id );
-    glBufferSubData( GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(glm::vec3), &vertices[0] );
-
-    return true;
+    const glm::vec2 offset( x * PATCH_SIZE_METERS + TERRAIN_OFFSET, y * PATCH_SIZE_METERS + TERRAIN_OFFSET );
+    generateVertices( offset, patch.vertices, patch.lod );
 }
 
 void Terrain::render( const RenderContext &context ) {
     glUniformMatrix4fv( mvpId, 1, GL_FALSE, &context.pv[0][0] );
     
     glEnableVertexAttribArray(0);
+	int updateCounter = 0;
     for (int i = 0; i < PATCHES_COUNT; i++) {
-        const Patch &patch = patches[i];
+        Patch &patch = patches[i];
 		if (patch.lod == -1) {
 			continue;
+		}
+
+		if (!patch.vertices.empty() && updateCounter++ <= PATCH_MEMORY_UPDATE_LIMIT) {
+			patch.lod = indexToLod[i];
+			glBindBuffer( GL_ARRAY_BUFFER, patch.id );
+			glBufferSubData( GL_ARRAY_BUFFER, 0, patch.vertices.size() * sizeof(glm::vec3), &patch.vertices[0] );
+			patch.vertices.clear();
 		}
 
         glBindBuffer( GL_ARRAY_BUFFER, patch.id );
@@ -96,63 +101,30 @@ void Terrain::render( const RenderContext &context ) {
 
 bool Terrain::refresh( const RenderContext &context ) {
     const glm::vec3 cameraPos = context.cameraPos;
-    const float dx = cameraPos.x - position.x;
-    const float dz = cameraPos.z - position.z;
 
-    if ( (abs(dx) > PATCH_SIZE_METERS * 0.66) || (abs(dz) > PATCH_SIZE_METERS * 0.66) ) {
-		rebuildTerrain(dx, dz);
-    }
+	const int x = static_cast<int>(round(cameraPos.x / PATCH_SIZE_METERS));
+	const int y = static_cast<int>(round(cameraPos.z / PATCH_SIZE_METERS));
 
-	int reinitCounter = 0;
+    int reinitCounter = 0;
 	for (int i = 0; i < PATCHES_COUNT; i++) {
+
 		// using global index here to avoid sittuation where some patches refresh more often then others
-		refreshPos = (refreshPos + 1) % PATCHES_COUNT;
+		refreshPos = i;
+		const int patchX = refreshPos % PATCHES_COUNT_SQRT + x;
+		const int patchY = refreshPos / PATCHES_COUNT_SQRT + y;
+		const int lod = indexToLod[refreshPos];
+
 		Patch &patch = patches[refreshPos];
-		if (patch.lod != indexToLod[refreshPos]) {
-			reinitPatch(patch, refreshPos % PATCHES_COUNT_SQRT, refreshPos / PATCHES_COUNT_SQRT, indexToLod[refreshPos]);
+		if (patch.lod != lod || patch.x != patchX || patch.y != patchY) {
+			reinitPatch(patch, patchX, patchY, lod);
 			reinitCounter++;
 
-			if (reinitCounter >= LOD_REINIT_LIMIT)
+			if (reinitCounter >= PATCH_REINIT_LIMIT)
 				return false;
 		}
 	}
 	
 	return reinitCounter <= 0;
-}
-
-void Terrain::rebuildTerrain( const float &dx, const float &dz) {
-    const int dxPatches = static_cast<int>( glm::round(dx / PATCH_SIZE_METERS) );
-    const float dxActual = dxPatches * PATCH_SIZE_METERS;
-    const int dzPatches = static_cast<int>( glm::round(dz / PATCH_SIZE_METERS) );
-    const float dzActual = dzPatches * PATCH_SIZE_METERS;
-    
-    position = position + glm::vec3(dxActual, 0, dzActual);
-       
-    std::vector<Patch> patchesCopy(patches.begin(), patches.end());
-    for (int i = 0; i < PATCHES_COUNT; i++) {
-        const int column = i % PATCHES_COUNT_SQRT;
-        const int row = i / PATCHES_COUNT_SQRT; 
-        bool needReinit = false;
-
-        int oldColumn = column + dxPatches;
-        if (oldColumn < 0 || oldColumn >= PATCHES_COUNT_SQRT) {
-            oldColumn = (oldColumn + PATCHES_COUNT) % PATCHES_COUNT_SQRT;
-            needReinit = true;
-        }
-        
-        int oldRow = row + dzPatches;
-        if (oldRow < 0 || oldRow >= PATCHES_COUNT_SQRT) {
-            oldRow = (oldRow + PATCHES_COUNT) % PATCHES_COUNT_SQRT;
-            needReinit = true;
-        }
-        
-        const int oldIndex = oldColumn + oldRow * PATCHES_COUNT_SQRT;
-        patches[i] = patchesCopy[oldIndex];
-
-		if (needReinit) {
-			patches[i].lod = -1; // don't render until refresh_patch
-		}
-    }
 }
 
 void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod ) {
