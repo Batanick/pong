@@ -109,7 +109,7 @@ bool Terrain::refresh( const RenderContext &context ) {
 	for (int i = 0; i < PATCHES_COUNT; i++) {
 
 		// using global index here to avoid sittuation where some patches refresh more often then others
-		refreshPos = i;
+		refreshPos = (refreshPos + 1) % PATCHES_COUNT;
 		const int patchX = refreshPos % PATCHES_COUNT_SQRT + x;
 		const int patchY = refreshPos / PATCHES_COUNT_SQRT + y;
 		const int lod = indexToLod[refreshPos];
