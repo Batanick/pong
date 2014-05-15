@@ -45,24 +45,26 @@ void Terrain::init( const GLuint shaderId ) {
 
         const int row = i / PATCHES_COUNT_SQRT;
         const int column = i % PATCHES_COUNT_SQRT;
+		patch.lod = -1;
+		patch.x = column;
+		patch.y = row;
 
         const int lod = countLevelOfDetail( column, row );
-        patch.lod = lod;
-        indexToLod[i] = lod;
-
+		indexToLod[i] = lod;
+        
         glBindBuffer( GL_ARRAY_BUFFER, patch.id );
         
         const long dataSize = VERTICES_IN_PATH * sizeof(glm::vec3);
         glBufferData( GL_ARRAY_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW );
 
-        reinitPatch( patch, column, row, LOD_LEVELS_COUNT - 1 );
+		reinitPatch( patch, column, row, lod );
     }
 
 	mvpId = glGetUniformLocation( shaderId, "mvp" );
 }
 
 void Terrain::reinitPatch( Patch &patch, const int x, const int y, int lod ) {
-    //patch.lod = lod;
+    patch.lod = lod;
 	patch.x = x;
 	patch.y = y;
 
@@ -109,7 +111,7 @@ bool Terrain::refresh( const RenderContext &context ) {
 	for (int i = 0; i < PATCHES_COUNT; i++) {
 
 		// using global index here to avoid sittuation where some patches refresh more often then others
-		refreshPos = (refreshPos + 1) % PATCHES_COUNT;
+		refreshPos = i;
 		const int patchX = refreshPos % PATCHES_COUNT_SQRT + x;
 		const int patchY = refreshPos / PATCHES_COUNT_SQRT + y;
 		const int lod = indexToLod[refreshPos];
