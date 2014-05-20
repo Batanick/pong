@@ -56,8 +56,6 @@ void Terrain::init( const GLuint shaderId ) {
         
         const long dataSize = VERTICES_IN_PATH * sizeof(glm::vec3);
         glBufferData( GL_ARRAY_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW );
-
-		reinitPatch( patch, column, row, lod );
     }
 
 	mvpId = glGetUniformLocation( shaderId, "mvp" );
@@ -138,13 +136,14 @@ void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &
         for (int x = 0; x < tilesCount + 1; x++) {
             const float xCoord = x * tileSize + offset.x;
             const float yCoord = y * tileSize + offset.y;
-            vertices.push_back ( glm::vec3(xCoord, getHeight( xCoord, yCoord), yCoord) );
+			const float zCoord = MAX_HEIGHT * getHeight(xCoord, yCoord);
+            vertices.push_back ( glm::vec3(xCoord, zCoord, yCoord) );
 		}
 	}
 }
 
 float Terrain::getHeight( float x, float y ) {
-	return MAX_HEIGHT * noise(x / 128, y / 128);
+	return glm::max(noise(x / 128, y / 128) + 1.0f, 0.4f);
 }
 
 glm::vec3 Terrain::getRandomPos() {

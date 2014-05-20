@@ -63,7 +63,9 @@ void Game::refreshThread() {
 	while (running) {
 		if (renderLock.try_lock()){
 			renderer->refreshSome();
+			glFinish();
 			renderLock.unlock();
+			
 			std::this_thread::sleep_for(std::chrono::milliseconds(20));
 		}
 	}
@@ -75,6 +77,7 @@ void Game::runMainLoop() {
     double currentTime = 0;
     double timeDelta = 0;
 
+	glFinish();
 	std::thread refreshThread( &Game::refreshThread, this );
 	while (running) {
         currentTime = glfwGetTime();
@@ -83,6 +86,7 @@ void Game::runMainLoop() {
 
 		renderLock.lock();
         renderer->render(timeDelta);
+		glFinish();
 		renderLock.unlock();
 		
 		glfwSwapBuffers(window);
