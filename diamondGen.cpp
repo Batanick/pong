@@ -76,7 +76,7 @@ HeightMap * HeightMap::create( const float h1, const float h2, const float h3, c
 }
 
 float HeightMap::getHeight( int x, int y ) const {
-	return( data[trim(0, resolution - 1, x) + resolution * trim(0, resolution - 1, y)] );
+	return( data[trim<int>(0, resolution - 1, x) + resolution * trim(0, resolution - 1, y)] );
 }
 
 float HeightMap::getMaxHeight() const {

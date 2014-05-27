@@ -3,7 +3,14 @@
 
 bool isPower2(int x);
 
-int trim( int min, int max, int value);
+template <class T>
+T trim(T min, T max, T value) {
+	if (value < min) {
+		return min;
+	}
+
+	return value > max ? max : value;
+}
 
 glm::quat getRotation( glm::vec3 start, glm::vec3 dest );
 

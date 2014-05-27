@@ -91,6 +91,9 @@
     <ClCompile Include="noise.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
+    <ClCompile Include="TerrainConstants.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -164,6 +167,9 @@
     </ClInclude>
     <ClInclude Include="noise.h">
       <Filter>src\common</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainConstants.h">
+      <Filter>src\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

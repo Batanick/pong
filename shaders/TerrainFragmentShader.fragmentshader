@@ -1,7 +1,11 @@
 #version 330 core
 
+in float height;
+
+uniform sampler1D terrainTexture;
+
 out vec3 color;
 
 void main() {
-	color = vec3 (1, 0, 0);
+	color = texture( terrainTexture, clamp(height, 0.0, 1.0 ) ).rgb;
 }

@@ -3,8 +3,11 @@
 layout (location = 0) in vec3 vertexPosition;
 
 uniform mat4 mvp;
+uniform float heightScale;
 
+out float height;
 
-void main(){
+void main() {
 	gl_Position = mvp * vec4(vertexPosition, 1);
+	height = vertexPosition.y / heightScale ;
 }
