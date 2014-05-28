@@ -113,8 +113,8 @@ void Terrain::render( const RenderContext &context ) {
     glUniformMatrix4fv( mvpId, 1, GL_FALSE, &context.pv[0][0] );
 	glUniform1f(heightId, MAX_HEIGHT);
 
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glActiveTexture(GL_TEXTURE0);
@@ -177,6 +177,8 @@ bool Terrain::refresh( const RenderContext &context ) {
 }
 
 void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod ) {
+	const double start = glfwGetTime();
+
     const int factor = glm::min(TILES_IN_PATCH_SQRT, 1 << lod * LOD_REDUCTION);
     const float tileSize = TILE_SIZE * factor;
     const int tilesCount = TILES_IN_PATCH_SQRT / factor;
@@ -188,6 +190,10 @@ void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &
 			const float zCoord = getHeight(xCoord, yCoord); // * MAX_HEIGHT;
             vertices.push_back ( glm::vec3(xCoord, zCoord, yCoord) );
 		}
+	}
+
+	if (lod == 0) {
+		LOG("Reiniting lod[%d]: %dms", lod, static_cast<int>((glfwGetTime() - start) * 1000));
 	}
 }
 
