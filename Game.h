@@ -25,14 +25,12 @@ private:
 	
 	GLFWwindow* window;
 	double lastTick;
-	std::mutex renderLock;
 
 	std::shared_ptr<Renderer> renderer;
 	std::vector<TickablePtr> tickables;
 	
 	void runMainLoop();
 	void onShutdown();
-	void refreshThread();
 	
 	RenderContext createRenderContext();
 };

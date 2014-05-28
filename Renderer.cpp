@@ -127,21 +127,6 @@ void Renderer::renderAll() {
     }
 }
 
-void Renderer::refreshSome() {
-	std::vector<PRenderable> renderablesCopy;
-	renderablesCopy.reserve(renderables.size());
-	for (auto iterator = renderables.begin(); iterator != renderables.end(); iterator++) {
-		renderablesCopy.push_back( iterator->second );
-	}
-	std::random_shuffle(renderablesCopy.begin(), renderablesCopy.end());
-
-	for (auto renderable : renderablesCopy) {
-		if (!renderable->refresh(context)) {
-			return;
-		}
-	}
-}
-
 void Renderer::shutdown() {
 	for ( auto iterator = renderables.begin(); iterator != renderables.end();iterator++ ) {
         iterator->second->shutdown();

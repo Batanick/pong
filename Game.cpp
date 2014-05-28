@@ -59,35 +59,18 @@ void Game::shutdown() {
     glfwTerminate();
 }
 
-void Game::refreshThread() {
-	while (running) {
-		if (renderLock.try_lock()){
-			renderer->refreshSome();
-			glFinish();
-			renderLock.unlock();
-			
-			std::this_thread::sleep_for(std::chrono::milliseconds(20));
-		}
-	}
-	
-}
-
 void Game::runMainLoop() {
     double lastTickTime = glfwGetTime();
     double currentTime = 0;
     double timeDelta = 0;
 
 	glFinish();
-	std::thread refreshThread( &Game::refreshThread, this );
 	while (running) {
         currentTime = glfwGetTime();
         timeDelta =  currentTime - lastTickTime;
         lastTickTime = currentTime;
 
-		renderLock.lock();
         renderer->render(timeDelta);
-		glFinish();
-		renderLock.unlock();
 		
 		glfwSwapBuffers(window);
         glfwPollEvents();
@@ -95,7 +78,6 @@ void Game::runMainLoop() {
 		running = running & (!glfwWindowShouldClose(window));
     }
 
-	refreshThread.join();
 	onShutdown();
 }
 

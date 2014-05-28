@@ -26,9 +26,6 @@ static const int LOD_LEVELS_COUNT = 6;
 static const int LOD_STEP = 1;
 static const int LOD_REDUCTION = 1;
 
-static const int PATCH_REINIT_LIMIT = 8;
-static const int PATCH_MEMORY_UPDATE_LIMIT = 8;
-
 struct color {
 	color() {
 		r = 0;

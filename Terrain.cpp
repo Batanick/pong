@@ -57,18 +57,20 @@ void Terrain::initVertices(const GLuint &shaderId) {
 
 		const int row = i / PATCHES_COUNT_SQRT;
 		const int column = i % PATCHES_COUNT_SQRT;
-		patch.lod = -1;
+
+		const int lod = countLevelOfDetail(column, row);
+		patch.lod = lod;
 		patch.x = column;
 		patch.y = row;
 
-		const int lod = countLevelOfDetail(column, row);
+		
 		indexToLod[i] = lod;
-
 		glBindBuffer(GL_ARRAY_BUFFER, patch.id);
 
 		const long dataSize = VERTICES_IN_PATH * sizeof(glm::vec3);
 		glBufferData(GL_ARRAY_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
 	}
+
 }
 
 void Terrain::initTexture(const GLuint &shaderId) {
@@ -100,16 +102,20 @@ void Terrain::initTexture(const GLuint &shaderId) {
 	free(textureData);
 }
 
-void Terrain::reinitPatch( Patch &patch, const int x, const int y, int lod ) {
-    patch.lod = lod;
-	patch.x = x;
-	patch.y = y;
-
-    const glm::vec2 offset( x * PATCH_SIZE_METERS + TERRAIN_OFFSET, y * PATCH_SIZE_METERS + TERRAIN_OFFSET );
+void Terrain::reinitPatch( Patch &patch ) {
+    const glm::vec2 offset( patch.x * PATCH_SIZE_METERS + TERRAIN_OFFSET, patch.y * PATCH_SIZE_METERS + TERRAIN_OFFSET );
     generateVertices( offset, patch.vertices, patch.lod );
+
+	glBindBuffer(GL_ARRAY_BUFFER, patch.id);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, patch.vertices.size() * sizeof(glm::vec3), &patch.vertices[0]);
 }
 
 void Terrain::render( const RenderContext &context ) {
+	if (!inited) {
+		inited = true;
+		refresh(context);
+	}
+
     glUniformMatrix4fv( mvpId, 1, GL_FALSE, &context.pv[0][0] );
 	glUniform1f(heightId, MAX_HEIGHT);
 
@@ -130,12 +136,6 @@ void Terrain::render( const RenderContext &context ) {
 			continue;
 		}
 
-		if (!patch.vertices.empty() && updateCounter++ <= PATCH_MEMORY_UPDATE_LIMIT) {
-			patch.lod = indexToLod[i];
-			glBindBuffer( GL_ARRAY_BUFFER, patch.id );
-			glBufferSubData( GL_ARRAY_BUFFER, 0, patch.vertices.size() * sizeof(glm::vec3), &patch.vertices[0] );
-			patch.vertices.clear();
-		}
 
         glBindBuffer( GL_ARRAY_BUFFER, patch.id );
 	    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0 );
@@ -148,32 +148,15 @@ void Terrain::render( const RenderContext &context ) {
     glDisableVertexAttribArray(0);
 }
 
-bool Terrain::refresh( const RenderContext &context ) {
+void Terrain::refresh( const RenderContext &context ) {
     const glm::vec3 cameraPos = context.cameraPos;
 
 	const int x = static_cast<int>(round(cameraPos.x / PATCH_SIZE_METERS));
 	const int y = static_cast<int>(round(cameraPos.z / PATCH_SIZE_METERS));
 
-    int reinitCounter = 0;
 	for (int i = 0; i < PATCHES_COUNT; i++) {
-
-		// using global index here to avoid sittuation where some patches refresh more often then others
-		refreshPos = i;
-		const int patchX = refreshPos % PATCHES_COUNT_SQRT + x;
-		const int patchY = refreshPos / PATCHES_COUNT_SQRT + y;
-		const int lod = indexToLod[refreshPos];
-
-		Patch &patch = patches[refreshPos];
-		if (patch.lod != lod || patch.x != patchX || patch.y != patchY) {
-			reinitPatch(patch, patchX, patchY, lod);
-			reinitCounter++;
-
-			if (reinitCounter >= PATCH_REINIT_LIMIT)
-				return false;
-		}
+		reinitPatch(patches[i]);
 	}
-	
-	return reinitCounter <= 0;
 }
 
 void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod ) {
