@@ -16,6 +16,7 @@ void Patches::init() {
 
   std::vector<GLuint> vBuffers(PATCHES_COUNT);
   glGenBuffers(PATCHES_COUNT, &vBuffers[0]);
+  const long dataSize = VERTICES_IN_PATH * sizeof(glm::vec3);
 
   for (int i = 0; i < PATCHES_COUNT; i++) {
     pMutex lock = std::shared_ptr<std::mutex>(new std::mutex());
@@ -23,20 +24,15 @@ void Patches::init() {
 
     Patch &patch = patches[i];
     patch.id = vBuffers[i];
-
-    const int row = i / PATCHES_COUNT_SQRT;
-    const int column = i % PATCHES_COUNT_SQRT;
-
-    patch.lod = countLevelOfDetail(column, row);
-    patch.x = column;
-    patch.y = row;
+    patch.lod = -1;
+    patch.x = 0;
+    patch.y = 0;
+    patch.vertices.clear();
+    patch.normals.clear();
 
     glBindBuffer(GL_ARRAY_BUFFER, patch.id);
 
-    const long dataSize = VERTICES_IN_PATH * sizeof(glm::vec3);
     glBufferData(GL_ARRAY_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
-
-    reinitPatch(i, column, row, countLevelOfDetail(column, row));
   }
 
   running = true;
@@ -46,22 +42,33 @@ void Patches::init() {
 void Patches::refresh() {
   const glm::vec3 cameraPos = position;
 
-  const int x = static_cast<int>(round(cameraPos.x / PATCH_SIZE_METERS));
-  const int y = static_cast<int>(round(cameraPos.z / PATCH_SIZE_METERS));
+  const int cameraX = static_cast<int>(cameraPos.x / PATCH_SIZE_METERS + 0.5);
+  const int cameraY = static_cast<int>(cameraPos.z / PATCH_SIZE_METERS + 0.5);
 
   for (int i = 0; i < PATCHES_COUNT; i++) {
-    const int row = i / PATCHES_COUNT_SQRT;
-    const int column = i % PATCHES_COUNT_SQRT;
+    static const int offset = PATCHES_COUNT_SQRT / 2;
+    const int offsetX = i % PATCHES_COUNT_SQRT - offset;
+    const int offsetY = i / PATCHES_COUNT_SQRT - offset;
+    const int suggestedLod = countLevelOfDetail(offsetX, offsetY);
 
-    reinitPatch( i, column, row,  countLevelOfDetail(column, row));
+    const int patchX = offsetX + cameraX;
+    const int patchY = offsetY + cameraY;
+
+    const Patch &patch = patches[i]; // no need of sincronization here, since we are the only thread that writing this data
+    const bool needReinit = (patch.lod <= 0) || (patch.lod > suggestedLod) || (patch.x != patchX) || (patch.y != patchY);
+
+    if (needReinit) {
+      reinitPatch(i, patchX, patchY, suggestedLod);
+    }
+
+    if (!running)
+      return;
   }
 }
 
 void Patches::reinitPatch(const int &index, const int &x, const int &y, const int &lod) {
-  const glm::vec2 offset(x * PATCH_SIZE_METERS + TERRAIN_OFFSET, y * PATCH_SIZE_METERS + TERRAIN_OFFSET);
-
+  const glm::vec2 offset(x * PATCH_SIZE_METERS, y * PATCH_SIZE_METERS);
   std::vector<glm::vec3> vertices;
-
   generateVertices(offset, vertices, lod);
 
   {

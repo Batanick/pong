@@ -21,11 +21,11 @@ struct Patch {
 	std::vector<glm::vec3> normals;
 	int x, y;
 
-	bool needReinit() {
-		return !vertices.empty();
-	}
-
-	bool needToDraw() {
+  bool needReinit() const {
+    return !vertices.empty();
+  }
+  
+	bool needToDraw() const {
 		return lod >= 0;
 	}
 };
