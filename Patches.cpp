@@ -36,25 +36,42 @@ void Patches::init() {
     const long dataSize = VERTICES_IN_PATH * sizeof(glm::vec3);
     glBufferData(GL_ARRAY_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
 
-    PatchHolder holder = acquire(i);
-    reinitPatch(patch);
+    reinitPatch(i, column, row, countLevelOfDetail(column, row));
   }
+
+  running = true;
+  backgndThread = std::make_shared<std::thread>(std::thread(&Patches::refreshThread, this));
 }
 
-void Patches::refresh(const RenderContext &context) {
-  const glm::vec3 cameraPos = context.cameraPos;
+void Patches::refresh() {
+  const glm::vec3 cameraPos = position;
 
   const int x = static_cast<int>(round(cameraPos.x / PATCH_SIZE_METERS));
   const int y = static_cast<int>(round(cameraPos.z / PATCH_SIZE_METERS));
 
   for (int i = 0; i < PATCHES_COUNT; i++) {
-    reinitPatch(patches[i]);
+    const int row = i / PATCHES_COUNT_SQRT;
+    const int column = i % PATCHES_COUNT_SQRT;
+
+    reinitPatch( i, column, row,  countLevelOfDetail(column, row));
   }
 }
 
-void Patches::reinitPatch(Patch &patch) {
-  const glm::vec2 offset(patch.x * PATCH_SIZE_METERS + TERRAIN_OFFSET, patch.y * PATCH_SIZE_METERS + TERRAIN_OFFSET);
-  generateVertices(offset, patch.vertices, patch.lod);
+void Patches::reinitPatch(const int &index, const int &x, const int &y, const int &lod) {
+  const glm::vec2 offset(x * PATCH_SIZE_METERS + TERRAIN_OFFSET, y * PATCH_SIZE_METERS + TERRAIN_OFFSET);
+
+  std::vector<glm::vec3> vertices;
+
+  generateVertices(offset, vertices, lod);
+
+  {
+    PatchHolder holder = acquire(index);
+    Patch &patch = holder.patch;
+    patch.lod = lod;
+    patch.x = x;
+    patch.y = y;
+    patch.vertices = vertices;
+  }
 }
 
 PatchHolder Patches::acquire(const int &index) {
@@ -69,7 +86,17 @@ void Patches::updatePos(const glm::vec3 &updatePos) {
   position = updatePos;
 }
 
+void Patches::refreshThread() {
+  while (running) {
+    refresh();
+    std::this_thread::sleep_for(std::chrono::milliseconds(20));
+  }
+}
+
 void Patches::shutdown() {
+  running = false;
+  backgndThread->join();
+
   for (const auto &patch : patches) {
     glDeleteBuffers(1, &patch.id);
   }

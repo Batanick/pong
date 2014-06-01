@@ -2,6 +2,7 @@
 #include <mutex>
 #include <memory>
 #include <atomic>
+#include <thread>
 
 #include "glm.hpp"
 
@@ -36,7 +37,7 @@ struct PatchHolder final {
 	PatchHolder(Patch &patch, std::mutex &_lock ) :
 		patch(patch), 
 		lock(_lock) {
-	}
+ 	}
 
 	PatchHolder(PatchHolder&& other):
 		patch(other.patch){
@@ -57,7 +58,7 @@ struct PatchHolder final {
 class Patches final {
 public:
 	Patches() {
-		//nothing here
+    running = false;
 	}
 
 	void init();
@@ -68,13 +69,16 @@ public:
   void updatePos(const glm::vec3 &updatePos);
 
 private:
+  typedef std::shared_ptr<std::mutex> pMutex;
+
+  std::vector<pMutex> locks;
 	std::vector<Patch> patches;
   std::atomic<glm::vec3> position;
+  std::atomic<bool> running;
 
-	typedef std::shared_ptr<std::mutex> pMutex;
-	std::vector<pMutex> locks;
+  std::shared_ptr<std::thread> backgndThread;
 
-	void reinitPatch(Patch &patch);
-	void refresh(const RenderContext &context);
-  
+  void refreshThread();
+	void refresh();
+  void Patches::reinitPatch(const int &index, const int &x, const int &y, const int &lod);
 };
