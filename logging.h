@@ -6,24 +6,24 @@
 //TODO: introduce normal logging
 #define ASSERT( predicate, errorMsg )       \
     {                                       \
-        if ( !predicate ) {                 \
-			printf( errorMsg );				\
-			printf( "\n" );					\
-        }                                   \
+    if ( !predicate ) {                 \
+    printf( errorMsg );				\
+    printf( "\n" );					\
+    }                                   \
     }		
 
 #define VERIFY( predicate, errorMsg, operation )       \
     {                                       \
-        if ( !predicate ) {                 \
-			printf( errorMsg );				\
-			printf( "\n" );					\
-			operation;						\
-        }                                   \
+    if ( !predicate ) {                 \
+    printf( errorMsg );				\
+    printf( "\n" );					\
+    operation;						\
+    }                                   \
     };
 
 #define LOG( msg, ... ) {						\
-	printf ( msg, ##__VA_ARGS__ );							\
-	printf ( "\n" );						\
+  printf ( msg, ##__VA_ARGS__ );							\
+  printf ( "\n" );						\
 }
 
 #endif

@@ -27,26 +27,26 @@ static const int LOD_STEP = 1;
 static const int LOD_REDUCTION = 1;
 
 struct color {
-	color() {
-		r = 0;
-		g = 0;
-		b = 0;
-	};
+  color() {
+    r = 0;
+    g = 0;
+    b = 0;
+  };
 
-	color(unsigned char r,
-		unsigned char g,
-		unsigned char b) {
-		this->r = r;
-		this->g = g;
-		this->b = b;
-	}
+  color(unsigned char r,
+    unsigned char g,
+    unsigned char b) {
+    this->r = r;
+    this->g = g;
+    this->b = b;
+  }
 
-	unsigned char r;
-	unsigned char g;
-	unsigned char b;
+  unsigned char r;
+  unsigned char g;
+  unsigned char b;
 };
 
 #include <vector>
-std::vector< std::pair<float, color>> buildTerrainColors(); 
+std::vector< std::pair<float, color>> buildTerrainColors();
 
 #endif

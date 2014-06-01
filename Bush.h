@@ -4,39 +4,39 @@
 class Bush final : public Renderable {
 
 public:
-    Bush(glm::vec3 pos, int leafsCount, float height, float width):
-        pos(pos),
-        leafsCount(leafsCount),
-        height(height), 
-        width(width){
-    }
+  Bush(glm::vec3 pos, int leafsCount, float height, float width) :
+    pos(pos),
+    leafsCount(leafsCount),
+    height(height),
+    width(width){
+  }
 
-    Bush( glm::vec3 pos, int leafsCount ):
-        pos(pos),
-        leafsCount(leafsCount), 
-        height(0.5f), 
-        width(0.02f){
-    }
+  Bush(glm::vec3 pos, int leafsCount) :
+    pos(pos),
+    leafsCount(leafsCount),
+    height(0.5f),
+    width(0.02f){
+  }
 
 
-    virtual void render( const RenderContext &context ) override;
-    virtual void shutdown() override;
-    virtual void init( const GLuint shaderId ) override;
+  virtual void render(const RenderContext &context) override;
+  virtual void shutdown() override;
+  virtual void init(const GLuint shaderId) override;
 
 private:
-    glm::vec3 pos;
+  glm::vec3 pos;
 
-    GLuint vertexBuffer;
-	GLuint indexBuffer;
+  GLuint vertexBuffer;
+  GLuint indexBuffer;
 
-    GLuint mvpId;
+  GLuint mvpId;
 
-    unsigned int indicesSize;
+  unsigned int indicesSize;
 
-    int const leafsCount;
+  int const leafsCount;
 
-    float const height;
-    float const width;
+  float const height;
+  float const width;
 
-    void createLeaf( glm::vec3 pos, float height, float maxRotationAngle, float localYaw, std::vector<glm::vec3> &vertices, std::vector<unsigned int> &indices);
+  void createLeaf(glm::vec3 pos, float height, float maxRotationAngle, float localYaw, std::vector<glm::vec3> &vertices, std::vector<unsigned int> &indices);
 };

@@ -7,16 +7,16 @@
 
 class AssetManager final {
 public:
-	GLuint loadTexture( std::string fileName );
-	GLuint getTextureId( std::string fileName );
-    
-    bool init();
-	void shutdown();
-    std::shared_ptr<Font> getDefaultFont();
+  GLuint loadTexture(std::string fileName);
+  GLuint getTextureId(std::string fileName);
+
+  bool init();
+  void shutdown();
+  std::shared_ptr<Font> getDefaultFont();
 
 private:
-    std::map<std::string, TextureInfo> textures;
-    std::shared_ptr<Font> defaultFont;
+  std::map<std::string, TextureInfo> textures;
+  std::shared_ptr<Font> defaultFont;
 
-    std::shared_ptr<Font> loadFont( std::string metaFileName );
+  std::shared_ptr<Font> loadFont(std::string metaFileName);
 };

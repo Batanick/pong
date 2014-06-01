@@ -8,50 +8,50 @@ static const float RENDER_FOV = 45.0f;
 typedef unsigned int GLuint;
 
 struct RenderContext {
-	double timeDelta;
+  double timeDelta;
 
-    int windowHeight;
-    int windowWidth;
+  int windowHeight;
+  int windowWidth;
 
-	glm::mat4 pv;
-    glm::vec3 cameraPos;
+  glm::mat4 pv;
+  glm::vec3 cameraPos;
 };
 
 struct Glyph {
-    Glyph() {
-    }
-    Glyph(int key, int x, int y, int width, int height):
-        key(key),
-        x(x), y(y),
-        width(width), 
-        height(height){
-    }
+  Glyph() {
+  }
+  Glyph(int key, int x, int y, int width, int height) :
+    key(key),
+    x(x), y(y),
+    width(width),
+    height(height){
+  }
 
-    int key;
-    int x,y;
-    int width, height;
+  int key;
+  int x, y;
+  int width, height;
 };
 
 struct TextureInfo {
-    TextureInfo(){
-    }
+  TextureInfo(){
+  }
 
-    TextureInfo(GLuint textureId, unsigned int width, unsigned int height):
-        textureId(textureId),
-        height(height),
-        width(width){
-    }
+  TextureInfo(GLuint textureId, unsigned int width, unsigned int height) :
+    textureId(textureId),
+    height(height),
+    width(width){
+  }
 
-    GLuint textureId;
-    unsigned int height;
-    unsigned int width;
+  GLuint textureId;
+  unsigned int height;
+  unsigned int width;
 };
 
 class Renderable {
 public:
-    virtual void render( const RenderContext &context ) = 0;
-	virtual void shutdown() = 0;
-	virtual void init(const GLuint shaderId) = 0;
+  virtual void render(const RenderContext &context) = 0;
+  virtual void shutdown() = 0;
+  virtual void init(const GLuint shaderId) = 0;
 };
 
 #endif

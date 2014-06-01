@@ -14,41 +14,41 @@ class Tickable;
 class FpsCounter;
 class Label;
 class ShaderManager;
-enum class ShaderType: unsigned int;
+enum class ShaderType : unsigned int;
 
 typedef std::shared_ptr<Renderable> PRenderable;
 
 class Renderer final {
 public:
-	Renderer(GLFWwindow* _window):window(_window) {
-	}
+  Renderer(GLFWwindow* _window) :window(_window) {
+  }
 
-	void render( double timeDelta );
-	bool init();
-	void shutdown();
-	
-	std::shared_ptr<Tickable> getTickable(); 
+  void render(double timeDelta);
+  bool init();
+  void shutdown();
 
-    void add( ShaderType type, PRenderable renderable );
+  std::shared_ptr<Tickable> getTickable();
+
+  void add(ShaderType type, PRenderable renderable);
 
 private:
-	GLFWwindow * const window;
-    
-	std::shared_ptr<FpsCounter> fpsCounter; 
-    std::shared_ptr<Label> fpsLabel;
-    std::shared_ptr<Label> cameraCoords;
+  GLFWwindow * const window;
 
-	std::shared_ptr<ShaderManager> shaderManager;
-	std::shared_ptr<AssetManager> assetManager;
-	std::shared_ptr<Camera> camera;
+  std::shared_ptr<FpsCounter> fpsCounter;
+  std::shared_ptr<Label> fpsLabel;
+  std::shared_ptr<Label> cameraCoords;
 
-    std::multimap<ShaderType, PRenderable> renderables;
+  std::shared_ptr<ShaderManager> shaderManager;
+  std::shared_ptr<AssetManager> assetManager;
+  std::shared_ptr<Camera> camera;
 
-	RenderContext context;
+  std::multimap<ShaderType, PRenderable> renderables;
 
-	void initContext();
-    void initScene();
+  RenderContext context;
 
-	void renderAll();
+  void initContext();
+  void initScene();
+
+  void renderAll();
 };
 
