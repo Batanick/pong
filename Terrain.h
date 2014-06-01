@@ -42,7 +42,5 @@ private :
 
 	std::unique_ptr<Patches> patches;
 
-	void generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod );
-	
-    void rebuildTerrain( const float &dx, const float &dz);
+	void Terrain::refreshPatch(Patch &patch);
 };

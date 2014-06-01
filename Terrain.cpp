@@ -93,11 +93,12 @@ void Terrain::render( const RenderContext &context ) {
     for (int i = 0; i < PATCHES_COUNT; i++) {
 		PatchHolder holder = patches->acquire(i);
 		Patch &patch = holder.patch;
-		if (patch.lod == -1) {
+		if (!patch.needToDraw()) {
 			continue;
 		}
+		refreshPatch(patch);
 
-        glBindBuffer( GL_ARRAY_BUFFER, patch.id );
+		glBindBuffer( GL_ARRAY_BUFFER, patch.id );
 	    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0 );
 
         const IndexBuffer &indexBuffer = indexBuffers[patch.lod];
@@ -105,6 +106,25 @@ void Terrain::render( const RenderContext &context ) {
         glDrawElements( GL_TRIANGLE_STRIP, indexBuffer.length, GL_UNSIGNED_INT, (void *) 0);
     }
     glDisableVertexAttribArray(0);
+}
+
+void Terrain::refreshPatch(Patch &patch) {
+	if (!patch.needReinit()) {
+		return;
+	}
+
+	const double start = glfwGetTime();
+
+	glBindBuffer(GL_ARRAY_BUFFER, patch.id);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, patch.vertices.size() * sizeof(glm::vec3), &patch.vertices[0]);
+	glFinish();
+
+	patch.normals.clear();
+	patch.vertices.clear();
+
+	if (patch.lod == 0) {
+		LOG("Refreshing lod[%d]: %dms", patch.lod, static_cast<int>((glfwGetTime() - start) * 1000));
+	}
 }
 
 void Terrain::shutdown() {

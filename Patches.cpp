@@ -55,16 +55,6 @@ void Patches::refresh(const RenderContext &context) {
 void Patches::reinitPatch(Patch &patch) {
 	const glm::vec2 offset(patch.x * PATCH_SIZE_METERS + TERRAIN_OFFSET, patch.y * PATCH_SIZE_METERS + TERRAIN_OFFSET);
 	generateVertices( offset, patch.vertices, patch.lod);
-
-	const double start = glfwGetTime();
-
-	glBindBuffer(GL_ARRAY_BUFFER, patch.id);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, patch.vertices.size() * sizeof(glm::vec3), &patch.vertices[0]);
-	glFinish();
-
-	if (patch.lod == 0) {
-		LOG("Buffering [%d]: %dms", patch.lod, static_cast<int>((glfwGetTime() - start) * 1000));
-	}
 }
 
 PatchHolder Patches::acquire(const int &index) {

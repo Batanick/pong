@@ -18,6 +18,14 @@ struct Patch {
 	std::vector<glm::vec3> vertices;
 	std::vector<glm::vec3> normals;
 	int x, y;
+
+	bool needReinit() {
+		return !vertices.empty();
+	}
+
+	bool needToDraw() {
+		return lod >= 0;
+	}
 };
 
 struct PatchHolder final {
