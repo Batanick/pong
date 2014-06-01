@@ -1,6 +1,7 @@
 #include <vector>
 #include <mutex>
 #include <memory>
+#include <atomic>
 
 #include "glm.hpp"
 
@@ -63,13 +64,17 @@ public:
 	void shutdown();
 
 	PatchHolder acquire(const int &index);
+  //threadsafe
+  void updatePos(const glm::vec3 &updatePos);
 
 private:
 	std::vector<Patch> patches;
+  std::atomic<glm::vec3> position;
 
 	typedef std::shared_ptr<std::mutex> pMutex;
 	std::vector<pMutex> locks;
 
 	void reinitPatch(Patch &patch);
 	void refresh(const RenderContext &context);
+  
 };

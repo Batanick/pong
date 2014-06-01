@@ -65,6 +65,10 @@ PatchHolder Patches::acquire(const int &index) {
   return holder;
 }
 
+void Patches::updatePos(const glm::vec3 &updatePos) {
+  position = updatePos;
+}
+
 void Patches::shutdown() {
   for (const auto &patch : patches) {
     glDeleteBuffers(1, &patch.id);
