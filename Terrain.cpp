@@ -9,10 +9,7 @@
 
 #include "logging.h"
 #include "commonMath.h"
-#include "noise.h"
 #include "renderUtils.h"
-
-int countLevelOfDetail( const int &x, const int &y );
 
 void Terrain::init(const GLuint shaderId) {
 	mvpId = glGetUniformLocation(shaderId, "mvp");
@@ -46,31 +43,7 @@ void Terrain::initIndices(const GLuint &shaderId) {
 }
 
 void Terrain::initVertices(const GLuint &shaderId) {
-	patches.resize(PATCHES_COUNT);
-	indexToLod.resize(PATCHES_COUNT);
-
-	std::vector<GLuint> vBuffers(PATCHES_COUNT);
-	glGenBuffers(PATCHES_COUNT, &vBuffers[0]);
-	for (int i = 0; i < PATCHES_COUNT; i++) {
-		Patch &patch = patches[i];
-		patch.id = vBuffers[i];
-
-		const int row = i / PATCHES_COUNT_SQRT;
-		const int column = i % PATCHES_COUNT_SQRT;
-
-		const int lod = countLevelOfDetail(column, row);
-		patch.lod = lod;
-		patch.x = column;
-		patch.y = row;
-
-		
-		indexToLod[i] = lod;
-		glBindBuffer(GL_ARRAY_BUFFER, patch.id);
-
-		const long dataSize = VERTICES_IN_PATH * sizeof(glm::vec3);
-		glBufferData(GL_ARRAY_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
-	}
-
+	patches->init();
 }
 
 void Terrain::initTexture(const GLuint &shaderId) {
@@ -102,20 +75,7 @@ void Terrain::initTexture(const GLuint &shaderId) {
 	free(textureData);
 }
 
-void Terrain::reinitPatch( Patch &patch ) {
-    const glm::vec2 offset( patch.x * PATCH_SIZE_METERS + TERRAIN_OFFSET, patch.y * PATCH_SIZE_METERS + TERRAIN_OFFSET );
-    generateVertices( offset, patch.vertices, patch.lod );
-
-	glBindBuffer(GL_ARRAY_BUFFER, patch.id);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, patch.vertices.size() * sizeof(glm::vec3), &patch.vertices[0]);
-}
-
 void Terrain::render( const RenderContext &context ) {
-	if (!inited) {
-		inited = true;
-		refresh(context);
-	}
-
     glUniformMatrix4fv( mvpId, 1, GL_FALSE, &context.pv[0][0] );
 	glUniform1f(heightId, MAX_HEIGHT);
 
@@ -131,11 +91,11 @@ void Terrain::render( const RenderContext &context ) {
 	int updateCounter = 0;
 
     for (int i = 0; i < PATCHES_COUNT; i++) {
-        Patch &patch = patches[i];
+		PatchHolder holder = patches->acquire(i);
+		Patch &patch = holder.patch;
 		if (patch.lod == -1) {
 			continue;
 		}
-
 
         glBindBuffer( GL_ARRAY_BUFFER, patch.id );
 	    glVertexAttribPointer( 0, 3, GL_FLOAT, GL_FALSE, 0, (void *) 0 );
@@ -143,72 +103,17 @@ void Terrain::render( const RenderContext &context ) {
         const IndexBuffer &indexBuffer = indexBuffers[patch.lod];
         glBindBuffer( GL_ELEMENT_ARRAY_BUFFER, indexBuffer.id);
         glDrawElements( GL_TRIANGLE_STRIP, indexBuffer.length, GL_UNSIGNED_INT, (void *) 0);
-
     }
     glDisableVertexAttribArray(0);
 }
-
-void Terrain::refresh( const RenderContext &context ) {
-    const glm::vec3 cameraPos = context.cameraPos;
-
-	const int x = static_cast<int>(round(cameraPos.x / PATCH_SIZE_METERS));
-	const int y = static_cast<int>(round(cameraPos.z / PATCH_SIZE_METERS));
-
-	for (int i = 0; i < PATCHES_COUNT; i++) {
-		reinitPatch(patches[i]);
-	}
-}
-
-void Terrain::generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod ) {
-	const double start = glfwGetTime();
-
-    const int factor = glm::min(TILES_IN_PATCH_SQRT, 1 << lod * LOD_REDUCTION);
-    const float tileSize = TILE_SIZE * factor;
-    const int tilesCount = TILES_IN_PATCH_SQRT / factor;
-
-    for ( int y = 0; y < tilesCount + 1; y++) {
-        for (int x = 0; x < tilesCount + 1; x++) {
-            const float xCoord = x * tileSize + offset.x;
-            const float yCoord = y * tileSize + offset.y;
-			const float zCoord = getHeight(xCoord, yCoord); // * MAX_HEIGHT;
-            vertices.push_back ( glm::vec3(xCoord, zCoord, yCoord) );
-		}
-	}
-
-	if (lod == 0) {
-		LOG("Reiniting lod[%d]: %dms", lod, static_cast<int>((glfwGetTime() - start) * 1000));
-	}
-}
-
-float Terrain::getHeight( float x, float y ) {
-	float result = glm::max(noise(x / 64, y / 64) + 0.8f, 0.0f) / 2.0f;
-	return result * MAX_HEIGHT;
-}
-
-glm::vec3 Terrain::getRandomPos() {
-    const float x = 0.0;//tiles * tileSize * getRandomFloat() - offset;
-    const float z = 0.0;//tiles * tileSize * getRandomFloat() - offset;
-    
-    return glm::vec3( x, getHeight(x, z), z );
-}
-
 
 void Terrain::shutdown() {
     for (const auto buffer : indexBuffers ) {
         glDeleteBuffers ( 1, &buffer.id );
     }
-    
-    for (const auto patch : patches ) {
-        glDeleteBuffers ( 1, &patch.id );
-    }
 
+	patches->shutdown();
 	glDeleteTextures(1, &textureId);
 }
 
-int countLevelOfDetail( const int &x, const int &y ) {
-    static const float indexOffset = PATCHES_COUNT_SQRT / 2 - 0.5;
-    const float floatLod =  glm::max( glm::abs(static_cast<float>(x) - indexOffset), glm::abs(static_cast<float>(y) - indexOffset) ) / LOD_STEP;
-    const int lod = glm::min( glm::max(0, static_cast<int>(floatLod)), LOD_LEVELS_COUNT - 1 );
-    return lod;
-}
 

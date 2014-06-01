@@ -3,53 +3,34 @@
 #include <memory>
 
 #include "TerrainConstants.h"
+#include "Patches.h"
 
 class Terrain final : public Renderable {
 
 public:
-    Terrain() {
+    Terrain(): 
+		patches( new Patches() ) {
         position = glm::vec3();
 
 		mvpId = -1;
 		textureId = -1; 
 		heightId = -1;
-
-		inited = false;
 	}
 
     virtual void init( const GLuint shaderId ) override;
     virtual void render( const RenderContext &context ) override;
     virtual void shutdown() override;
-    
-    glm::vec3 getRandomPos();
-    float getHeight( float x, float y );
-
 private :
     struct IndexBuffer {
         GLuint id;
         int length;
     };
 
-    struct Patch {
-		Patch() {
-			x = -1;
-			y = -1;
-		}
-
-        GLuint id;
-        int lod;
-		std::vector<glm::vec3> vertices;
-		std::vector<glm::vec3> normals;
-		int x, y;
-    };
-
 	void initTexture( const GLuint &shaderId );
 	void initVertices( const GLuint &shaderId );
 	void initIndices( const GLuint &shaderId );
 
-    std::vector<Patch> patches;
     std::vector<IndexBuffer> indexBuffers;
-    std::vector<int> indexToLod;
 
     glm::vec3 position;
     
@@ -59,11 +40,9 @@ private :
 
 	GLuint textureId;
 
-	bool inited;
+	std::unique_ptr<Patches> patches;
 
 	void generateVertices( const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod );
 	
     void rebuildTerrain( const float &dx, const float &dz);
-    void reinitPatch( Patch &patch );
-	void refresh(const RenderContext &context);
 };
