@@ -42,8 +42,8 @@ void Patches::init() {
 void Patches::refresh() {
   const glm::vec3 cameraPos = position;
 
-  const int cameraX = static_cast<int>(cameraPos.x / PATCH_SIZE_METERS + 0.5);
-  const int cameraY = static_cast<int>(cameraPos.z / PATCH_SIZE_METERS + 0.5);
+  const int cameraX = static_cast<int>(cameraPos.x / PATCH_SIZE_METERS);
+  const int cameraY = static_cast<int>(cameraPos.z / PATCH_SIZE_METERS);
 
   for (int i = 0; i < PATCHES_COUNT; i++) {
     static const int offset = PATCHES_COUNT_SQRT / 2;
@@ -55,7 +55,7 @@ void Patches::refresh() {
     const int patchY = offsetY + cameraY;
 
     const Patch &patch = patches[i]; // no need of sincronization here, since we are the only thread that writing this data
-    const bool needReinit = (patch.lod <= 0) || (patch.lod > suggestedLod) || (patch.x != patchX) || (patch.y != patchY);
+    const bool needReinit = (patch.lod < 0) || (patch.lod > suggestedLod) || (patch.x != patchX) || (patch.y != patchY);
 
     if (needReinit) {
       reinitPatch(i, patchX, patchY, suggestedLod);
@@ -67,7 +67,7 @@ void Patches::refresh() {
 }
 
 void Patches::reinitPatch(const int &index, const int &x, const int &y, const int &lod) {
-  const glm::vec2 offset(x * PATCH_SIZE_METERS, y * PATCH_SIZE_METERS);
+  const glm::vec2 offset((x - 0.5f) * PATCH_SIZE_METERS, (y - 0.5f) * PATCH_SIZE_METERS);
   std::vector<glm::vec3> vertices;
   generateVertices(offset, vertices, lod);
 
@@ -110,9 +110,8 @@ void Patches::shutdown() {
 }
 
 int countLevelOfDetail(const int &x, const int &y) {
-  static const float indexOffset = PATCHES_COUNT_SQRT / 2 - 0.5;
-  const float floatLod = glm::max(glm::abs(static_cast<float>(x)-indexOffset), glm::abs(static_cast<float>(y)-indexOffset)) / LOD_STEP;
-  const int lod = glm::min(glm::max(0, static_cast<int>(floatLod)), LOD_LEVELS_COUNT - 1);
+  const int lodLevel = glm::max(static_cast<int>(glm::abs(x + 0.5f)), static_cast<int>(glm::abs(y + 0.5f))) / LOD_STEP;
+  const int lod = glm::min(glm::max(0, lodLevel), LOD_LEVELS_COUNT - 1);
   return lod;
 }
 
