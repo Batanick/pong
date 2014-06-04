@@ -71,8 +71,6 @@ void Patches::refresh() {
 
     const bool needReinit = (patch.lod != suggestedLod) || (patch.x != patchX) || (patch.y != patchY);
 
-    if (!needReinit)
-
     if (needReinit) {
       reinitPatch(actualIndex, patchX, patchY, suggestedLod);
       reinited++;
