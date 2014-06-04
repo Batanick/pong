@@ -59,6 +59,9 @@ class Patches final {
 public:
 	Patches() {
     running = false;
+
+    offsetX = 0;
+    offsetY = 0;
 	}
 
 	void init();
@@ -73,12 +76,16 @@ private:
 
   std::vector<pMutex> locks;
 	std::vector<Patch> patches;
-  std::atomic<glm::vec3> position;
-  std::atomic<bool> running;
 
+  int offsetX, offsetY;
+
+  std::atomic<glm::vec3> cameraPosition;
+  std::atomic<bool> running;
+  
   std::shared_ptr<std::thread> backgndThread;
 
   void refreshThread();
 	void refresh();
-  void Patches::reinitPatch(const int &index, const int &x, const int &y, const int &lod);
+  void reinitPatch(const int &index, const int &x, const int &y, const int &lod);
+  int countLevelOfDetail(const int &x, const int &y);
 };

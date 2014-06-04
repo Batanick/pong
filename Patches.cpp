@@ -7,9 +7,9 @@
 #include "logging.h"
 #include "noise.h"
 
-int countLevelOfDetail(const int &x, const int &y);
 float getHeight(float x, float y);
 void generateVertices(const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod);
+int normalizeOffset(const int &value);
 
 void Patches::init() {
   patches.resize(PATCHES_COUNT);
@@ -31,8 +31,12 @@ void Patches::init() {
     patch.normals.clear();
 
     glBindBuffer(GL_ARRAY_BUFFER, patch.id);
-
     glBufferData(GL_ARRAY_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
+
+    const int patchX = i % PATCHES_COUNT_SQRT - PATCHES_COUNT_SQRT / 2;
+    const int patchY = i / PATCHES_COUNT_SQRT - PATCHES_COUNT_SQRT / 2;
+
+    reinitPatch(i, patchX, patchY, countLevelOfDetail(patchX, patchY));
   }
 
   running = true;
@@ -40,34 +44,49 @@ void Patches::init() {
 }
 
 void Patches::refresh() {
-  const glm::vec3 cameraPos = position;
+  glm::vec3 cameraPos = cameraPosition;
 
-  const int cameraX = static_cast<int>(cameraPos.x / PATCH_SIZE_METERS);
-  const int cameraY = static_cast<int>(cameraPos.z / PATCH_SIZE_METERS);
+  const glm::vec2 currentPos = glm::vec2(offsetX * PATCH_SIZE_METERS, offsetY * PATCH_SIZE_METERS);
+  const glm::vec2 posDelta = glm::vec2(cameraPos.x - currentPos.x, cameraPos.z - currentPos.y);
 
+  static const float posThreshold = PATCH_SIZE_METERS;
+  if ((glm::abs(posDelta.x) < posThreshold) && (glm::abs(posDelta.y) < posThreshold)){
+    return;
+  }
+
+  offsetX = static_cast<int>(glm::round(cameraPos.x / PATCH_SIZE_METERS));
+  offsetY = static_cast<int>(glm::round(cameraPos.z / PATCH_SIZE_METERS));
+
+  int reinited = 0;
   for (int i = 0; i < PATCHES_COUNT; i++) {
-    static const int offset = PATCHES_COUNT_SQRT / 2;
-    const int offsetX = i % PATCHES_COUNT_SQRT - offset;
-    const int offsetY = i / PATCHES_COUNT_SQRT - offset;
-    const int suggestedLod = countLevelOfDetail(offsetX, offsetY);
+    const int patchX = i % PATCHES_COUNT_SQRT + offsetX - PATCHES_COUNT_SQRT / 2;
+    const int patchXNorm = normalizeOffset(patchX);
 
-    const int patchX = offsetX + cameraX;
-    const int patchY = offsetY + cameraY;
+    const int patchY = i / PATCHES_COUNT_SQRT + offsetY - PATCHES_COUNT_SQRT / 2;
+    const int patchYNorm = normalizeOffset(patchY);
 
-    const Patch &patch = patches[i]; // no need of sincronization here, since we are the only thread that writing this data
-    const bool needReinit = (patch.lod < 0) || (patch.lod > suggestedLod) || (patch.x != patchX) || (patch.y != patchY);
+    const int actualIndex = patchXNorm + PATCHES_COUNT_SQRT * patchYNorm;
+    const Patch &patch = patches[actualIndex];
+    const int suggestedLod = countLevelOfDetail(patchX - offsetX, patchY - offsetY);
+
+    const bool needReinit = (patch.lod != suggestedLod) || (patch.x != patchX) || (patch.y != patchY);
+
+    if (!needReinit)
 
     if (needReinit) {
-      reinitPatch(i, patchX, patchY, suggestedLod);
+      reinitPatch(actualIndex, patchX, patchY, suggestedLod);
+      reinited++;
     }
 
     if (!running)
       return;
   }
+
+  LOG("Reinited: %d", reinited);
 }
 
 void Patches::reinitPatch(const int &index, const int &x, const int &y, const int &lod) {
-  const glm::vec2 offset((x - 0.5f) * PATCH_SIZE_METERS, (y - 0.5f) * PATCH_SIZE_METERS);
+  const glm::vec2 offset(x * PATCH_SIZE_METERS, y * PATCH_SIZE_METERS);
   std::vector<glm::vec3> vertices;
   generateVertices(offset, vertices, lod);
 
@@ -90,7 +109,7 @@ PatchHolder Patches::acquire(const int &index) {
 }
 
 void Patches::updatePos(const glm::vec3 &updatePos) {
-  position = updatePos;
+  cameraPosition = updatePos;
 }
 
 void Patches::refreshThread() {
@@ -109,10 +128,10 @@ void Patches::shutdown() {
   }
 }
 
-int countLevelOfDetail(const int &x, const int &y) {
-  const int lodLevel = glm::max(static_cast<int>(glm::abs(x + 0.5f)), static_cast<int>(glm::abs(y + 0.5f))) / LOD_STEP;
-  const int lod = glm::min(glm::max(0, lodLevel), LOD_LEVELS_COUNT - 1);
-  return lod;
+int Patches::countLevelOfDetail(const int &x, const int &y) {
+  const int xLod = static_cast<int>(glm::abs(x + 0.5f));
+  const int yLod = static_cast<int>(glm::abs(y + 0.5f));
+  return glm::min(LOD_LEVELS_COUNT - 1, glm::max(0, glm::max(xLod, yLod)));
 }
 
 void generateVertices(const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod) {
@@ -126,7 +145,7 @@ void generateVertices(const glm::vec2 offset, std::vector<glm::vec3> &vertices, 
     for (int x = 0; x < tilesCount + 1; x++) {
       const float xCoord = x * tileSize + offset.x;
       const float yCoord = y * tileSize + offset.y;
-      const float zCoord = getHeight(xCoord, yCoord); // * MAX_HEIGHT;
+      const float zCoord = getHeight(xCoord, yCoord);
       vertices.push_back(glm::vec3(xCoord, zCoord, yCoord));
     }
   }
@@ -139,4 +158,22 @@ void generateVertices(const glm::vec2 offset, std::vector<glm::vec3> &vertices, 
 float getHeight(float x, float y) {
   float result = glm::max(noise(x / 64, y / 64) + 0.8f, 0.0f) / 2.0f;
   return result * MAX_HEIGHT;
+}
+
+int normalizeOffset(const int &value) {
+  int result = value;
+
+  if (result >= PATCHES_COUNT_SQRT) {
+    while (result >= PATCHES_COUNT_SQRT) {
+      result -= PATCHES_COUNT_SQRT;
+    }
+    return result;
+  }
+  else {
+    while (result < 0) {
+      result += PATCHES_COUNT_SQRT;
+    }
+
+    return result;
+  }
 }
