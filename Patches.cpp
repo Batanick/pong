@@ -51,7 +51,7 @@ void Patches::refresh() {
 
   static const float posThreshold = PATCH_SIZE_METERS;
   if ((glm::abs(posDelta.x) < posThreshold) && (glm::abs(posDelta.y) < posThreshold)){
-    return;
+    //return;
   }
 
   offsetX = static_cast<int>(glm::round(cameraPos.x / PATCH_SIZE_METERS));
@@ -67,9 +67,16 @@ void Patches::refresh() {
 
     const int actualIndex = patchXNorm + PATCHES_COUNT_SQRT * patchYNorm;
     const Patch &patch = patches[actualIndex];
-    const int suggestedLod = countLevelOfDetail(patchX - offsetX, patchY - offsetY);
 
-    const bool needReinit = (patch.lod != suggestedLod) || (patch.x != patchX) || (patch.y != patchY);
+    int suggestedLod = 0;
+    bool needReinit = (patch.x != patchX) || (patch.y != patchY);
+    if (needReinit) {
+      suggestedLod = LOD_LEVELS_COUNT - 1;
+    }
+    else {
+      suggestedLod = glm::max(patch.lod - 1, countLevelOfDetail(patchX - offsetX, patchY - offsetY));
+      needReinit |= suggestedLod != patch.lod; 
+    }
 
     if (needReinit) {
       reinitPatch(actualIndex, patchX, patchY, suggestedLod);
