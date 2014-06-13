@@ -32,11 +32,6 @@ void Patches::init() {
 
     glBindBuffer(GL_ARRAY_BUFFER, patch.id);
     glBufferData(GL_ARRAY_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
-
-    const int patchX = i % PATCHES_COUNT_SQRT - PATCHES_COUNT_SQRT / 2;
-    const int patchY = i / PATCHES_COUNT_SQRT - PATCHES_COUNT_SQRT / 2;
-
-    reinitPatch(i, patchX, patchY, countLevelOfDetail(patchX, patchY));
   }
 
   running = true;
@@ -87,7 +82,9 @@ void Patches::refresh() {
       return;
   }
 
-  LOG("Reinited: %d", reinited);
+  if (reinited > 0) {
+    LOG("Reinited: %d", reinited);
+  }
 }
 
 void Patches::reinitPatch(const int &index, const int &x, const int &y, const int &lod) {
