@@ -1,13 +1,16 @@
 #version 330 core
 
 layout (location = 0) in vec3 vertexPosition;
+layout (location = 1) in vec3 vertexNormal;
 
 uniform mat4 mvp;
 uniform float heightScale;
 
 out float height;
+out vec3 normal;
 
 void main() {
 	gl_Position = mvp * vec4(vertexPosition, 1);
-	height = vertexPosition.y / heightScale ;
+	height = vertexPosition.y / heightScale;
+  normal = vertexNormal;
 }

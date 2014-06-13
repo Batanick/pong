@@ -8,7 +8,7 @@
 #include "noise.h"
 
 float getHeight(float x, float y);
-void generateVertices(const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod);
+void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices, int lod);
 int normalizeOffset(const int &value);
 
 void Patches::init() {
@@ -16,7 +16,7 @@ void Patches::init() {
 
   std::vector<GLuint> vBuffers(PATCHES_COUNT);
   glGenBuffers(PATCHES_COUNT, &vBuffers[0]);
-  const long dataSize = VERTICES_IN_PATH * sizeof(glm::vec3);
+  const long dataSize = VERTICES_IN_PATH * sizeof(VertexData);
 
   for (int i = 0; i < PATCHES_COUNT; i++) {
     pMutex lock = std::shared_ptr<std::mutex>(new std::mutex());
@@ -28,7 +28,6 @@ void Patches::init() {
     patch.x = 0;
     patch.y = 0;
     patch.vertices.clear();
-    patch.normals.clear();
 
     glBindBuffer(GL_ARRAY_BUFFER, patch.id);
     glBufferData(GL_ARRAY_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
@@ -70,7 +69,7 @@ void Patches::refresh() {
     }
     else {
       suggestedLod = glm::max(patch.lod - 1, countLevelOfDetail(patchX - offsetX, patchY - offsetY));
-      needReinit |= suggestedLod != patch.lod; 
+      needReinit |= suggestedLod != patch.lod;
     }
 
     if (needReinit) {
@@ -89,7 +88,7 @@ void Patches::refresh() {
 
 void Patches::reinitPatch(const int &index, const int &x, const int &y, const int &lod) {
   const glm::vec2 offset(x * PATCH_SIZE_METERS, y * PATCH_SIZE_METERS);
-  std::vector<glm::vec3> vertices;
+  std::vector<VertexData> vertices;
   generateVertices(offset, vertices, lod);
 
   {
@@ -136,7 +135,7 @@ int Patches::countLevelOfDetail(const int &x, const int &y) {
   return glm::min(LOD_LEVELS_COUNT - 1, glm::max(0, glm::max(xLod, yLod)));
 }
 
-void generateVertices(const glm::vec2 offset, std::vector<glm::vec3> &vertices, int lod) {
+void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices, int lod) {
   const double start = glfwGetTime();
 
   const int factor = glm::min(TILES_IN_PATCH_SQRT, 1 << lod * LOD_REDUCTION);
@@ -146,9 +145,12 @@ void generateVertices(const glm::vec2 offset, std::vector<glm::vec3> &vertices, 
   for (int y = 0; y < tilesCount + 1; y++) {
     for (int x = 0; x < tilesCount + 1; x++) {
       const float xCoord = x * tileSize + offset.x;
-      const float yCoord = y * tileSize + offset.y;
-      const float zCoord = getHeight(xCoord, yCoord);
-      vertices.push_back(glm::vec3(xCoord, zCoord, yCoord));
+      const float zCoord = y * tileSize + offset.y;
+      const float yCoord = getHeight(xCoord, zCoord);
+
+      const glm::vec3 position(xCoord, yCoord, zCoord);
+      const glm::vec3 normal(0.0f, 1.0f, 1.0f);
+      vertices.push_back(VertexData(position, normal));
     }
   }
 

@@ -9,6 +9,20 @@
 #include "TerrainConstants.h"
 #include "RenderCommon.h"
 
+struct VertexData {
+  VertexData(const glm::vec3 &position, const glm::vec3 &normal) {
+    this->position = position;
+    this->normal = normal;
+  }
+
+  VertexData() {
+
+  }
+
+  glm::vec3 position;
+  glm::vec3 normal;
+};
+
 struct Patch {
 	Patch() {
 		x = -1;
@@ -17,8 +31,7 @@ struct Patch {
 
 	GLuint id;
 	int lod;
-	std::vector<glm::vec3> vertices;
-	std::vector<glm::vec3> normals;
+	std::vector<VertexData> vertices;
 	int x, y;
 
   bool needReinit() const {

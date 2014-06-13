@@ -90,6 +90,8 @@ void Terrain::render(const RenderContext &context) {
   glUniform1i(textureParamId, 0);
 
   glEnableVertexAttribArray(0);
+  glEnableVertexAttribArray(1);
+
   int updateCounter = 0;
 
   for (int i = 0; i < PATCHES_COUNT; i++) {
@@ -101,13 +103,20 @@ void Terrain::render(const RenderContext &context) {
     refreshPatch(patch);
 
     glBindBuffer(GL_ARRAY_BUFFER, patch.id);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
+
+    static const int coordsOffset = offsetof(VertexData, position);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void *)coordsOffset);
+
+    static const int normalOffset = offsetof(VertexData, normal);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void *)normalOffset);
 
     const IndexBuffer &indexBuffer = indexBuffers[patch.lod];
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.id);
     glDrawElements(GL_TRIANGLE_STRIP, indexBuffer.length, GL_UNSIGNED_INT, (void *)0);
   }
+
   glDisableVertexAttribArray(0);
+  glDisableVertexAttribArray(1);
 }
 
 void Terrain::refreshPatch(Patch &patch) {
@@ -118,10 +127,9 @@ void Terrain::refreshPatch(Patch &patch) {
   const double start = glfwGetTime();
 
   glBindBuffer(GL_ARRAY_BUFFER, patch.id);
-  glBufferSubData(GL_ARRAY_BUFFER, 0, patch.vertices.size() * sizeof(glm::vec3), &patch.vertices[0]);
+  glBufferSubData(GL_ARRAY_BUFFER, 0, patch.vertices.size() * sizeof(VertexData), &patch.vertices[0]);
   glFinish();
 
-  patch.normals.clear();
   patch.vertices.clear();
 
   if (patch.lod == 0) {
