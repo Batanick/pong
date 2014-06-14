@@ -94,6 +94,8 @@ void Renderer::render(double timeDelta) {
   const glm::mat4 view = camera->getView();
   const glm::mat4 projection = camera->getProjection();
   context.pv = projection * view;
+  context.projection = projection;
+  context.view = view;
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

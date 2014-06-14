@@ -135,6 +135,14 @@ int Patches::countLevelOfDetail(const int &x, const int &y) {
   return glm::min(LOD_LEVELS_COUNT - 1, glm::max(0, glm::max(xLod, yLod)));
 }
 
+glm::vec3 buildPosition(const int &x, const int &y, const float &tileSize, const glm::vec2 &offset) {
+  const float xCoord = x * tileSize + offset.x;
+  const float zCoord = y * tileSize + offset.y;
+  const float yCoord = getHeight(xCoord, zCoord);
+
+  return glm::vec3(xCoord, yCoord, zCoord);
+}
+
 void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices, int lod) {
   const double start = glfwGetTime();
 
@@ -144,12 +152,12 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
 
   for (int y = 0; y < tilesCount + 1; y++) {
     for (int x = 0; x < tilesCount + 1; x++) {
-      const float xCoord = x * tileSize + offset.x;
-      const float zCoord = y * tileSize + offset.y;
-      const float yCoord = getHeight(xCoord, zCoord);
+      const glm::vec3 position = buildPosition(x, y, tileSize, offset);
 
-      const glm::vec3 position(xCoord, yCoord, zCoord);
-      const glm::vec3 normal(0.0f, 1.0f, 1.0f);
+      const glm::vec3 n1 = buildPosition(x - 1, y, tileSize, offset);
+      const glm::vec3 n2 = buildPosition(x, y - 1, tileSize, offset);
+
+      const glm::vec3 normal = glm::normalize(glm::cross(n2 - position, n1 - position));
       vertices.push_back(VertexData(position, normal));
     }
   }

@@ -14,6 +14,9 @@ struct RenderContext {
   int windowWidth;
 
   glm::mat4 pv;
+  glm::mat4 projection;
+  glm::mat4 view;
+
   glm::vec3 cameraPos;
   glm::vec3 lightDir;
 };

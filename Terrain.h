@@ -10,10 +10,13 @@ class Terrain final : public Renderable {
 public:
   Terrain() :
     patches(new Patches()) {
-    mvpId = -1;
+    projectionId = -1;
+    viewId = -1;
     textureId = -1;
     heightId = -1;
     textureId = -1;
+    cameraPosId = -1;
+    lightDirId = -1;
   }
 
   virtual void init(const GLuint shaderId) override;
@@ -31,7 +34,8 @@ private:
 
   std::vector<IndexBuffer> indexBuffers;
 
-  GLuint mvpId;
+  GLuint projectionId;
+  GLuint viewId;
   GLuint textureParamId;
   GLuint heightId;
   GLuint cameraPosId;
