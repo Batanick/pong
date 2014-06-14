@@ -15,6 +15,8 @@ void Terrain::init(const GLuint shaderId) {
   mvpId = glGetUniformLocation(shaderId, "mvp");
   textureParamId = glGetUniformLocation(shaderId, "terrainTexture");
   heightId = glGetUniformLocation(shaderId, "heightScale");
+  cameraPosId = glGetUniformLocation(shaderId, "cameraPos");
+  lightDirId = glGetUniformLocation(shaderId, "lightDir");
 
   initIndices(shaderId);
   initVertices(shaderId);
@@ -80,6 +82,8 @@ void Terrain::render(const RenderContext &context) {
 
   glUniformMatrix4fv(mvpId, 1, GL_FALSE, &context.pv[0][0]);
   glUniform1f(heightId, MAX_HEIGHT);
+  glUniform3fv(cameraPosId, 1, &context.cameraPos[0]);
+  glUniform3fv(lightDirId, 1, &context.lightDir[0]);
 
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

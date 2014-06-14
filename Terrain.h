@@ -34,6 +34,8 @@ private:
   GLuint mvpId;
   GLuint textureParamId;
   GLuint heightId;
+  GLuint cameraPosId;
+  GLuint lightDirId;
 
   GLuint textureId;
 

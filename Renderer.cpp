@@ -81,6 +81,8 @@ void Renderer::initContext() {
   glfwGetWindowSize(window, &windowW, &windowH);
   context.windowHeight = windowH;
   context.windowWidth = windowW;
+
+  context.lightDir = glm::normalize(glm::vec3(1, 1, -1));
 }
 
 void Renderer::render(double timeDelta) {

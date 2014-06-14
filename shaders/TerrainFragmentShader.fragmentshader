@@ -4,6 +4,8 @@ in float height;
 in vec3 normal;
 
 uniform sampler1D terrainTexture;
+uniform vec3 cameraPos;
+uniform vec3 lightDir;
 
 out vec3 color;
 

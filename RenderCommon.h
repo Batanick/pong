@@ -15,6 +15,7 @@ struct RenderContext {
 
   glm::mat4 pv;
   glm::vec3 cameraPos;
+  glm::vec3 lightDir;
 };
 
 struct Glyph {
