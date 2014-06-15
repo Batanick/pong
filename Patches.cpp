@@ -63,7 +63,7 @@ void Patches::refresh() {
     const Patch &patch = patches[actualIndex];
 
     int suggestedLod = 0;
-    bool needReinit = (patch.x != patchX) || (patch.y != patchY);
+    bool needReinit = (patch.x != patchX) || (patch.y != patchY) || (patch.lod < 0);
     if (needReinit) {
       suggestedLod = LOD_LEVELS_COUNT - 1;
     }
@@ -146,6 +146,8 @@ glm::vec3 buildPosition(const int &x, const int &y, const float &tileSize, const
 void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices, int lod) {
   const double start = glfwGetTime();
 
+  vertices.clear();
+
   const int factor = glm::min(TILES_IN_PATCH_SQRT, 1 << lod * LOD_REDUCTION);
   const float tileSize = TILE_SIZE * factor;
   const int tilesCount = TILES_IN_PATCH_SQRT / factor;
@@ -154,8 +156,8 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
     for (int x = 0; x < tilesCount + 1; x++) {
       const glm::vec3 position = buildPosition(x, y, tileSize, offset);
 
-      const glm::vec3 n1 = buildPosition(x - 1, y, tileSize, offset);
-      const glm::vec3 n2 = buildPosition(x, y - 1, tileSize, offset);
+      const glm::vec3 n1 = x > 0 ? vertices.back().position : buildPosition(x - 1, y, tileSize, offset);
+      const glm::vec3 n2 = y > 0 ? vertices[vertices.size() - tilesCount - 1].position : buildPosition(x, y - 1, tileSize, offset);
 
       const glm::vec3 normal = glm::normalize(glm::cross(n2 - position, n1 - position));
       vertices.push_back(VertexData(position, normal));
