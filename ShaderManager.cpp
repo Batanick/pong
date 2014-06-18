@@ -45,29 +45,29 @@ std::vector<ShaderManager::ShaderDesc> ShaderManager::buildShaders() {
   // ============== TERRAIN_SHADER ============== 
   shaders.push_back(ShaderDesc(
     ShaderType::TERRAIN_SHADER,
-    "TerrainVertexShader.vertexshader",
-    "TerrainFragmentShader.fragmentshader",
+    "Terrain.vs",
+    "Terrain.fs",
     &initTerrainShader));
 
   // ============== BUSH_SHADER ============== 
   shaders.push_back(ShaderDesc(
     ShaderType::BUSH_SHADER,
-    "BushVertexShader.vertexshader",
-    "BushFragmentShader.fragmentshader",
+    "Bush.vs",
+    "Bush.fs",
     &initBushShader));
 
   // ============== FONT_SHADER ============== 
   shaders.push_back(ShaderDesc(
     ShaderType::FONT_SHADER,
-    "FontVertexShader.vertexshader",
-    "FontFragmentShader.fragmentshader",
+    "Font.vs",
+    "Font.fs",
     &initTextShader));
 
   // ============== TEST_SHADER ============== 
   shaders.push_back(ShaderDesc(
     ShaderType::TEST_SHADER,
-    "TestVertexShader.vertexshader",
-    "TestFragmentShader.fragmentshader",
+    "Test.vs",
+    "Test.fs",
     initTestShader));
 
   return shaders;

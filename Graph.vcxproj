@@ -94,6 +94,7 @@
     <ClCompile Include="commonMath.cpp" />
     <ClCompile Include="fontLoader.cpp" />
     <ClCompile Include="noise.cpp" />
+    <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="TerrainConstants.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="Terrain.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="fontLoader.h" />
     <ClInclude Include="FpsCounter.h" />
+    <ClInclude Include="SkyBox.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="logging.h" />
     <ClInclude Include="noise.h" />
@@ -132,14 +134,14 @@
     <ClInclude Include="Tree.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\BushFragmentShader.fragmentshader" />
-    <None Include="shaders\BushVertexShader.vertexshader" />
-    <None Include="shaders\FontFragmentShader.fragmentshader" />
-    <None Include="shaders\FontVertexShader.vertexshader" />
-    <None Include="shaders\TerrainFragmentShader.fragmentshader" />
-    <None Include="shaders\TerrainVertexShader.vertexshader" />
-    <None Include="shaders\TestFragmentShader.fragmentshader" />
-    <None Include="shaders\TestVertexShader.vertexshader" />
+    <None Include="shaders\Bush.fs" />
+    <None Include="shaders\Bush.vs" />
+    <None Include="shaders\Font.fs" />
+    <None Include="shaders\Font.vs" />
+    <None Include="shaders\Terrain.fs" />
+    <None Include="shaders\Terrain.vs" />
+    <None Include="shaders\Test.fs" />
+    <None Include="shaders\Test.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

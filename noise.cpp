@@ -3,7 +3,7 @@
 #include <math.h>
 #include "commonMath.h"
 
-static const int OCTAVES = 16;
+static const int OCTAVES = 8;
 
 inline float signum(float n) {
   if (n < 0)

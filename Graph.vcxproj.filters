@@ -17,10 +17,10 @@
     <Filter Include="tinyXml">
       <UniqueIdentifier>{245d04f9-12be-45d7-b3ad-ebbc1d9a15a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\renderer\Terrain">
+    <Filter Include="src\renderer\world">
       <UniqueIdentifier>{f207e4c2-6a80-46a4-bcf6-54e46f303a3a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\renderer\Common">
+    <Filter Include="src\renderer\common">
       <UniqueIdentifier>{86b880c1-270b-405c-b19a-65cb838abf38}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -68,40 +68,43 @@
       <Filter>src\common</Filter>
     </ClCompile>
     <ClCompile Include="Terrain.cpp">
-      <Filter>src\renderer\Terrain</Filter>
+      <Filter>src\renderer\world</Filter>
     </ClCompile>
     <ClCompile Include="TerrainConstants.cpp">
-      <Filter>src\renderer\Terrain</Filter>
+      <Filter>src\renderer\world</Filter>
     </ClCompile>
     <ClCompile Include="Patches.cpp">
-      <Filter>src\renderer\Terrain</Filter>
+      <Filter>src\renderer\world</Filter>
     </ClCompile>
     <ClCompile Include="AssetManager.cpp">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClCompile>
     <ClCompile Include="FpsCounter.cpp">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClCompile>
     <ClCompile Include="RenderableMesh.cpp">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClCompile>
     <ClCompile Include="Label.cpp">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClCompile>
     <ClCompile Include="Font.cpp">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClCompile>
     <ClCompile Include="ShaderManager.cpp">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClCompile>
     <ClCompile Include="Bush.cpp">
-      <Filter>src\renderer\Terrain</Filter>
+      <Filter>src\renderer\world</Filter>
     </ClCompile>
     <ClCompile Include="Tree.cpp">
-      <Filter>src\renderer\Terrain</Filter>
+      <Filter>src\renderer\world</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBox.cpp">
+      <Filter>src\renderer\world</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,65 +151,68 @@
       <Filter>src\common</Filter>
     </ClInclude>
     <ClInclude Include="Terrain.h">
-      <Filter>src\renderer\Terrain</Filter>
+      <Filter>src\renderer\world</Filter>
     </ClInclude>
     <ClInclude Include="TerrainConstants.h">
-      <Filter>src\renderer\Terrain</Filter>
+      <Filter>src\renderer\world</Filter>
     </ClInclude>
     <ClInclude Include="Patches.h">
-      <Filter>src\renderer\Terrain</Filter>
+      <Filter>src\renderer\world</Filter>
     </ClInclude>
     <ClInclude Include="AssetManager.h">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClInclude>
     <ClInclude Include="FpsCounter.h">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClInclude>
     <ClInclude Include="RenderableMesh.h">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClInclude>
     <ClInclude Include="Label.h">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClInclude>
     <ClInclude Include="Font.h">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
-      <Filter>src\renderer\Common</Filter>
+      <Filter>src\renderer\common</Filter>
     </ClInclude>
     <ClInclude Include="Bush.h">
-      <Filter>src\renderer\Terrain</Filter>
+      <Filter>src\renderer\world</Filter>
     </ClInclude>
     <ClInclude Include="Tree.h">
-      <Filter>src\renderer\Terrain</Filter>
+      <Filter>src\renderer\world</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>src\renderer\world</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\TerrainFragmentShader.fragmentshader">
+    <None Include="shaders\Bush.fs">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="shaders\TerrainVertexShader.vertexshader">
+    <None Include="shaders\Bush.vs">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="shaders\FontFragmentShader.fragmentshader">
+    <None Include="shaders\Font.fs">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="shaders\FontVertexShader.vertexshader">
+    <None Include="shaders\Font.vs">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="shaders\TestFragmentShader.fragmentshader">
+    <None Include="shaders\Terrain.fs">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="shaders\TestVertexShader.vertexshader">
+    <None Include="shaders\Test.fs">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="shaders\BushFragmentShader.fragmentshader">
+    <None Include="shaders\Test.vs">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="shaders\BushVertexShader.vertexshader">
+    <None Include="shaders\Terrain.vs">
       <Filter>src\shaders</Filter>
     </None>
   </ItemGroup>
