@@ -20,6 +20,9 @@
     <Filter Include="src\renderer\Terrain">
       <UniqueIdentifier>{f207e4c2-6a80-46a4-bcf6-54e46f303a3a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\renderer\Common">
+      <UniqueIdentifier>{86b880c1-270b-405c-b19a-65cb838abf38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -40,18 +43,6 @@
     <ClCompile Include="commonMath.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderManager.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Font.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Label.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="fontLoader.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
@@ -67,25 +58,10 @@
     <ClCompile Include="tinyXml\tinyxmlparser.cpp">
       <Filter>tinyXml</Filter>
     </ClCompile>
-    <ClCompile Include="AssetManager.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="FpsCounter.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="Bush.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderUtils.cpp">
       <Filter>src\common</Filter>
     </ClCompile>
-    <ClCompile Include="Tree.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>src\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="RenderableMesh.cpp">
       <Filter>src\renderer</Filter>
     </ClCompile>
     <ClCompile Include="noise.cpp">
@@ -98,6 +74,33 @@
       <Filter>src\renderer\Terrain</Filter>
     </ClCompile>
     <ClCompile Include="Patches.cpp">
+      <Filter>src\renderer\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.cpp">
+      <Filter>src\renderer\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="FpsCounter.cpp">
+      <Filter>src\renderer\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableMesh.cpp">
+      <Filter>src\renderer\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Label.cpp">
+      <Filter>src\renderer\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Font.cpp">
+      <Filter>src\renderer\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>src\renderer\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="ShaderManager.cpp">
+      <Filter>src\renderer\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Bush.cpp">
+      <Filter>src\renderer\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Tree.cpp">
       <Filter>src\renderer\Terrain</Filter>
     </ClCompile>
   </ItemGroup>
@@ -123,19 +126,7 @@
     <ClInclude Include="commonMath.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>src\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="Renderer.h">
-      <Filter>src\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="ShaderManager.h">
-      <Filter>src\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Label.h">
-      <Filter>src\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Font.h">
       <Filter>src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="fontLoader.h">
@@ -147,26 +138,11 @@
     <ClInclude Include="tinyXml\tinyxml.h">
       <Filter>tinyXml</Filter>
     </ClInclude>
-    <ClInclude Include="AssetManager.h">
-      <Filter>src\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderCommon.h">
       <Filter>src\common</Filter>
     </ClInclude>
-    <ClInclude Include="FpsCounter.h">
-      <Filter>src\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="Bush.h">
-      <Filter>src\renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderUtils.h">
       <Filter>src\common</Filter>
-    </ClInclude>
-    <ClInclude Include="Tree.h">
-      <Filter>src\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="RenderableMesh.h">
-      <Filter>src\renderer</Filter>
     </ClInclude>
     <ClInclude Include="noise.h">
       <Filter>src\common</Filter>
@@ -178,6 +154,33 @@
       <Filter>src\renderer\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="Patches.h">
+      <Filter>src\renderer\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="AssetManager.h">
+      <Filter>src\renderer\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="FpsCounter.h">
+      <Filter>src\renderer\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableMesh.h">
+      <Filter>src\renderer\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Label.h">
+      <Filter>src\renderer\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Font.h">
+      <Filter>src\renderer\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>src\renderer\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="ShaderManager.h">
+      <Filter>src\renderer\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Bush.h">
+      <Filter>src\renderer\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.h">
       <Filter>src\renderer\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
