@@ -7,11 +7,14 @@
 
 #include "ShaderManager.h"
 #include "AssetManager.h"
+
 #include "Terrain.h"
 #include "Bush.h"
 #include "Tree.h"
-#include "Camera.h"
 #include "Label.h"
+#include "SkyBox.h"
+
+#include "Camera.h"
 #include "FpsCounter.h"
 
 #include "logging.h"
@@ -21,6 +24,7 @@
 #define DRAW_TERRAIN
 //#define DRAW_GRASS
 //#define DRAW_TREES
+#define DRAW_SKYBOX
 
 bool Renderer::init() {
   VERIFY(glewInit() == GLEW_OK, "Unable to initialize glew", return false);
@@ -40,6 +44,7 @@ bool Renderer::init() {
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
   glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK); 
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   initContext();
@@ -54,17 +59,9 @@ void Renderer::initScene() {
   add(ShaderType::TERRAIN_SHADER, terrain);
 #endif
 
-#ifdef DRAW_GRASS
-  static const int bushes = tiles * 4;
-  for (int i = 0; i < bushes; i++) {
-    std::shared_ptr<Bush> bush = std::shared_ptr<Bush>(new Bush(terrain->getRandomPos(), 64));
-    add(ShaderType::BUSH_SHADER, bush);
-  }
-#endif
-
-#ifdef DRAW_TREES
-  std::shared_ptr<Tree> tree = std::shared_ptr<Tree>(new Tree());
-  add(ShaderType::BUSH_SHADER, tree);
+#ifdef DRAW_SKYBOX
+  std::shared_ptr<SkyBox> skyBox = std::shared_ptr<SkyBox>(new SkyBox());
+  add(ShaderType::SKYBOX_SHADER, skyBox);
 #endif
 
 #ifdef SHOW_FPS
@@ -74,6 +71,8 @@ void Renderer::initScene() {
   this->cameraCoords = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
   add(ShaderType::FONT_SHADER, cameraCoords);
 #endif
+
+
 }
 
 void Renderer::initContext() {

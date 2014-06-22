@@ -215,5 +215,11 @@
     <None Include="shaders\Terrain.vs">
       <Filter>src\shaders</Filter>
     </None>
+    <None Include="shaders\SkyBox.fs">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\SkyBox.vs">
+      <Filter>src\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -6,81 +6,25 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-void initTextShader() {
-  glDisable(GL_CULL_FACE);
-  glDisable(GL_DEPTH_TEST);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glEnable(GL_BLEND);
-  glEnable(GL_COLOR_MATERIAL);
-  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-  glBlendEquation(GL_FUNC_ADD);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-}
-
-void initTerrainShader() {
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glDisable(GL_BLEND);
-}
-
-void initTestShader() {
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_CULL_FACE);
-  glDisable(GL_BLEND);
-}
-
-void initBushShader() {
-  glDisable(GL_DEPTH_TEST);
-  glDisable(GL_CULL_FACE);
-  glDisable(GL_BLEND);
-}
-
-
-// shaders list here
-std::vector<ShaderManager::ShaderDesc> ShaderManager::buildShaders() {
-  std::vector<ShaderDesc> shaders;
-
-  // ============== TERRAIN_SHADER ============== 
-  shaders.push_back(ShaderDesc(
-    ShaderType::TERRAIN_SHADER,
-    "Terrain.vs",
-    "Terrain.fs",
-    &initTerrainShader));
-
-  // ============== BUSH_SHADER ============== 
-  shaders.push_back(ShaderDesc(
-    ShaderType::BUSH_SHADER,
-    "Bush.vs",
-    "Bush.fs",
-    &initBushShader));
-
-  // ============== FONT_SHADER ============== 
-  shaders.push_back(ShaderDesc(
-    ShaderType::FONT_SHADER,
-    "Font.vs",
-    "Font.fs",
-    &initTextShader));
-
-  // ============== TEST_SHADER ============== 
-  shaders.push_back(ShaderDesc(
-    ShaderType::TEST_SHADER,
-    "Test.vs",
-    "Test.fs",
-    initTestShader));
-
-  return shaders;
-}
+void initTextShader();
+void initMeshShader();
+void initSkyMesh();
 
 static const std::string SHADER_PATH = "../shaders/";
 
 void loadShaderSource(GLuint shaderId, char const * source);
 void printLog(GLuint obj);
 
+static std::vector<ShaderManager::ShaderDesc> SHADERS = {
+  ShaderManager::ShaderDesc(ShaderType::TERRAIN_SHADER, "Terrain.vs", "Terrain.fs", &initMeshShader),
+  ShaderManager::ShaderDesc(ShaderType::BUSH_SHADER, "Bush.vs", "Bush.fs", &initMeshShader),
+  ShaderManager::ShaderDesc(ShaderType::FONT_SHADER, "Font.vs", "Font.fs", &initTextShader),
+  ShaderManager::ShaderDesc(ShaderType::SKYBOX_SHADER, "SkyBox.vs", "SkyBox.fs", &initSkyMesh),
+  ShaderManager::ShaderDesc(ShaderType::TEST_SHADER, "Test.vs", "Test.fs", &initMeshShader)
+};
+
 bool ShaderManager::init() {
-  std::vector<ShaderManager::ShaderDesc> shaderDescs = buildShaders();
-  for (ShaderDesc desc : shaderDescs) {
+  for (const ShaderDesc &desc : SHADERS) {
     if (!loadShader(desc)){
       return false;
     }
@@ -189,4 +133,31 @@ void printLog(GLuint obj) {
 
   if (infologLength > 0)
     LOG("%s\n", infoLog);
+}
+
+void initTextShader() {
+  glDisable(GL_CULL_FACE);
+  glDisable(GL_DEPTH_TEST);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glEnable(GL_BLEND);
+  glEnable(GL_COLOR_MATERIAL);
+  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+  glBlendEquation(GL_FUNC_ADD);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void initMeshShader() {
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+  glDisable(GL_BLEND);
+}
+
+void initSkyMesh() {
+  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_FRONT);
+  glDisable(GL_BLEND);
 }

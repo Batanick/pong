@@ -138,6 +138,8 @@
     <None Include="shaders\Bush.vs" />
     <None Include="shaders\Font.fs" />
     <None Include="shaders\Font.vs" />
+    <None Include="shaders\SkyBox.fs" />
+    <None Include="shaders\SkyBox.vs" />
     <None Include="shaders\Terrain.fs" />
     <None Include="shaders\Terrain.vs" />
     <None Include="shaders\Test.fs" />

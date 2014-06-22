@@ -9,7 +9,7 @@ class ShaderDesc;
 
 
 enum class ShaderType : unsigned int {
-  NONE, MODEL_SHADER, TERRAIN_SHADER, BUSH_SHADER, FONT_SHADER, TEST_SHADER
+  NONE, MODEL_SHADER, TERRAIN_SHADER, BUSH_SHADER, SKYBOX_SHADER, FONT_SHADER, TEST_SHADER
 };
 
 class ShaderManager final {
@@ -22,7 +22,6 @@ public:
   void useProgram(const ShaderType shaderType);
   GLuint getProgramId(const ShaderType shaderType);
 
-private:
   typedef void(*ShaderInitializer) ();
   struct ShaderDesc {
     ShaderDesc(ShaderType shaderType, char * vertexShader, char * fragmentShader, ShaderInitializer initilizer) :
@@ -31,13 +30,14 @@ private:
       shaderType(shaderType),
       initilizer(initilizer) {
     }
-
-    const std::string vertexShaderFName;
-    const std::string fragmentShaderFName;
+    
+    std::string vertexShaderFName;
+    std::string fragmentShaderFName;
     ShaderType shaderType;
     ShaderInitializer initilizer;
   };
 
+private:
 
   struct ShaderParams {
     ShaderParams(ShaderType type, ShaderInitializer initilizer, GLuint id) :
@@ -51,7 +51,6 @@ private:
     ShaderInitializer initilizer;
   };
 
-  static std::vector<ShaderDesc> buildShaders();
   std::map<ShaderType, const ShaderParams> shaders;
   bool loadShader(const ShaderDesc &desc);
 };
