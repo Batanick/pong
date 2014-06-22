@@ -38,7 +38,7 @@ bool Renderer::init() {
   fpsCounter = std::shared_ptr<FpsCounter>(new FpsCounter());
 
   camera = std::shared_ptr<Camera>(new Camera());
-  glClearColor(0.0f, 0.0f, 0.6f, 0.0f);
+  glClearColor(0.0f, 0.635f, 0.91f, 0.0f);
 
   glfwSwapInterval(1);
   glEnable(GL_DEPTH_TEST);
@@ -80,6 +80,7 @@ void Renderer::initContext() {
   glfwGetWindowSize(window, &windowW, &windowH);
   context.windowHeight = windowH;
   context.windowWidth = windowW;
+  context.time = 0;
 
   context.lightDir = glm::normalize(glm::vec3(1, 1, -1));
 }
@@ -88,6 +89,7 @@ void Renderer::render(double timeDelta) {
   camera->onBeforeRender(window, timeDelta);
 
   context.timeDelta = timeDelta;
+  context.time += timeDelta;
   context.cameraPos = camera->getPosition();
 
   const glm::mat4 view = camera->getView();

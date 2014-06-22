@@ -35,7 +35,7 @@ void Terrain::initIndices(const GLuint &shaderId) {
 
     generateIndexTable(size, size, indices);
     LOG("Lod %d: [%d] elements", i, size);
-    size = size >> LOD_REDUCTION;
+    size = size >> 1;
 
     indexBuffers[i].id = iBuffers[i];
     indexBuffers[i].length = indices.size();

@@ -2,9 +2,13 @@
 
 layout (location = 0) in vec3 pos;
 
-uniform mat4 mvp;
+uniform mat4 vp;
 uniform vec3 cameraPos;
+
+out vec3 fragmentPos;
  
 void main() {
-   gl_Position = mvp * vec4(pos + cameraPos, 1);
+  vec3 vPosition = pos + cameraPos;
+  gl_Position = vp * vec4(vPosition , 1);
+  fragmentPos = vPosition;
 }

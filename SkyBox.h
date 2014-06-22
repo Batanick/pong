@@ -1,13 +1,17 @@
 #include "RenderCommon.h"
 
-static const float SIZE = 1000.0f;
+static const float SIZE = 10000.0f;
+static const int SKY_LEVELS_COUNT = 16;
+static const float HEIGHT = 500;
+static const float HEIGHT_STEP = 10;
 
 class SkyBox final : public Renderable  {
 public:
   SkyBox() {
     verticesId = -1;
-    indicesId = -1;
     cameraPosId = -1;
+    pvId = -1;
+    timeId = -1;
   }
 
   virtual void init(const GLuint shaderId) override;
@@ -16,7 +20,9 @@ public:
 
 private:
   GLuint verticesId;
-  GLuint indicesId;
   GLuint cameraPosId;
-  GLuint mvpId;
+  GLuint pvId;
+  GLuint timeId;
+
+  GLuint textureId;
 };

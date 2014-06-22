@@ -148,7 +148,7 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
 
   vertices.clear();
 
-  const int factor = glm::min(TILES_IN_PATCH_SQRT, 1 << lod * LOD_REDUCTION);
+  const int factor = glm::min(TILES_IN_PATCH_SQRT, 1 << lod);
   const float tileSize = TILE_SIZE * factor;
   const int tilesCount = TILES_IN_PATCH_SQRT / factor;
 
@@ -170,7 +170,7 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
 }
 
 float getHeight(float x, float y) {
-  float result = glm::max(noise(x / 256, y / 256) + 0.8f, 0.0f) / 2.0f;
+  float result = glm::max(noise(x / 512, y / 512) + 0.8f, 0.0f) / 2.0f;
   return result * MAX_HEIGHT;
 }
 

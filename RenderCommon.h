@@ -8,6 +8,7 @@ static const float RENDER_FOV = 45.0f;
 typedef unsigned int GLuint;
 
 struct RenderContext {
+  double time;
   double timeDelta;
 
   int windowHeight;
@@ -19,6 +20,8 @@ struct RenderContext {
 
   glm::vec3 cameraPos;
   glm::vec3 lightDir;
+
+  
 };
 
 struct Glyph {
