@@ -109,6 +109,9 @@
     <ClCompile Include="RenderableMesh.cpp">
       <Filter>src\renderer\common</Filter>
     </ClCompile>
+    <ClCompile Include="Sun.cpp">
+      <Filter>src\renderer\world</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -194,6 +197,9 @@
     </ClInclude>
     <ClInclude Include="RenderableMesh.h">
       <Filter>src\renderer\common</Filter>
+    </ClInclude>
+    <ClInclude Include="Sun.h">
+      <Filter>src\renderer\world</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

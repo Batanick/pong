@@ -2,7 +2,7 @@
 
 #include <vector>
 
-class TexturedMesh final : public Renderable  {
+class TexturedMesh : public Renderable  {
 public:
   TexturedMesh() {
     verticesId = -1;
@@ -11,11 +11,6 @@ public:
     indicesId = -1;
   }
 
-  virtual void init(const GLuint shaderId) override;
-  virtual void render(const RenderContext &context) override;
-  virtual void shutdown() override;
-
-private:
   struct VertexData {
     VertexData(const glm::vec3 &position, const glm::vec2 uv) {
       this->position = position;
@@ -29,6 +24,11 @@ private:
     glm::vec2 uv;
   };
 
+  virtual void init(const GLuint shaderId) override;
+  virtual void render(const RenderContext &context) override;
+  virtual void shutdown() override;
+
+private:
   GLuint verticesId;
   GLuint indicesId; 
 
@@ -38,7 +38,7 @@ private:
 
   int indicesCount;
 
-  void initVertices(std::vector<const VertexData> &vertices, std::vector<const unsigned short> &indices);
-  void initTexture(GLuint &textureId);
-  glm::mat4 getModelTransform(const RenderContext &context); 
+  virtual void initVertices(std::vector<const VertexData> &vertices, std::vector<const unsigned short> &indices) = 0;
+  virtual void initTexture(GLuint &textureId) = 0;
+  virtual glm::mat4 getModelTransform(const RenderContext &context) = 0; 
 };

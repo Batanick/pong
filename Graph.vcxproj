@@ -95,6 +95,7 @@
     <ClCompile Include="fontLoader.cpp" />
     <ClCompile Include="noise.cpp" />
     <ClCompile Include="SkyBox.cpp" />
+    <ClCompile Include="Sun.cpp" />
     <ClCompile Include="TexturedMesh.cpp" />
     <ClCompile Include="TerrainConstants.cpp" />
     <ClCompile Include="Tree.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="RenderableMesh.h" />
     <ClInclude Include="SkyBox.h" />
+    <ClInclude Include="Sun.h" />
     <ClInclude Include="TexturedMesh.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="logging.h" />
