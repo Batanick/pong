@@ -95,6 +95,7 @@
     <ClCompile Include="fontLoader.cpp" />
     <ClCompile Include="noise.cpp" />
     <ClCompile Include="SkyBox.cpp" />
+    <ClCompile Include="TexturedMesh.cpp" />
     <ClCompile Include="TerrainConstants.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="Terrain.cpp" />
@@ -115,12 +116,13 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="fontLoader.h" />
     <ClInclude Include="FpsCounter.h" />
+    <ClInclude Include="RenderableMesh.h" />
     <ClInclude Include="SkyBox.h" />
+    <ClInclude Include="TexturedMesh.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="logging.h" />
     <ClInclude Include="noise.h" />
     <ClInclude Include="Patches.h" />
-    <ClInclude Include="RenderableMesh.h" />
     <ClInclude Include="renderCommon.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="renderUtils.h" />
@@ -144,6 +146,8 @@
     <None Include="shaders\Terrain.vs" />
     <None Include="shaders\Test.fs" />
     <None Include="shaders\Test.vs" />
+    <None Include="shaders\TexturedMesh.fs" />
+    <None Include="shaders\TexturedMesh.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

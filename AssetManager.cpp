@@ -61,6 +61,10 @@ void AssetManager::shutdown() {
 }
 
 bool AssetManager::init() {
+  int texturesCount;
+  glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texturesCount);
+  LOG("Available texture units: [%d]", texturesCount);
+
   defaultFont = loadFont("../textures/arial.xml");
   return true;
 }

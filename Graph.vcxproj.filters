@@ -82,9 +82,6 @@
     <ClCompile Include="FpsCounter.cpp">
       <Filter>src\renderer\common</Filter>
     </ClCompile>
-    <ClCompile Include="RenderableMesh.cpp">
-      <Filter>src\renderer\common</Filter>
-    </ClCompile>
     <ClCompile Include="Label.cpp">
       <Filter>src\renderer\common</Filter>
     </ClCompile>
@@ -103,8 +100,14 @@
     <ClCompile Include="Tree.cpp">
       <Filter>src\renderer\world</Filter>
     </ClCompile>
+    <ClCompile Include="TexturedMesh.cpp">
+      <Filter>src\renderer\common</Filter>
+    </ClCompile>
     <ClCompile Include="SkyBox.cpp">
       <Filter>src\renderer\world</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableMesh.cpp">
+      <Filter>src\renderer\common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -165,9 +168,6 @@
     <ClInclude Include="FpsCounter.h">
       <Filter>src\renderer\common</Filter>
     </ClInclude>
-    <ClInclude Include="RenderableMesh.h">
-      <Filter>src\renderer\common</Filter>
-    </ClInclude>
     <ClInclude Include="Label.h">
       <Filter>src\renderer\common</Filter>
     </ClInclude>
@@ -186,8 +186,14 @@
     <ClInclude Include="Tree.h">
       <Filter>src\renderer\world</Filter>
     </ClInclude>
+    <ClInclude Include="TexturedMesh.h">
+      <Filter>src\renderer\common</Filter>
+    </ClInclude>
     <ClInclude Include="SkyBox.h">
       <Filter>src\renderer\world</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableMesh.h">
+      <Filter>src\renderer\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +225,12 @@
       <Filter>src\shaders</Filter>
     </None>
     <None Include="shaders\SkyBox.vs">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\TexturedMesh.fs">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\TexturedMesh.vs">
       <Filter>src\shaders</Filter>
     </None>
   </ItemGroup>

@@ -16,7 +16,6 @@ struct VertexData {
   }
 
   VertexData() {
-
   }
 
   glm::vec3 position;

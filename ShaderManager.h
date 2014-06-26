@@ -5,11 +5,8 @@
 typedef unsigned int GLuint;
 typedef std::string ShaderParam;
 
-class ShaderDesc;
-
-
 enum class ShaderType : unsigned int {
-  NONE, MODEL_SHADER, TERRAIN_SHADER, BUSH_SHADER, SKYBOX_SHADER, FONT_SHADER, TEST_SHADER
+  NONE, MODEL_SHADER, TEX_MESH_SHADER, TERRAIN_SHADER, BUSH_SHADER, SKYBOX_SHADER, FONT_SHADER, TEST_SHADER
 };
 
 class ShaderManager final {
@@ -23,6 +20,7 @@ public:
   GLuint getProgramId(const ShaderType shaderType);
 
   typedef void(*ShaderInitializer) ();
+
   struct ShaderDesc {
     ShaderDesc(ShaderType shaderType, char * vertexShader, char * fragmentShader, ShaderInitializer initilizer) :
       vertexShaderFName(vertexShader),
@@ -30,7 +28,7 @@ public:
       shaderType(shaderType),
       initilizer(initilizer) {
     }
-    
+
     std::string vertexShaderFName;
     std::string fragmentShaderFName;
     ShaderType shaderType;

@@ -13,6 +13,7 @@
 #include "Tree.h"
 #include "Label.h"
 #include "SkyBox.h"
+#include "TexturedMesh.h"
 
 #include "Camera.h"
 #include "FpsCounter.h"
@@ -21,7 +22,7 @@
 
 #define SHOW_FPS
 
-#define DRAW_TERRAIN
+//#define DRAW_TERRAIN
 //#define DRAW_GRASS
 //#define DRAW_TREES
 #define DRAW_SKYBOX
@@ -62,17 +63,18 @@ void Renderer::initScene() {
 #ifdef DRAW_SKYBOX
   std::shared_ptr<SkyBox> skyBox = std::shared_ptr<SkyBox>(new SkyBox());
   add(ShaderType::SKYBOX_SHADER, skyBox);
+
+  std::shared_ptr<TexturedMesh> sun = std::shared_ptr<TexturedMesh>(new TexturedMesh());
+  add(ShaderType::TEX_MESH_SHADER, sun);
 #endif
 
 #ifdef SHOW_FPS
-  this->fpsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 50, glm::vec3(0, 1, 0)));
+  this->fpsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), "DUMMYY", 20, context.windowHeight - 50, glm::vec3(0, 1, 0)));
   add(ShaderType::FONT_SHADER, fpsLabel);
 
   this->cameraCoords = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
   add(ShaderType::FONT_SHADER, cameraCoords);
 #endif
-
-
 }
 
 void Renderer::initContext() {

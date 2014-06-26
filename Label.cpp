@@ -19,11 +19,15 @@ void Label::render(const RenderContext &context) {
   glBindTexture(GL_TEXTURE_2D, font->getTextureInfo().textureId);
   glUniform1i(fontTextureId, 0);
 
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void *)0);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+  glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
+
+  glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
   glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
   glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
 
@@ -117,6 +121,6 @@ void Label::setText(std::string text) {
     return;
   }
 
-  shutdown();
+  loaded = false;
   str = text;
 }

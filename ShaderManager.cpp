@@ -9,6 +9,7 @@
 void initTextShader();
 void initMeshShader();
 void initSkyMesh();
+void initDumb();
 
 static const std::string SHADER_PATH = "../shaders/";
 
@@ -18,6 +19,7 @@ void printLog(GLuint obj);
 static std::vector<ShaderManager::ShaderDesc> SHADERS = {
   ShaderManager::ShaderDesc(ShaderType::TERRAIN_SHADER, "Terrain.vs", "Terrain.fs", &initMeshShader),
   ShaderManager::ShaderDesc(ShaderType::BUSH_SHADER, "Bush.vs", "Bush.fs", &initMeshShader),
+  ShaderManager::ShaderDesc(ShaderType::TEX_MESH_SHADER, "TexturedMesh.vs", "TexturedMesh.fs", &initMeshShader),
   ShaderManager::ShaderDesc(ShaderType::FONT_SHADER, "Font.vs", "Font.fs", &initTextShader),
   ShaderManager::ShaderDesc(ShaderType::SKYBOX_SHADER, "SkyBox.vs", "SkyBox.fs", &initSkyMesh),
   ShaderManager::ShaderDesc(ShaderType::TEST_SHADER, "Test.vs", "Test.fs", &initMeshShader)
@@ -139,11 +141,8 @@ void initTextShader() {
   glDisable(GL_CULL_FACE);
   glDisable(GL_DEPTH_TEST);
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glEnable(GL_BLEND);
-  glEnable(GL_COLOR_MATERIAL);
-  glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+  
   glBlendEquation(GL_FUNC_ADD);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -160,4 +159,8 @@ void initSkyMesh() {
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+void initDumb() {
+
 }
