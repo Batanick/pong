@@ -6,6 +6,8 @@
 #include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
 
+#include "commonMath.h"
+
 void Sun::initVertices(std::vector<const VertexData> &vertices, std::vector<const unsigned short> &indices) {
   vertices.push_back(VertexData(glm::vec3(-MESH_SIZE, MESH_SIZE, 0.0f), glm::vec2(0.0f, 0.0f)));
   vertices.push_back(VertexData(glm::vec3(MESH_SIZE, MESH_SIZE, 0.0f), glm::vec2(0.0f, 0.0f)));
@@ -41,6 +43,11 @@ void Sun::initTexture(GLuint &textureId) {
   free(textureData);
 }
 
-glm::mat4 Sun::getModelTransform(const RenderContext &context){
-  return glm::mat4();
+glm::mat4 Sun::getModelTransform(const RenderContext &context) {
+  const glm::vec3 dirToSun = glm::normalize(-context.lightDir);
+  const glm::vec3 translation = dirToSun / dirToSun.y * MESH_HEIGHT;
+  const glm::mat4 transMat = glm::translate(glm::mat4(), translation + context.cameraPos);
+
+  const glm::quat rotationQuat = getRotation(-zAxis, context.lightDir);
+  return transMat * glm::toMat4(rotationQuat);
 }

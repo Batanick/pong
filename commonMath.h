@@ -14,7 +14,7 @@ T trim(T min, T max, T value) {
 
 glm::quat getRotation(glm::vec3 start, glm::vec3 dest);
 
-glm::vec3 findPerpendicular(glm::vec3  vector);
+glm::vec3 findPerpendicular(glm::vec3 vector);
 
 float getRandomFloat();
 

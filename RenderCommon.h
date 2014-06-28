@@ -5,6 +5,10 @@
 static const float RENDER_PI = 3.14159265358979323846264338327950288f;
 static const float RENDER_FOV = 45.0f;
 
+static const glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+static const glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+static const glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+
 typedef unsigned int GLuint;
 
 struct RenderContext {
@@ -20,8 +24,6 @@ struct RenderContext {
 
   glm::vec3 cameraPos;
   glm::vec3 lightDir;
-
-  
 };
 
 struct Glyph {
