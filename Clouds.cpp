@@ -1,4 +1,4 @@
-#include "SkyBox.h"
+#include "Clouds.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -8,7 +8,7 @@
 
 #include <vector>
 
-void SkyBox::init(const GLuint shaderId) {
+void Clouds::init(const GLuint shaderId) {
   pvId = glGetUniformLocation(shaderId, "vp");
   cameraPosId = glGetUniformLocation(shaderId, "cameraPos");
   timeId = glGetUniformLocation(shaderId, "time");
@@ -31,7 +31,7 @@ void SkyBox::init(const GLuint shaderId) {
   glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec3), &vertices[0], GL_STATIC_DRAW);
 }
 
-void SkyBox::render(const RenderContext &context) {
+void Clouds::render(const RenderContext &context) {
   glUniformMatrix4fv(pvId, 1, GL_FALSE, &context.pv[0][0]);
   glUniform3fv(cameraPosId, 1, &context.cameraPos[0]);
 
@@ -48,6 +48,6 @@ void SkyBox::render(const RenderContext &context) {
   glDisableVertexAttribArray(0);
 }
 
-void SkyBox::shutdown() {
+void Clouds::shutdown() {
   glDeleteBuffers(1, &verticesId);
 }

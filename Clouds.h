@@ -5,9 +5,9 @@ static const int SKY_LEVELS_COUNT = 16;
 static const float HEIGHT = 500;
 static const float HEIGHT_STEP = 10;
 
-class SkyBox final : public Renderable  {
+class Clouds final : public Renderable  {
 public:
-  SkyBox() {
+  Clouds() {
     verticesId = -1;
     cameraPosId = -1;
     pvId = -1;

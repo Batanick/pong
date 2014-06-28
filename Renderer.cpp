@@ -12,7 +12,7 @@
 #include "Bush.h"
 #include "Tree.h"
 #include "Label.h"
-#include "SkyBox.h"
+#include "Clouds.h"
 #include "Sun.h"
 
 #include "Camera.h"
@@ -61,8 +61,8 @@ void Renderer::initScene() {
 #endif
 
 #ifdef DRAW_SKYBOX
-  //std::shared_ptr<SkyBox> skyBox = std::shared_ptr<SkyBox>(new SkyBox());
- // add(ShaderType::SKYBOX_SHADER, skyBox);
+  std::shared_ptr<Clouds> clouds = std::shared_ptr<Clouds>(new Clouds());
+  add(ShaderType::CLOUDS_SHADER, clouds);
 
   std::shared_ptr<TexturedMesh> sun = std::shared_ptr<TexturedMesh>(new Sun());
   add(ShaderType::TEX_MESH_SHADER, sun);

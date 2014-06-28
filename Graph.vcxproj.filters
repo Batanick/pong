@@ -103,13 +103,13 @@
     <ClCompile Include="TexturedMesh.cpp">
       <Filter>src\renderer\common</Filter>
     </ClCompile>
-    <ClCompile Include="SkyBox.cpp">
-      <Filter>src\renderer\world</Filter>
-    </ClCompile>
     <ClCompile Include="RenderableMesh.cpp">
       <Filter>src\renderer\common</Filter>
     </ClCompile>
     <ClCompile Include="Sun.cpp">
+      <Filter>src\renderer\world</Filter>
+    </ClCompile>
+    <ClCompile Include="Clouds.cpp">
       <Filter>src\renderer\world</Filter>
     </ClCompile>
   </ItemGroup>
@@ -192,13 +192,13 @@
     <ClInclude Include="TexturedMesh.h">
       <Filter>src\renderer\common</Filter>
     </ClInclude>
-    <ClInclude Include="SkyBox.h">
-      <Filter>src\renderer\world</Filter>
-    </ClInclude>
     <ClInclude Include="RenderableMesh.h">
       <Filter>src\renderer\common</Filter>
     </ClInclude>
     <ClInclude Include="Sun.h">
+      <Filter>src\renderer\world</Filter>
+    </ClInclude>
+    <ClInclude Include="Clouds.h">
       <Filter>src\renderer\world</Filter>
     </ClInclude>
   </ItemGroup>
@@ -227,16 +227,16 @@
     <None Include="shaders\Terrain.vs">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="shaders\SkyBox.fs">
-      <Filter>src\shaders</Filter>
-    </None>
-    <None Include="shaders\SkyBox.vs">
-      <Filter>src\shaders</Filter>
-    </None>
     <None Include="shaders\TexturedMesh.fs">
       <Filter>src\shaders</Filter>
     </None>
     <None Include="shaders\TexturedMesh.vs">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\Clouds.fs">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\Clouds.vs">
       <Filter>src\shaders</Filter>
     </None>
   </ItemGroup>

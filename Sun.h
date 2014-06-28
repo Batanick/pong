@@ -1,7 +1,7 @@
 #include "TexturedMesh.h"
 
-static const float MESH_SIZE = 64;
-static const float MESH_HEIGHT = 300;
+static const float MESH_SIZE = 128;
+static const float MESH_HEIGHT = 1000;
 
 class Sun final : public TexturedMesh {
 public:

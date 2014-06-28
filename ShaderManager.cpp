@@ -21,7 +21,7 @@ static std::vector<ShaderManager::ShaderDesc> SHADERS = {
   ShaderManager::ShaderDesc(ShaderType::BUSH_SHADER, "Bush.vs", "Bush.fs", &initMeshShader),
   ShaderManager::ShaderDesc(ShaderType::TEX_MESH_SHADER, "TexturedMesh.vs", "TexturedMesh.fs", &initMeshShader),
   ShaderManager::ShaderDesc(ShaderType::FONT_SHADER, "Font.vs", "Font.fs", &initTextShader),
-  ShaderManager::ShaderDesc(ShaderType::SKYBOX_SHADER, "SkyBox.vs", "SkyBox.fs", &initSkyMesh),
+  ShaderManager::ShaderDesc(ShaderType::CLOUDS_SHADER, "Clouds.vs", "Clouds.fs", &initSkyMesh),
   ShaderManager::ShaderDesc(ShaderType::TEST_SHADER, "Test.vs", "Test.fs", &initMeshShader)
 };
 
@@ -151,12 +151,11 @@ void initMeshShader() {
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
-  glDisable(GL_BLEND);
+  //glDisable(GL_BLEND);
 }
 
 void initSkyMesh() {
   glEnable(GL_DEPTH_TEST);
-  glDisable(GL_CULL_FACE);
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
