@@ -7,7 +7,7 @@
 
 static const float MAX_HEIGHT = 128;
 
-static const float PATCH_SIZE_METERS = 64;
+static const float PATCH_SIZE_METERS = 128;
 
 static const int PATCHES_COUNT_SQRT = 64;
 static const int PATCHES_COUNT = PATCHES_COUNT_SQRT * PATCHES_COUNT_SQRT;
@@ -22,8 +22,8 @@ static const float TERRAIN_SIZE = PATCH_SIZE_METERS * PATCHES_COUNT_SQRT;
 static const float TERRAIN_SIZE_HALF = TERRAIN_SIZE / 2;
 static const float TERRAIN_OFFSET = -TERRAIN_SIZE_HALF;
 
-static const int LOD_LEVELS_COUNT = 6;
-static const int LOD_STEP = 8;
+static const int LOD_LEVELS_COUNT = 4;
+static const int LOD_STEP = 1;
 
 struct color {
   color() {

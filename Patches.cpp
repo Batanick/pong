@@ -129,7 +129,7 @@ void Patches::shutdown() {
 int Patches::countLevelOfDetail(const int &x, const int &y) {
   const int xLod = static_cast<int>(glm::abs(x + 0.5f));
   const int yLod = static_cast<int>(glm::abs(y + 0.5f));
-  return glm::min(LOD_LEVELS_COUNT - 1, glm::max(0, glm::max(xLod, yLod)));
+  return glm::min(LOD_LEVELS_COUNT - 1, glm::max(0, glm::max(xLod, yLod) / LOD_STEP));
 }
 
 glm::vec3 buildPosition(const int &x, const int &y, const float &tileSize, const glm::vec2 &offset) {
@@ -169,7 +169,6 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
 }
 
 float getHeight(float x, float y) {
-
   float result = powf((noise(x / 512, y / 512) + 0.8f) / 2.0f, 2.0f);
   result = glm::max(result, 0.0f);
   return result * MAX_HEIGHT;
