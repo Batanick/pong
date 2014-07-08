@@ -25,9 +25,12 @@ void generateIndexTable(const int rows, const int cols, std::vector<unsigned int
       forward = true;
       right = !right;
       rowEndCounter = 2 * cols + 1;
+
+      //repeating last element to reset triangle direction
+      indices.push_back(indices.back());
+      indices.push_back(indices.back()); 
     }
   }
-
 }
 
 void generateRowIndices(const int offset, const int cols, std::vector<unsigned int> &indices) {
