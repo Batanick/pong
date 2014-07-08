@@ -54,10 +54,17 @@ void Camera::onBeforeRender(GLFWwindow * const window, double deltaTime) {
   }
 
   //Switching polygon draw mode
+  static bool buttonUp = true;
   if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-    GLint currentMode[2]; //front and back value
-    glGetIntegerv(GL_POLYGON_MODE, &currentMode[0]);
-    glPolygonMode(GL_FRONT_AND_BACK, currentMode[0] == GL_LINE ? GL_FILL : GL_LINE);
+    if (buttonUp) {
+      GLint currentMode[2]; //front and back value
+      glGetIntegerv(GL_POLYGON_MODE, &currentMode[0]);
+      glPolygonMode(GL_FRONT_AND_BACK, currentMode[0] == GL_LINE ? GL_FILL : GL_LINE);
+      buttonUp = false;
+    }
+  }
+  else {
+    buttonUp = true;
   }
 }
 
