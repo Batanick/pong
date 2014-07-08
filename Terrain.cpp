@@ -11,6 +11,8 @@
 #include "commonMath.h"
 #include "renderUtils.h"
 
+//#define STATIC_TERRAIN
+
 void Terrain::init(const GLuint shaderId) {
   projectionId = glGetUniformLocation(shaderId, "projection");
   viewId = glGetUniformLocation(shaderId, "view");
@@ -33,7 +35,7 @@ void Terrain::initIndices(const GLuint &shaderId) {
   for (int i = 0; i < LOD_LEVELS_COUNT; i++) {
     std::vector<unsigned int> indices;
 
-    generateIndexTable(size, size, indices);
+    generateIndexTable(size + 1, size + 1, indices);
     LOG("Lod %d: [%d] elements", i, size);
     size = size >> 1;
 
@@ -79,7 +81,9 @@ void Terrain::initTexture(const GLuint &shaderId) {
 }
 
 void Terrain::render(const RenderContext &context) {
+#ifndef STATIC_TERRAIN
   patches->updatePos(context.cameraPos);
+#endif
 
   glUniformMatrix4fv(projectionId, 1, GL_FALSE, &context.projection[0][0]);
   glUniformMatrix4fv(viewId, 1, GL_FALSE, &context.view[0][0]);
@@ -133,7 +137,7 @@ void Terrain::refreshPatch(Patch &patch) {
   const double start = glfwGetTime();
 
   glBindBuffer(GL_ARRAY_BUFFER, patch.id);
-  glBufferSubData(GL_ARRAY_BUFFER, 0, patch.vertices.size() * sizeof(VertexData), &patch.vertices[0]);
+  glBufferData(GL_ARRAY_BUFFER, patch.vertices.size() * sizeof(VertexData), &patch.vertices[0], GL_DYNAMIC_DRAW);
   glFinish();
 
   patch.vertices.clear();

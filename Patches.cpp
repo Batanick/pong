@@ -16,7 +16,7 @@ void Patches::init() {
 
   std::vector<GLuint> vBuffers(PATCHES_COUNT);
   glGenBuffers(PATCHES_COUNT, &vBuffers[0]);
-  const long dataSize = VERTICES_IN_PATH * sizeof(VertexData);
+  const long dataSize = 0;
 
   for (int i = 0; i < PATCHES_COUNT; i++) {
     pMutex lock = std::shared_ptr<std::mutex>(new std::mutex());
@@ -28,9 +28,6 @@ void Patches::init() {
     patch.x = 0;
     patch.y = 0;
     patch.vertices.clear();
-
-    glBindBuffer(GL_ARRAY_BUFFER, patch.id);
-    glBufferData(GL_ARRAY_BUFFER, dataSize, NULL, GL_DYNAMIC_DRAW);
   }
 
   running = true;
@@ -150,16 +147,18 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
 
   const int factor = glm::min(TILES_IN_PATCH_SQRT, 1 << lod);
   const float tileSize = TILE_SIZE * factor;
-  const int tilesCount = TILES_IN_PATCH_SQRT / factor;
+  const int tilesCount = TILES_IN_PATCH_SQRT / factor + 1;
 
-  for (int y = 0; y < tilesCount + 1; y++) {
-    for (int x = 0; x < tilesCount + 1; x++) {
+  for (int y = 0; y <= tilesCount; y++) {
+    for (int x = 0; x <= tilesCount; x++) {
       const glm::vec3 position = buildPosition(x, y, tileSize, offset);
 
       const glm::vec3 n1 = x > 0 ? vertices.back().position : buildPosition(x - 1, y, tileSize, offset);
-      const glm::vec3 n2 = y > 0 ? vertices[vertices.size() - tilesCount - 1].position : buildPosition(x, y - 1, tileSize, offset);
+      int index = vertices.size() - tilesCount - 1;
+      const glm::vec3 n2 = y > 0 ? vertices[index].position : buildPosition(x, y - 1, tileSize, offset);
 
       const glm::vec3 normal = glm::normalize(glm::cross(n2 - position, n1 - position));
+
       vertices.push_back(VertexData(position, normal));
     }
   }
@@ -170,7 +169,7 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
 }
 
 float getHeight(float x, float y) {
-  
+
   float result = powf((noise(x / 512, y / 512) + 0.8f) / 2.0f, 2.0f);
   result = glm::max(result, 0.0f);
   return result * MAX_HEIGHT;
