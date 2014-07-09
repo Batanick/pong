@@ -30,19 +30,23 @@ struct color {
     r = 0;
     g = 0;
     b = 0;
+    maxDisloc = 0;
   };
 
   color(unsigned char r,
     unsigned char g,
-    unsigned char b) {
+    unsigned char b,
+    unsigned char maxDisloc = 0) {
     this->r = r;
     this->g = g;
     this->b = b;
+    this->maxDisloc = maxDisloc;
   }
 
   unsigned char r;
   unsigned char g;
   unsigned char b;
+  unsigned char maxDisloc;
 };
 
 #include <vector>

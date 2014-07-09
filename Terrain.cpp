@@ -53,8 +53,7 @@ void Terrain::initVertices(const GLuint &shaderId) {
 
 void Terrain::initTexture(const GLuint &shaderId) {
   const int textureLength = 64;
-  const int textureSize = textureLength * 3 * sizeof(unsigned char);
-  unsigned char *textureData = (unsigned char *)malloc(textureSize);
+  unsigned char *textureData = new unsigned char[textureLength * 4];
 
   const std::vector< std::pair<float, color>> colors = buildTerrainColors();
 
@@ -67,17 +66,18 @@ void Terrain::initTexture(const GLuint &shaderId) {
     }
 
     const color clr = colors[n].second;
-    textureData[i * 3] = clr.r;			  // R 
-    textureData[i * 3 + 1] = clr.g;		// G 
-    textureData[i * 3 + 2] = clr.b;		// B 
+    textureData[i * 4] = clr.r;			        // R 
+    textureData[i * 4 + 1] = clr.g;		      // G 
+    textureData[i * 4 + 2] = clr.b;		      // B 
+    textureData[i * 4 + 3] = clr.maxDisloc; //max value of U coord dislocation
   }
 
   glGenTextures(1, &textureId);
   glBindTexture(GL_TEXTURE_1D, textureId);
-  glTexStorage1D(GL_TEXTURE_1D, 1, GL_RGB8, textureLength);
-  glTexSubImage1D(GL_TEXTURE_1D, 0, 0, textureLength, GL_RGB, GL_UNSIGNED_BYTE, textureData);
+  glTexStorage1D(GL_TEXTURE_1D, 1, GL_RGBA8, textureLength);
+  glTexSubImage1D(GL_TEXTURE_1D, 0, 0, textureLength, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
 
-  free(textureData);
+  delete[] textureData;
 }
 
 void Terrain::render(const RenderContext &context) {
@@ -94,7 +94,7 @@ void Terrain::render(const RenderContext &context) {
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_1D, textureId);
   glUniform1i(textureParamId, 0);
