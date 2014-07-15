@@ -16,7 +16,7 @@ void main() {
   float texCoord = texture( terrainTexture, u ).a * (snoise(xyz / 70)) + ((snoise(xyz)) / 200 + u);
   vec3 texColor = texture( terrainTexture, texCoord ).rgb;
 
-  float cosTheta = clamp( dot( normal,light ), 0,1 );
+  float cosTheta = clamp( dot( normal,light ), 0, 1 );
   color = vec4(texColor * (cosTheta * 0.7 + 0.3), 1);
 }
 

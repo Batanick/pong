@@ -15,7 +15,7 @@ out vec3 xyz;
 
 void main() {
 	gl_Position = projection * view * vec4( vertexPosition, 1 );
-	u = clamp( vertexPosition.y / heightScale, 0.0, 1.0 );
+	u = vertexPosition.y / heightScale;
   normal = (view * vec4(vertexNormal, 0)).xyz;
   light = (view * vec4(lightDir, 0)).xyz;
   xyz = vertexPosition.xyz;

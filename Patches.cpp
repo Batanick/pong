@@ -169,8 +169,8 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
 }
 
 float getHeight(float x, float y) {
-  float result = powf((noise(x / 512, y / 512) + 0.8f) / 2.0f, 2.0f);
-  result = glm::max(result, 0.0f);
+  float result = noise(x / 512, y / 512);
+  result = powf((result + 2.0f) / 2.0f, 1.2f) - 0.6f;
   return result * MAX_HEIGHT;
 }
 
