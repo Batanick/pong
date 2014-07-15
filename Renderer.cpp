@@ -45,7 +45,7 @@ bool Renderer::init() {
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
   glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK); 
+  glCullFace(GL_BACK);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   initContext();
@@ -70,10 +70,10 @@ void Renderer::initScene() {
 
 #ifdef SHOW_FPS
   this->fpsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), "DUMMYY", 20, context.windowHeight - 50, glm::vec3(0, 1, 0)));
-  add(ShaderType::FONT_SHADER, fpsLabel);
+  add(ShaderType::FONT_SHADER, fpsLabel, RenderableType::GUI);
 
-  this->cameraCoords = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
-  add(ShaderType::FONT_SHADER, cameraCoords);
+  this->cameraCoordsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
+  add(ShaderType::FONT_SHADER, cameraCoordsLabel, RenderableType::GUI);
 #endif
 }
 
@@ -111,33 +111,37 @@ void Renderer::render(double timeDelta) {
 
   const glm::vec3 pos = camera->getPosition();
   sprintf_s(buff, "%.2f, %.2f, %.2f", pos.x, pos.y, pos.z);
-  cameraCoords->setText(buff);
+  cameraCoordsLabel->setText(buff);
 }
 
-void Renderer::add(ShaderType type, PRenderable renderable) {
-  const GLuint shaderId = shaderManager->getProgramId(type);
+void Renderer::add(ShaderType shaderType, PRenderable renderable, Renderer::RenderableType type) {
+  const GLuint shaderId = shaderManager->getProgramId(shaderType);
   renderable->init(shaderId);
 
-  renderables.insert(std::make_pair(type, renderable));
+  renderables[type].insert(std::make_pair(shaderType, renderable));
 }
 
 void Renderer::renderAll() {
-  // expecting that elements ordered by key
   ShaderType currentType = ShaderType::NONE;
-  for (auto iterator = renderables.begin(); iterator != renderables.end(); iterator++) {
-    if (iterator->first != currentType) {
-      currentType = iterator->first;
-      shaderManager->useProgram(currentType);
-    }
 
-    iterator->second->render(context);
+  for (RenderableHolder holder : renderables) {
+    // expecting that elements ordered by key
+    for (auto iterator = holder.begin(); iterator != holder.end(); iterator++) {
+      if (iterator->first != currentType) {
+        currentType = iterator->first;
+        shaderManager->useProgram(currentType);
+      }
+
+      iterator->second->render(context);
+    }
   }
 }
 
 void Renderer::shutdown() {
-  for (auto iterator = renderables.begin(); iterator != renderables.end(); iterator++) {
-    iterator->second->shutdown();
-  }
+  for (RenderableHolder holder : renderables)
+    for (auto iterator = holder.begin(); iterator != holder.end(); iterator++) {
+      iterator->second->shutdown();
+    }
 
   shaderManager->shutdown();
   assetManager->shutdown();

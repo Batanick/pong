@@ -9,7 +9,7 @@ static const float MAX_HEIGHT = 128;
 
 static const float PATCH_SIZE_METERS = 128;
 
-static const int PATCHES_COUNT_SQRT = 64;
+static const int PATCHES_COUNT_SQRT = 16;
 static const int PATCHES_COUNT = PATCHES_COUNT_SQRT * PATCHES_COUNT_SQRT;
 
 static const int TILES_IN_PATCH_SQRT = 128;
