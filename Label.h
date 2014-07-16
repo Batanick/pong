@@ -1,39 +1,28 @@
 #include <memory>
 
-#include "RenderCommon.h"
+#include "GuiElement.h"
 #include "Font.h"
 #include <glm.hpp>
 
-class Label final : public Renderable {
+class Label final : public GuiElement {
 
 public:
-  Label(std::shared_ptr<Font> font, std::string str, int x, int y, glm::vec3 color) :
+  Label(std::shared_ptr<Font> font, int x, int y, glm::vec3 color) :
     font(font),
-    str(str),
-    x(x), y(y),
     color(color),
-    loaded(false){
+    x(x), y(y) {
   }
 
-  virtual void render(const RenderContext &context) override;
-  virtual void shutdown() override;
-  virtual void init(const GLuint shaderId) override;
+  void setText(const RenderContext &context, std::string text);
 
-  void setText(std::string text);
 private:
+  const int x, y;
   const std::shared_ptr<Font> font;
   std::string str;
-  const int x, y;
   const glm::vec3 color;
 
-  GLuint vertexBuffer;
-  GLuint uvBuffer;
-
   GLuint fontColorId;
-  GLuint fontTextureId;
 
-  bool loaded;
-
-  void initVertices(const RenderContext &context);
-
+  virtual void onInit(const GLuint shaderId, GLuint &textureId, GLuint &textureParamId) override;
+  virtual void onBeforeRender(const RenderContext &context) override;
 };

@@ -112,6 +112,12 @@
     <ClCompile Include="Clouds.cpp">
       <Filter>src\renderer\world</Filter>
     </ClCompile>
+    <ClCompile Include="TexturedFrame.cpp">
+      <Filter>src\renderer\common</Filter>
+    </ClCompile>
+    <ClCompile Include="GuiElement.cpp">
+      <Filter>src\renderer\common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -200,6 +206,12 @@
     </ClInclude>
     <ClInclude Include="Clouds.h">
       <Filter>src\renderer\world</Filter>
+    </ClInclude>
+    <ClInclude Include="TexturedFrame.h">
+      <Filter>src\renderer\common</Filter>
+    </ClInclude>
+    <ClInclude Include="GuiElement.h">
+      <Filter>src\renderer\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

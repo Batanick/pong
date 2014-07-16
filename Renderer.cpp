@@ -19,6 +19,7 @@
 #include "FpsCounter.h"
 
 #include "logging.h"
+#include "commonMath.h"
 
 #define SHOW_FPS
 
@@ -69,10 +70,10 @@ void Renderer::initScene() {
 #endif
 
 #ifdef SHOW_FPS
-  this->fpsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), "DUMMYY", 20, context.windowHeight - 50, glm::vec3(0, 1, 0)));
+  this->fpsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 50, glm::vec3(0, 1, 0)));
   add(ShaderType::FONT_SHADER, fpsLabel, RenderableType::GUI);
 
-  this->cameraCoordsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), "DUMMY", 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
+  this->cameraCoordsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
   add(ShaderType::FONT_SHADER, cameraCoordsLabel, RenderableType::GUI);
 #endif
 }
@@ -82,6 +83,7 @@ void Renderer::initContext() {
   glfwGetWindowSize(window, &windowW, &windowH);
   context.windowHeight = windowH;
   context.windowWidth = windowW;
+  context.guiView = convertToViewMatrix(2 / (float)context.windowWidth, 2 / (float)context.windowHeight, -1, -1);
   context.time = 0;
 
   context.lightDir = glm::normalize(glm::vec3(1, 1, -1));
@@ -107,11 +109,11 @@ void Renderer::render(double timeDelta) {
   fpsCounter->onFrame();
   char buff[128];
   sprintf_s(buff, "FPS: %.2f", fpsCounter->getFps());
-  fpsLabel->setText(buff);
+  fpsLabel->setText(context, buff);
 
   const glm::vec3 pos = camera->getPosition();
   sprintf_s(buff, "%.2f, %.2f, %.2f", pos.x, pos.y, pos.z);
-  cameraCoordsLabel->setText(buff);
+  cameraCoordsLabel->setText(context, buff);
 }
 
 void Renderer::add(ShaderType shaderType, PRenderable renderable, Renderer::RenderableType type) {

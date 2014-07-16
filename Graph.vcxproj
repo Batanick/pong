@@ -82,6 +82,7 @@
     <ClCompile Include="Font.cpp" />
     <ClCompile Include="FpsCounter.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GuiElement.cpp" />
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Patches.cpp" />
@@ -96,6 +97,7 @@
     <ClCompile Include="noise.cpp" />
     <ClCompile Include="Clouds.cpp" />
     <ClCompile Include="Sun.cpp" />
+    <ClCompile Include="TexturedFrame.cpp" />
     <ClCompile Include="TexturedMesh.cpp" />
     <ClCompile Include="TerrainConstants.cpp" />
     <ClCompile Include="Tree.cpp" />
@@ -117,9 +119,11 @@
     <ClInclude Include="Font.h" />
     <ClInclude Include="fontLoader.h" />
     <ClInclude Include="FpsCounter.h" />
+    <ClInclude Include="GuiElement.h" />
     <ClInclude Include="RenderableMesh.h" />
     <ClInclude Include="Clouds.h" />
     <ClInclude Include="Sun.h" />
+    <ClInclude Include="TexturedFrame.h" />
     <ClInclude Include="TexturedMesh.h" />
     <ClInclude Include="Label.h" />
     <ClInclude Include="logging.h" />

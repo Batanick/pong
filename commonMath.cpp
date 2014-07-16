@@ -61,3 +61,14 @@ glm::vec3 findPerpendicular(glm::vec3 base) {
 inline float interpolate(float a, float b, float x) {
   return a * (1 - x) + b * x;
 }
+
+glm::mat3 convertToViewMatrix(float scaleX, float scaleY, int translateX, int translateY) {
+  glm::mat3 proj;
+
+  proj[0][0] = scaleX;
+  proj[1][1] = scaleY;
+  proj[0][2] = (float)translateX;
+  proj[1][2] = (float)translateY;
+
+  return proj;
+}

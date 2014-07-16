@@ -4,71 +4,22 @@
 #include <GLFW/glfw3.h>
 #include <glm.hpp>
 
-void Label::render(const RenderContext &context) {
-  if (!loaded) {
-    initVertices(context);
-  }
+#include "commonMath.h"
 
-  GLint currentMode[2]; //front and back value
-  glGetIntegerv(GL_POLYGON_MODE, &currentMode[0]);
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-  glUniform3f(fontColorId, color.r, color.g, color.b);
-
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, font->getTextureInfo().textureId);
-  glUniform1i(fontTextureId, 0);
-
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-  glEnableVertexAttribArray(0);
-  glEnableVertexAttribArray(1);
-
-  glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-  glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-  glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-  glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-  glDrawArrays(GL_TRIANGLES, 0, 6 * str.length());
-
-  glDisableVertexAttribArray(0);
-  glDisableVertexAttribArray(1);
-
-  glPolygonMode(GL_FRONT_AND_BACK, currentMode[0] == GL_LINE ? GL_LINE : GL_FILL);
-}
-
-glm::mat3 convertToViewMatrix(float scaleX, float scaleY, int translateX, int translateY) {
-  glm::mat3 proj;
-
-  proj[0][0] = scaleX;
-  proj[1][1] = scaleY;
-  proj[0][2] = (float)translateX;
-  proj[1][2] = (float)translateY;
-
-  return proj;
-}
-
-void Label::init(const GLuint shaderId) {
+void Label::onInit(const GLuint shaderId, GLuint &textureId, GLuint &textureParamId) {
   fontColorId = glGetUniformLocation(shaderId, "fontColor");
-  fontTextureId = glGetUniformLocation(shaderId, "texture");
-
-  glGenBuffers(1, &vertexBuffer);
-  glGenBuffers(1, &uvBuffer);
+  textureParamId = glGetUniformLocation(shaderId, "texture");
+  textureId = font->getTextureInfo().textureId;
 }
 
-void Label::shutdown() {
-  if (loaded) {
-    loaded = false;
-    glDeleteBuffers(1, &vertexBuffer);
-    glDeleteBuffers(1, &uvBuffer);
+void Label::onBeforeRender(const RenderContext &context) {
+  glUniform3f(fontColorId, color.r, color.g, color.b);
+}
+
+void Label::setText(const RenderContext &context, std::string text) {
+  if (text == str) {
+    return;
   }
-}
-
-void Label::initVertices(const RenderContext &context) {
-  //screen coords to view
-  glm::mat3 const proj = convertToViewMatrix(2 / (float)context.windowWidth, 2 / (float)context.windowHeight, -1, -1);
 
   const TextureInfo info = font->getTextureInfo();
   glm::mat3 const uvProj = convertToViewMatrix(1 / (float)info.width, 1 / (float)info.height, 0, 0);
@@ -81,10 +32,10 @@ void Label::initVertices(const RenderContext &context) {
     int const chr = str[i];
     Glyph const gl = font->getGlyph(chr);
 
-    glm::vec2 p1(glm::vec3(currentX, y, 1) * proj);
-    glm::vec2 p2(glm::vec3(currentX + gl.width, y, 1) * proj);
-    glm::vec2 p3(glm::vec3(currentX + gl.width, y + gl.height, 1) * proj);
-    glm::vec2 p4(glm::vec3(currentX, y + gl.height, 1) * proj);
+    glm::vec2 p1(glm::vec3(currentX, y, 1) * context.guiView);
+    glm::vec2 p2(glm::vec3(currentX + gl.width, y, 1) * context.guiView);
+    glm::vec2 p3(glm::vec3(currentX + gl.width, y + gl.height, 1) * context.guiView);
+    glm::vec2 p4(glm::vec3(currentX, y + gl.height, 1) * context.guiView);
 
     glm::vec2 uv1(glm::vec3(gl.x, gl.y + gl.height, 1) * uvProj);
     glm::vec2 uv2(glm::vec3(gl.x + gl.width, gl.y + gl.height, 1) * uvProj);
@@ -106,21 +57,8 @@ void Label::initVertices(const RenderContext &context) {
 
     currentX += gl.width + font->getDistance();
   }
+  
+  setVertices(uvs, vertices);
 
-  glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(glm::vec2), &vertices[0], GL_DYNAMIC_DRAW);
-
-  glBindBuffer(GL_ARRAY_BUFFER, uvBuffer);
-  glBufferData(GL_ARRAY_BUFFER, uvs.size() * sizeof(glm::vec2), &uvs[0], GL_DYNAMIC_DRAW);
-
-  loaded = true;
-}
-
-void Label::setText(std::string text) {
-  if (text == str) {
-    return;
-  }
-
-  loaded = false;
   str = text;
 }
