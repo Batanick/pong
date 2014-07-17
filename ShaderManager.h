@@ -2,12 +2,9 @@
 #include <vector>
 #include <set>
 
-typedef unsigned int GLuint;
-typedef std::string ShaderParam;
+#include "renderCommon.h"
 
-enum class ShaderType : unsigned int {
-  NONE, MODEL_SHADER, TEX_MESH_SHADER, TERRAIN_SHADER, BUSH_SHADER, CLOUDS_SHADER, GUI_SHADER, TEST_SHADER
-};
+typedef std::string ShaderParam;
 
 class ShaderManager final {
 

@@ -11,6 +11,10 @@ static const glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
 
 typedef unsigned int GLuint;
 
+enum class ShaderType : unsigned int {
+  NONE, MODEL_SHADER, TEX_MESH_SHADER, TERRAIN_SHADER, BUSH_SHADER, CLOUDS_SHADER, GUI_SHADER, TEST_SHADER
+};
+
 struct RenderContext {
   double time;
   double timeDelta;
