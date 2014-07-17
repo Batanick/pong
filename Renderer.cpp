@@ -73,15 +73,15 @@ void Renderer::initScene() {
 
 #ifdef SHOW_FPS
   this->fpsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 50, glm::vec3(0, 1, 0)));
-  add(ShaderType::FONT_SHADER, fpsLabel, RenderableType::GUI);
+  add(ShaderType::GUI_SHADER, fpsLabel, RenderableType::GUI);
 
   this->cameraCoordsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
-  add(ShaderType::FONT_SHADER, cameraCoordsLabel, RenderableType::GUI);
+  add(ShaderType::GUI_SHADER, cameraCoordsLabel, RenderableType::GUI);
 #endif
 
 #ifdef SECOND_CAMERA
   std::shared_ptr<TexturedFrame> secondCamera = std::shared_ptr<TexturedFrame>(new TexturedFrame(0.5f, -1.0f, 0.5f, 0.5f, assetManager->getDefaultFont()->getTextureInfo() ));
-  add(ShaderType::FONT_SHADER, secondCamera);
+  add(ShaderType::GUI_SHADER, secondCamera);
 #endif
 
 }

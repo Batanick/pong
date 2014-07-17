@@ -6,7 +6,7 @@ typedef unsigned int GLuint;
 typedef std::string ShaderParam;
 
 enum class ShaderType : unsigned int {
-  NONE, MODEL_SHADER, TEX_MESH_SHADER, TERRAIN_SHADER, BUSH_SHADER, CLOUDS_SHADER, FONT_SHADER, TEST_SHADER
+  NONE, MODEL_SHADER, TEX_MESH_SHADER, TERRAIN_SHADER, BUSH_SHADER, CLOUDS_SHADER, GUI_SHADER, TEST_SHADER
 };
 
 class ShaderManager final {
