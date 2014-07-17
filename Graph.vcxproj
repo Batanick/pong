@@ -144,10 +144,10 @@
   <ItemGroup>
     <None Include="shaders\Bush.fs" />
     <None Include="shaders\Bush.vs" />
-    <None Include="shaders\Font.fs" />
-    <None Include="shaders\Font.vs" />
     <None Include="shaders\Clouds.fs" />
     <None Include="shaders\Clouds.vs" />
+    <None Include="shaders\GuiElement.fs" />
+    <None Include="shaders\GuiElement.vs" />
     <None Include="shaders\Terrain.fs" />
     <None Include="shaders\Terrain.vs" />
     <None Include="shaders\Test.fs" />

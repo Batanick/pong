@@ -221,12 +221,6 @@
     <None Include="shaders\Bush.vs">
       <Filter>src\shaders</Filter>
     </None>
-    <None Include="shaders\Font.fs">
-      <Filter>src\shaders</Filter>
-    </None>
-    <None Include="shaders\Font.vs">
-      <Filter>src\shaders</Filter>
-    </None>
     <None Include="shaders\Terrain.fs">
       <Filter>src\shaders</Filter>
     </None>
@@ -249,6 +243,12 @@
       <Filter>src\shaders</Filter>
     </None>
     <None Include="shaders\Clouds.vs">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\GuiElement.fs">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\GuiElement.vs">
       <Filter>src\shaders</Filter>
     </None>
   </ItemGroup>

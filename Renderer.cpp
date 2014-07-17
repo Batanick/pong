@@ -17,6 +17,7 @@
 
 #include "Camera.h"
 #include "FpsCounter.h"
+#include "TexturedFrame.h"
 
 #include "logging.h"
 #include "commonMath.h"
@@ -27,6 +28,7 @@
 //#define DRAW_GRASS
 //#define DRAW_TREES
 #define DRAW_SKYBOX
+#define SECOND_CAMERA
 
 bool Renderer::init() {
   VERIFY(glewInit() == GLEW_OK, "Unable to initialize glew", return false);
@@ -76,6 +78,12 @@ void Renderer::initScene() {
   this->cameraCoordsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
   add(ShaderType::FONT_SHADER, cameraCoordsLabel, RenderableType::GUI);
 #endif
+
+#ifdef SECOND_CAMERA
+  std::shared_ptr<TexturedFrame> secondCamera = std::shared_ptr<TexturedFrame>(new TexturedFrame(0.5f, -1.0f, 0.5f, 0.5f, assetManager->getDefaultFont()->getTextureInfo() ));
+  add(ShaderType::FONT_SHADER, secondCamera);
+#endif
+
 }
 
 void Renderer::initContext() {

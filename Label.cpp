@@ -7,7 +7,7 @@
 #include "commonMath.h"
 
 void Label::onInit(const GLuint shaderId, GLuint &textureId, GLuint &textureParamId) {
-  fontColorId = glGetUniformLocation(shaderId, "fontColor");
+  fontColorId = glGetUniformLocation(shaderId, "oColor");
   textureParamId = glGetUniformLocation(shaderId, "texture");
   textureId = font->getTextureInfo().textureId;
 }

@@ -1,3 +1,6 @@
+#ifndef H_GUI_ELEMENT
+#define H_GUI_ELEMENT
+
 #include "RenderCommon.h"
 
 #include <vector>
@@ -38,3 +41,5 @@ private:
   virtual void onInit(const GLuint shaderId, GLuint &textureId, GLuint &textureParamId){};
   virtual void onBeforeRender(const RenderContext &context){};
 };
+
+#endif

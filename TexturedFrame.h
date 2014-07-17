@@ -1,20 +1,22 @@
-#include "RenderCommon.h"
+#include "GuiElement.h"
 
-class TexturedFrame final : public Renderable {
+class TexturedFrame final : public GuiElement {
 
 public:
-  TexturedFrame(int x, int y, const GLuint textureId) :
-    x(x), y(y), 
-    textureId(textureId) {
+  TexturedFrame(float x, float y, float width, float height, const TextureInfo &textureInfo) :
+    x(x), y(y),
+    width(width),
+    height(height),
+    textureInfo(textureInfo) {
+    colorId = -1;
   }
 
-  virtual void render(const RenderContext &context) override;
-  virtual void shutdown() override;
-  virtual void init(const GLuint shaderId) override;
-
 private:
-  const int x, y;
-  const GLuint textureId;
+  const float x, y;
+  const float width, height;
+  const TextureInfo textureInfo;
 
+  GLuint colorId;
 
+  virtual void onInit(const GLuint shaderId, GLuint &textureId, GLuint &textureParamId) override;
 };
