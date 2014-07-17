@@ -7,11 +7,11 @@
 
 #include "RenderCommon.h"
 
-class RenderableMesh : public Renderable {
+class RenderableMesh: public Renderable {
 public:
-  virtual void render(const RenderContext &context) override;
-  virtual void shutdown() override;
-  virtual void init(const GLuint shaderId) override;
+  virtual void render(const RenderContext &context) final override;
+  virtual void shutdown() final override;
+  virtual void init(const GLuint shaderId) final override;
 
 protected:
   virtual void initMesh(

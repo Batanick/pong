@@ -58,3 +58,4 @@ glm::mat4 Sun::getModelTransform(const RenderContext &context) {
   const glm::quat rotationQuat = getRotation(-zAxis, context.lightDir);
   return transMat * glm::toMat4(rotationQuat);
 }
+

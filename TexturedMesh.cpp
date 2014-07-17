@@ -65,3 +65,7 @@ void TexturedMesh::shutdown() {
   glDeleteBuffers(1, &verticesId);
   glDeleteTextures(1, &textureId);
 }
+
+ShaderType TexturedMesh::getType() {
+  return ShaderType::TEX_MESH_SHADER;
+}

@@ -54,6 +54,6 @@ private:
 
   void renderAll();
 
-  void add(ShaderType shaderType, PRenderable renderable, Renderer::RenderableType type = RenderableType::Common);
+  void add(PRenderable renderable, Renderer::RenderableType type = RenderableType::Common);
 };
 

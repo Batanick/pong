@@ -73,3 +73,7 @@ void GuiElement::shutdown() {
   glDeleteBuffers(1, &uvBuffer);
 }
 
+ShaderType GuiElement::getType() {
+  return ShaderType::GUI_SHADER;
+}
+

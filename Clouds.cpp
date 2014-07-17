@@ -51,3 +51,7 @@ void Clouds::render(const RenderContext &context) {
 void Clouds::shutdown() {
   glDeleteBuffers(1, &verticesId);
 }
+
+ShaderType Clouds::getType() {
+  return ShaderType::CLOUDS_SHADER;
+}

@@ -19,6 +19,7 @@ public:
   virtual void render(const RenderContext &context) final override;
   virtual void shutdown() final override;
   virtual void init(const GLuint shaderId) final override;
+  virtual ShaderType getType() final override;
 
 protected:
   void setVertices(const std::vector<glm::vec2> &uvs, const std::vector<glm::vec2> &vertices);

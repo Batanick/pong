@@ -9,8 +9,6 @@
 #include "AssetManager.h"
 
 #include "Terrain.h"
-#include "Bush.h"
-#include "Tree.h"
 #include "Label.h"
 #include "Clouds.h"
 #include "Sun.h"
@@ -25,8 +23,6 @@
 #define SHOW_FPS
 
 #define DRAW_TERRAIN
-//#define DRAW_GRASS
-//#define DRAW_TREES
 #define DRAW_SKYBOX
 #define SECOND_CAMERA
 
@@ -59,31 +55,25 @@ bool Renderer::init() {
 
 void Renderer::initScene() {
 #ifdef DRAW_TERRAIN
-  std::shared_ptr<Terrain> terrain = std::shared_ptr<Terrain>(new Terrain());
-  add(ShaderType::TERRAIN_SHADER, terrain);
+  add(std::shared_ptr<Terrain>(new Terrain()));
 #endif
 
 #ifdef DRAW_SKYBOX
-  std::shared_ptr<Clouds> clouds = std::shared_ptr<Clouds>(new Clouds());
-  add(ShaderType::CLOUDS_SHADER, clouds);
-
-  std::shared_ptr<TexturedMesh> sun = std::shared_ptr<TexturedMesh>(new Sun());
-  add(ShaderType::TEX_MESH_SHADER, sun);
+  add(std::shared_ptr<Clouds>(new Clouds()));
+  add(std::shared_ptr<TexturedMesh>(new Sun()));
 #endif
 
 #ifdef SHOW_FPS
   this->fpsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 50, glm::vec3(0, 1, 0)));
-  add(ShaderType::GUI_SHADER, fpsLabel, RenderableType::GUI);
+  add(fpsLabel, RenderableType::GUI);
 
   this->cameraCoordsLabel = std::shared_ptr<Label>(new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
-  add(ShaderType::GUI_SHADER, cameraCoordsLabel, RenderableType::GUI);
+  add(cameraCoordsLabel, RenderableType::GUI);
 #endif
 
 #ifdef SECOND_CAMERA
-  std::shared_ptr<TexturedFrame> secondCamera = std::shared_ptr<TexturedFrame>(new TexturedFrame(0.5f, -1.0f, 0.5f, 0.5f, assetManager->getDefaultFont()->getTextureInfo() ));
-  add(ShaderType::GUI_SHADER, secondCamera);
+  add(std::shared_ptr<TexturedFrame>(new TexturedFrame(0.5f, -1.0f, 0.5f, 0.5f, assetManager->getDefaultFont()->getTextureInfo())));
 #endif
-
 }
 
 void Renderer::initContext() {
@@ -124,11 +114,11 @@ void Renderer::render(double timeDelta) {
   cameraCoordsLabel->setText(context, buff);
 }
 
-void Renderer::add(ShaderType shaderType, PRenderable renderable, Renderer::RenderableType type) {
-  const GLuint shaderId = shaderManager->getProgramId(shaderType);
+void Renderer::add(const PRenderable renderable, Renderer::RenderableType type) {
+  const GLuint shaderId = shaderManager->getProgramId(renderable->getType());
   renderable->init(shaderId);
 
-  renderables[type].insert(std::make_pair(shaderType, renderable));
+  renderables[type].insert(std::make_pair(renderable->getType(), renderable));
 }
 
 void Renderer::renderAll() {

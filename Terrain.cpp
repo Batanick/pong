@@ -156,4 +156,6 @@ void Terrain::shutdown() {
   glDeleteTextures(1, &textureId);
 }
 
-
+ShaderType Terrain::getType() {
+  return ShaderType::TERRAIN_SHADER;
+}

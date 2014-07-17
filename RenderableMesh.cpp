@@ -47,3 +47,4 @@ void RenderableMesh::shutdown() {
 void RenderableMesh::setColor(float r, float g, float b) {
   color = glm::vec3(r, g, b);
 }
+

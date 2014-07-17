@@ -66,6 +66,7 @@ public:
   virtual void render(const RenderContext &context) = 0;
   virtual void shutdown() = 0;
   virtual void init(const GLuint shaderId) = 0;
+  virtual ShaderType getType() = 0;
 };
 
 #endif

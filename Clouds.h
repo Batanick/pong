@@ -17,6 +17,7 @@ public:
   virtual void init(const GLuint shaderId) override;
   virtual void render(const RenderContext &context) override;
   virtual void shutdown() override;
+  virtual ShaderType getType() final override;
 
 private:
   GLuint verticesId;
