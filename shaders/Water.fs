@@ -7,6 +7,7 @@ in vec3 light;
 uniform mat4 view;
 uniform float time;
 uniform vec3 mainColor;
+uniform vec3 cameraDir;
 
 uniform sampler2D reflectionTex;
 
@@ -15,19 +16,24 @@ out vec4 color;
 float cnoise(vec3 P);
 
 void main() {
-  vec3 basePos = vec3(fPos.x * 0.2 + time * 0.5 , time, fPos.z * 0.2 + time * 0.5);
+  vec3 basePos = vec3(fPos.x * 0.1 + time * 0.5 , time, fPos.z * 0.1 + time * 0.5);
   float diff = 1;
   vec3 normal = normalize( vec3( cnoise(basePos + vec3(diff, 0, diff)) ,1 , cnoise(basePos + vec3(0, 0, 0))) );
+  vec3 viewNormal = normalize((view * vec4(normal, 0)).xyz);
 
   vec2 vDeviceReflection = pvPos.xy / pvPos.w + normal.xz / 77;
   vec2 vTexReflection = vec2(0.5, 0.48) + 0.5 * vDeviceReflection;
-  vec4 reflectedColor = texture2D (reflectionTex, vTexReflection * vec2(-1, 1));
-  
-  float cosTheta = clamp( dot( normal, light  ), 0, 1 );
+  vec3 reflectedColor = texture2D (reflectionTex, vTexReflection * vec2(-1, 1)).xyz;
 
-  vec4 result = vec4(mainColor * (cosTheta * 0.2 + 0.5), 1) + reflectedColor;
+  vec3 E = normalize((view * vec4(cameraDir, 0)).xyz);
 
-  color = vec4(result.xyz, 0.8);
+  vec3 R = reflect(normalize(light),viewNormal);
+  float cosAlpha = clamp( dot( E,R ), 0,1 );
+  float cosTheta = clamp( dot( viewNormal, normalize(light)), 0, 1 );
+
+  vec3 result = mainColor * 0.5 + mainColor * cosTheta * 0.1 + reflectedColor * 0.5 + 0.05 * vec3(1,1,1) * pow(cosAlpha,2);
+
+  color = vec4(result, 0.8);
 }
 
 

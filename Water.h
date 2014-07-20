@@ -1,7 +1,7 @@
 #include "renderCommon.h"
 
 static const float WATER_SIZE = 10000.0f;
-static const glm::vec3 COLOR(0.0f, 0.0f, 1.0f);
+static const glm::vec3 COLOR(0.25f, 0.5f, 0.5f);
 
 class Water final : public Renderable {
 
@@ -15,6 +15,7 @@ public:
     viewId = -1;
     cameraPosId = -1;
     lightDirId = -1;
+    cameraDirId = -1;
   }
 
   virtual void init(const GLuint shaderId) override;
@@ -32,6 +33,7 @@ private:
   GLuint reflectionTexId;
   GLuint mainColorId;
   GLuint lightDirId;
+  GLuint cameraDirId;
   GLuint timeId;
 
 };

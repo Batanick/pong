@@ -11,6 +11,7 @@ void Water::init(const GLuint shaderId) {
   projectionId = glGetUniformLocation(shaderId, "projection");
   viewId = glGetUniformLocation(shaderId, "view");
   cameraPosId = glGetUniformLocation(shaderId, "cameraPos");
+  cameraDirId = glGetUniformLocation(shaderId, "cameraDir");
   reflectionTexId = glGetUniformLocation(shaderId, "reflectionTex");
   lightDirId = glGetUniformLocation(shaderId, "lightDirection");
 
@@ -35,6 +36,7 @@ void Water::render(const RenderContext &context) {
   glUniform3fv(mainColorId, 1, &COLOR[0]);
   glUniform3fv(lightDirId, 1, &context.lightDir[0]);
   glUniform3fv(cameraPosId, 1, &context.cameraPos[0]);
+  glUniform3fv(cameraDirId, 1, &context.cameraDir[0]);
   glUniformMatrix4fv(viewId, 1, GL_FALSE, &context.view[0][0]);
   glUniformMatrix4fv(projectionId, 1, GL_FALSE, &context.projection[0][0]);
 
