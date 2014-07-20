@@ -44,7 +44,6 @@ void ReflectionHolder::onBeforeRender(const RenderContext &context) {
   glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
   glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glCullFace(GL_FRONT);
 
   glEnable(GL_CLIP_PLANE0);
   renderer.render(CommonRenderer::Common, contextCopy);

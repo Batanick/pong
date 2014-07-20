@@ -63,7 +63,7 @@ bool Renderer::init() {
 void Renderer::initScene() {
 #ifdef DRAW_TERRAIN
   add(std::shared_ptr<Terrain>(new Terrain()));
-  add(std::shared_ptr<Water>(new Water()));
+  add(std::shared_ptr<Water>(new Water()), CommonRenderer::PostRender);
 #endif
 
 #ifdef DRAW_SKYBOX

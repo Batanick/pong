@@ -8,9 +8,10 @@ uniform vec3 cameraPos;
 uniform mat4 projection;
 uniform mat4 view;
  
-out vec3 fragmentPos;
+out vec4 vertexPos;
  
 void main() {
-  vec3 vPosition = pos + cameraPos;
-  gl_Position = projection * view * vec4(vPosition, 1);
+  vec4 projPos = projection * view * vec4(pos, 1);
+  gl_Position = projPos;
+  vertexPos = projPos;
 }
