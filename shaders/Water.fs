@@ -15,10 +15,19 @@ out vec4 color;
 
 float cnoise(vec3 P);
 
-void main() {
-  vec3 basePos = vec3(fPos.x * 0.1 + time * 0.5 , time, fPos.z * 0.1 + time * 0.5);
+vec3 getRandomNormal(float x, float y, float z) {
+  vec3 basePos = vec3(x ,y, z);
   float diff = 1;
-  vec3 normal = normalize( vec3( cnoise(basePos + vec3(diff, 0, diff)) ,1 , cnoise(basePos + vec3(0, 0, 0))) );
+  return normalize( vec3( cnoise(basePos + vec3(diff, 0, diff)) ,1 , cnoise(basePos + vec3(0, 0, 0))) );
+}
+
+void main() {
+  vec3 n1 = getRandomNormal(fPos.x * 0.1 + time * 0.2, time, fPos.z * 0.05 + time * 0.2);
+  vec3 n2 = getRandomNormal(fPos.x + time, time, fPos.z + time);
+
+  vec3 normal = normalize(n1 + n2 / 8);
+  //vec3 n2 = normalize( vec3( cnoise(basePos + vec3(diff, 1000, diff)) ,1 , cnoise(basePos + vec3(0, 1000, 0))) );
+ 
   vec3 viewNormal = normalize((view * vec4(normal, 0)).xyz);
 
   vec2 vDeviceReflection = pvPos.xy / pvPos.w + normal.xz / 77;
