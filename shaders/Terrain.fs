@@ -13,7 +13,7 @@ out vec4 color;
 float snoise(vec3 v);
 
 void main() {
-  float texCoord = texture( terrainTexture, u ).a * (snoise(xyz / 70)) + ((snoise(xyz)) / 200 + u);
+  float texCoord = texture( terrainTexture, u ).a * (snoise(xyz / 70)) + ((snoise(xyz)) / 2000 + u);
   vec3 texColor = texture( terrainTexture, texCoord ).rgb;
 
   float cosTheta = clamp( dot( normal,light ), 0, 1 );

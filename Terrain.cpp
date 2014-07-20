@@ -53,7 +53,7 @@ void Terrain::initVertices(const GLuint &shaderId) {
 }
 
 void Terrain::initTexture(const GLuint &shaderId) {
-  const int textureLength = 64;
+  const int textureLength = 256;
   unsigned char *textureData = new unsigned char[textureLength * 4];
 
   const std::vector< std::pair<float, color>> colors = buildTerrainColors();

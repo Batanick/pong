@@ -30,6 +30,7 @@ private:
 
   GLuint reflectionTexId;
   GLuint mainColorId;
+  GLuint lightDirId;
   GLuint timeId;
 
 };

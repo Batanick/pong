@@ -12,6 +12,7 @@ void Water::init(const GLuint shaderId) {
   viewId = glGetUniformLocation(shaderId, "view");
   cameraPosId = glGetUniformLocation(shaderId, "cameraPos");
   reflectionTexId = glGetUniformLocation(shaderId, "reflectionTex");
+  lightDirId = glGetUniformLocation(shaderId, "lightDir");
 
   std::vector<glm::vec3> vertices;
 
@@ -32,6 +33,7 @@ void Water::render(const RenderContext &context) {
   const float time = (float)context.time;
   glUniform1f(timeId, time);
   glUniform3fv(mainColorId, 1, &COLOR[0]);
+  glUniform3fv(lightDirId, 1, &context.lightDir[0]);
   glUniformMatrix4fv(viewId, 1, GL_FALSE, &context.view[0][0]);
   glUniformMatrix4fv(projectionId, 1, GL_FALSE, &context.projection[0][0]);
 

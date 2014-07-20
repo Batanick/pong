@@ -4,14 +4,19 @@ layout (location = 0) in vec3 pos;
 
 uniform mat4 vp;
 uniform vec3 cameraPos;
+uniform vec3 lightDir;
 
 uniform mat4 projection;
 uniform mat4 view;
- 
-out vec4 vertexPos;
+
+out vec4 fPos; 
+out vec4 pvPos;
+out vec3 light;
  
 void main() {
-  vec4 projPos = projection * view * vec4(pos, 1);
-  gl_Position = projPos;
-  vertexPos = projPos;
+  fPos = vec4(pos, 1);
+  pvPos = projection * view * fPos;
+  light = (view * vec4(lightDir, 0)).xyz;
+
+  gl_Position = pvPos;
 }
