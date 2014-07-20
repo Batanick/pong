@@ -22,4 +22,4 @@ float random(float baseValue, float disp);
 
 inline float interpolate(float a, float b, float x);
 
-glm::mat3 convertToViewMatrix(float scaleX, float scaleY, int translateX, int translateY);
+glm::mat4 getViewMatrix(const glm::vec3 &pos, const glm::vec3 &dir, const glm::vec3 &up);

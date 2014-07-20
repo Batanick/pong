@@ -25,7 +25,6 @@ void Camera::onBeforeRender(GLFWwindow * const window, double deltaTime) {
   glfwGetCursorPos(window, &mouseXPos, &mouseYPos);
   int windowHeight, windowWidth;
   glfwGetWindowSize(window, &windowWidth, &windowHeight);
-  projection = glm::perspective(45.0f, ((float)windowWidth) / windowHeight, 1.0f, 5000.0f);
 
   //TODO: Move this from here!!!
   glfwSetCursorPos(window, windowWidth / 2, windowHeight / 2);
@@ -76,6 +75,10 @@ glm::vec3 Camera::getRight() {
     );
 }
 
+glm::vec3 Camera::getUp() {
+  return glm::cross(getRight(), getDirection());
+}
+
 glm::vec3 Camera::getDirection() {
   return glm::vec3(
     cos(verticalAngle) * sin(horizontalAngle),
@@ -86,14 +89,4 @@ glm::vec3 Camera::getDirection() {
 
 glm::vec3 Camera::getPosition() {
   return position;
-}
-
-glm::mat4 Camera::getView() {
-  const glm::vec3 direction = getDirection();
-  const glm::vec3 up = glm::cross(getRight(), direction);
-  return glm::lookAt(position, position + direction, up);
-}
-
-glm::mat4 Camera::getProjection() {
-  return projection;
 }

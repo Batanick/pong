@@ -32,7 +32,7 @@ public:
   void shutdown();
 
   virtual void renderAll() override;
-  virtual void render(const RenderableType &type) override;
+  virtual void render(const RenderableType &type, const RenderContext &context) override;
   virtual void add(PRenderable renderable, RenderableType type = RenderableType::Common) override;
 
 private:

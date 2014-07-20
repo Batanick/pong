@@ -26,9 +26,12 @@ struct RenderContext {
   glm::mat4 pv;
   glm::mat4 projection;
   glm::mat4 view;
+  glm::vec3 cameraPos;
+  glm::vec3 cameraUp;
+  glm::vec3 cameraDir;
+
   glm::mat3 guiView;
 
-  glm::vec3 cameraPos;
   glm::vec3 lightDir;
 
   GLuint reflectionTexId;
@@ -81,7 +84,7 @@ public:
   };
 
   virtual void renderAll() = 0;
-  virtual void render(const RenderableType &type) = 0;
+  virtual void render(const RenderableType &type, const RenderContext &context) = 0;
   virtual void add(PRenderable renderable, RenderableType type = RenderableType::Common) = 0;
 };
 

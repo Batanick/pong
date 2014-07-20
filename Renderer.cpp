@@ -20,6 +20,7 @@
 
 #include "logging.h"
 #include "commonMath.h"
+#include "renderUtils.h"
 
 #define SHOW_FPS
 
@@ -100,13 +101,8 @@ void Renderer::render(double timeDelta) {
   camera->onBeforeRender(window, timeDelta);
   context.timeDelta = timeDelta;
   context.time += timeDelta;
-  context.cameraPos = camera->getPosition();
 
-  const glm::mat4 view = camera->getView();
-  const glm::mat4 projection = camera->getProjection();
-  context.pv = projection * view;
-  context.projection = projection;
-  context.view = view;
+  setUpCamera(context, camera->getPosition(), camera->getUp(), camera->getDirection());
 
   for (PRenderHandler addon : addons) {
     addon->onBeforeRender(context);
@@ -134,7 +130,7 @@ void Renderer::add(const PRenderable renderable, Renderer::RenderableType type) 
   renderables[type].insert(std::make_pair(renderable->getType(), renderable));
 }
 
-void Renderer::render(const RenderableType &type) {
+void Renderer::render(const RenderableType &type, const RenderContext &context) {
   const RenderableHolder &holder = renderables[type];
 
   ShaderType currentType = ShaderType::NONE;

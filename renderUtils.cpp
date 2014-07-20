@@ -1,5 +1,8 @@
 #include "renderUtils.h"
 
+#include "glm.hpp"
+#include <gtc\matrix_transform.hpp>
+
 void generateIndexTable(const int rows, const int cols, std::vector<unsigned int> &indices) {
   int indidiesNeeded = rows * (2 * (cols + 1) - 1) + 1;
 
@@ -43,4 +46,18 @@ void generateRowIndices(const int offset, const int cols, std::vector<unsigned i
     indices.push_back(i + cols + 1);
     indices.push_back(i + cols + 2);
   }
+}
+
+glm::mat4 getViewMatrix(const glm::vec3 &pos, const glm::vec3 &dir, const glm::vec3 &up) {
+  return glm::lookAt(pos, pos + dir, up);
+}
+
+void setUpCamera(RenderContext &context, const glm::vec3 &pos, const glm::vec3 &up, const glm::vec3 &direction) {
+  context.cameraPos = pos;
+  context.cameraUp = up;
+  context.cameraDir = direction;
+
+  context.view = getViewMatrix(pos, direction, up);
+  context.projection = glm::perspective(45.0f, ((float)context.windowWidth) / context.windowHeight, 1.0f, 5000.0f);
+  context.pv = context.projection * context.view;
 }

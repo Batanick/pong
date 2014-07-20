@@ -5,6 +5,7 @@
 #include <glm.hpp>
 
 #include "commonMath.h"
+#include "renderUtils.h"
 
 void Label::onInit(const GLuint shaderId, GLuint &textureId, GLuint &textureParamId) {
   fontColorId = glGetUniformLocation(shaderId, "oColor");
