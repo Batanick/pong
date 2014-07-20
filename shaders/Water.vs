@@ -3,8 +3,7 @@
 layout (location = 0) in vec3 pos;
 
 uniform mat4 vp;
-uniform vec3 cameraPos;
-uniform vec3 lightDir;
+uniform vec3 lightDirection;
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -16,7 +15,7 @@ out vec3 light;
 void main() {
   fPos = vec4(pos, 1);
   pvPos = projection * view * fPos;
-  light = (view * vec4(lightDir, 0)).xyz;
+  light = (view * vec4(lightDirection, 0)).xyz;
 
   gl_Position = pvPos;
 }

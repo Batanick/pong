@@ -10,9 +10,8 @@ void Water::init(const GLuint shaderId) {
   mainColorId = glGetUniformLocation(shaderId, "mainColor");
   projectionId = glGetUniformLocation(shaderId, "projection");
   viewId = glGetUniformLocation(shaderId, "view");
-  cameraPosId = glGetUniformLocation(shaderId, "cameraPos");
   reflectionTexId = glGetUniformLocation(shaderId, "reflectionTex");
-  lightDirId = glGetUniformLocation(shaderId, "lightDir");
+  lightDirId = glGetUniformLocation(shaderId, "lightDirection");
 
   std::vector<glm::vec3> vertices;
 
