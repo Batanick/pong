@@ -19,15 +19,15 @@ void main() {
   float diff = 1;
   vec3 normal = normalize( vec3( cnoise(basePos + vec3(diff, 0, diff)) ,1 , cnoise(basePos + vec3(0, 0, 0))) );
 
-  vec2 vDeviceReflection = pvPos.xy / pvPos.w;
-  vec2 vTexReflection = vec2(0.5, 0.5) + 0.5 * vDeviceReflection;
+  vec2 vDeviceReflection = pvPos.xy / pvPos.w + normal.xz / 77;
+  vec2 vTexReflection = vec2(0.5, 0.48) + 0.5 * vDeviceReflection;
   vec4 reflectedColor = texture2D (reflectionTex, vTexReflection * vec2(-1, 1));
   
   float cosTheta = clamp( dot( normal, light  ), 0, 1 );
 
   vec4 result = vec4(mainColor * (cosTheta * 0.2 + 0.5), 1) + reflectedColor;
 
-	color = vec4(result.xyz, 0.8);
+  color = vec4(result.xyz, 0.8);
 }
 
 
