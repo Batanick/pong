@@ -9,7 +9,7 @@
 void TexturedFrame::onInit(const GLuint shaderId, GLuint &textureId, GLuint &textureParamId) {
   colorId = glGetUniformLocation(shaderId, "oColor");
   textureParamId = glGetUniformLocation(shaderId, "texture");
-  textureId = textureInfo.textureId;
+  textureId = this->textureId;
 
   std::vector<glm::vec2> vertices;
   std::vector<glm::vec2> uvs;
@@ -38,5 +38,9 @@ void TexturedFrame::onInit(const GLuint shaderId, GLuint &textureId, GLuint &tex
   uvs.push_back(uv4);
 
   setVertices(uvs, vertices);
+}
+
+void TexturedFrame::onBeforeRender(const RenderContext &context) {
+  glUniform3f(colorId, 1, 1, 1);
 }
 

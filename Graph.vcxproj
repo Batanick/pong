@@ -86,6 +86,7 @@
     <ClCompile Include="Label.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Patches.cpp" />
+    <ClCompile Include="ReflectionHolder.cpp" />
     <ClCompile Include="RenderableMesh.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="renderUtils.cpp" />
@@ -120,6 +121,7 @@
     <ClInclude Include="fontLoader.h" />
     <ClInclude Include="FpsCounter.h" />
     <ClInclude Include="GuiElement.h" />
+    <ClInclude Include="ReflectionHolder.h" />
     <ClInclude Include="RenderableMesh.h" />
     <ClInclude Include="Clouds.h" />
     <ClInclude Include="Sun.h" />

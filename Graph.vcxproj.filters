@@ -118,6 +118,9 @@
     <ClCompile Include="GuiElement.cpp">
       <Filter>src\renderer\common</Filter>
     </ClCompile>
+    <ClCompile Include="ReflectionHolder.cpp">
+      <Filter>src\renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -152,9 +155,6 @@
     </ClInclude>
     <ClInclude Include="tinyXml\tinyxml.h">
       <Filter>tinyXml</Filter>
-    </ClInclude>
-    <ClInclude Include="renderCommon.h">
-      <Filter>src\common</Filter>
     </ClInclude>
     <ClInclude Include="renderUtils.h">
       <Filter>src\common</Filter>
@@ -212,6 +212,12 @@
     </ClInclude>
     <ClInclude Include="GuiElement.h">
       <Filter>src\renderer\common</Filter>
+    </ClInclude>
+    <ClInclude Include="ReflectionHolder.h">
+      <Filter>src\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderCommon.h">
+      <Filter>src\renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -6,6 +6,7 @@
 #include <vector>
 
 class GuiElement : public Renderable {
+
 public:
   GuiElement() {
     vertexBuffer = -1;

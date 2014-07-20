@@ -63,6 +63,7 @@ void TexturedMesh::render(const RenderContext &context) {
 
 void TexturedMesh::shutdown() {
   glDeleteBuffers(1, &verticesId);
+  glDeleteBuffers(1, &indicesId);
   glDeleteTextures(1, &textureId);
 }
 

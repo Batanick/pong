@@ -8,6 +8,8 @@
 #include "ShaderManager.h"
 #include "AssetManager.h"
 
+#include "ReflectionHolder.h"
+
 #include "Terrain.h"
 #include "Label.h"
 #include "Clouds.h"
@@ -15,7 +17,6 @@
 
 #include "Camera.h"
 #include "FpsCounter.h"
-#include "TexturedFrame.h"
 
 #include "logging.h"
 #include "commonMath.h"
@@ -24,7 +25,6 @@
 
 #define DRAW_TERRAIN
 #define DRAW_SKYBOX
-#define SECOND_CAMERA
 
 bool Renderer::init() {
   VERIFY(glewInit() == GLEW_OK, "Unable to initialize glew", return false);
@@ -46,6 +46,12 @@ bool Renderer::init() {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+  addons.push_back(std::shared_ptr<RenderHandler>(new ReflectionHolder(*this)));
+
+  for (PRenderHandler addon : addons) {
+    addon->onInit();
+  }
 
   initContext();
   initScene();
@@ -71,9 +77,9 @@ void Renderer::initScene() {
   add(cameraCoordsLabel, RenderableType::GUI);
 #endif
 
-#ifdef SECOND_CAMERA
-  add(std::shared_ptr<TexturedFrame>(new TexturedFrame(0.5f, -1.0f, 0.5f, 0.5f, assetManager->getDefaultFont()->getTextureInfo())));
-#endif
+  for (PRenderHandler addon : addons) {
+    addon->onInitScene();
+  }
 }
 
 void Renderer::initContext() {
@@ -85,11 +91,13 @@ void Renderer::initContext() {
   context.time = 0;
 
   context.lightDir = glm::normalize(glm::vec3(1, 1, -1));
+  for (PRenderHandler addon : addons) {
+    addon->onContextInit(context);
+  }
 }
 
 void Renderer::render(double timeDelta) {
   camera->onBeforeRender(window, timeDelta);
-
   context.timeDelta = timeDelta;
   context.time += timeDelta;
   context.cameraPos = camera->getPosition();
@@ -100,8 +108,13 @@ void Renderer::render(double timeDelta) {
   context.projection = projection;
   context.view = view;
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  for (PRenderHandler addon : addons) {
+    addon->onBeforeRender(context);
+  }
 
+  glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   renderAll();
 
   fpsCounter->onFrame();
@@ -121,10 +134,24 @@ void Renderer::add(const PRenderable renderable, Renderer::RenderableType type) 
   renderables[type].insert(std::make_pair(renderable->getType(), renderable));
 }
 
+void Renderer::render(const RenderableType &type) {
+  const RenderableHolder &holder = renderables[type];
+
+  ShaderType currentType = ShaderType::NONE;
+  for (auto iterator = holder.begin(); iterator != holder.end(); iterator++) {
+    if (iterator->first != currentType) {
+      currentType = iterator->first;
+      shaderManager->useProgram(currentType);
+    }
+
+    iterator->second->render(context);
+  }
+}
+
 void Renderer::renderAll() {
   ShaderType currentType = ShaderType::NONE;
 
-  for (RenderableHolder holder : renderables) {
+  for (RenderableHolder &holder : renderables) {
     // expecting that elements ordered by key
     for (auto iterator = holder.begin(); iterator != holder.end(); iterator++) {
       if (iterator->first != currentType) {
@@ -142,6 +169,10 @@ void Renderer::shutdown() {
     for (auto iterator = holder.begin(); iterator != holder.end(); iterator++) {
       iterator->second->shutdown();
     }
+
+  for (PRenderHandler addon : addons) {
+    addon->onShutdown();
+  }
 
   shaderManager->shutdown();
   assetManager->shutdown();

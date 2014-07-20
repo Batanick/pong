@@ -1,6 +1,7 @@
 #ifndef H_RENDER_COMMON
 #define H_RENDER_COMMON
 #include "glm.hpp"
+#include <memory>
 
 static const float RENDER_PI = 3.14159265358979323846264338327950288f;
 static const float RENDER_FOV = 45.0f;
@@ -29,6 +30,8 @@ struct RenderContext {
 
   glm::vec3 cameraPos;
   glm::vec3 lightDir;
+
+  GLuint reflectionTexId;
 };
 
 struct Glyph {
@@ -67,6 +70,28 @@ public:
   virtual void shutdown() = 0;
   virtual void init(const GLuint shaderId) = 0;
   virtual ShaderType getType() = 0;
+};
+
+typedef std::shared_ptr<Renderable> PRenderable;
+
+class CommonRenderer {
+public:
+  enum RenderableType : unsigned char {
+    Common = 0, PostRender, GUI
+  };
+
+  virtual void renderAll() = 0;
+  virtual void render(const RenderableType &type) = 0;
+  virtual void add(PRenderable renderable, RenderableType type = RenderableType::Common) = 0;
+};
+
+class RenderHandler {
+public:
+  virtual void onInit(){};
+  virtual void onContextInit(RenderContext &context){};
+  virtual void onInitScene(){};
+  virtual void onBeforeRender(const RenderContext &context){};
+  virtual void onShutdown(){};
 };
 
 #endif

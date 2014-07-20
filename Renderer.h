@@ -1,8 +1,10 @@
-#include "RenderCommon.h"
+#include "renderCommon.h"
 
 #include <memory>
 #include <vector>
 #include <map>
+
+#include "logging.h"
 
 struct GLFWwindow;
 struct RenderContext;
@@ -16,9 +18,10 @@ class Label;
 class ShaderManager;
 enum class ShaderType : unsigned int;
 
-typedef std::shared_ptr<Renderable> PRenderable;
 
-class Renderer final {
+class RenderHandler;
+
+class Renderer final : public CommonRenderer {
 public:
   Renderer(GLFWwindow* _window) :window(_window) {
     renderables.resize(3); // Renderable types count
@@ -28,12 +31,13 @@ public:
   bool init();
   void shutdown();
 
-private:
-  enum RenderableType : unsigned char {
-    Common = 0, PostRender, GUI
-  };
+  virtual void renderAll() override;
+  virtual void render(const RenderableType &type) override;
+  virtual void add(PRenderable renderable, RenderableType type = RenderableType::Common) override;
 
+private:
   typedef std::multimap<ShaderType, PRenderable> RenderableHolder;
+  typedef std::shared_ptr<RenderHandler> PRenderHandler;
 
   GLFWwindow * const window;
 
@@ -46,14 +50,11 @@ private:
   std::shared_ptr<Camera> camera;
 
   std::vector<RenderableHolder> renderables;
+  std::vector<PRenderHandler> addons;
 
   RenderContext context;
 
   void initContext();
   void initScene();
-
-  void renderAll();
-
-  void add(PRenderable renderable, Renderer::RenderableType type = RenderableType::Common);
 };
 
