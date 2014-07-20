@@ -22,6 +22,7 @@ static std::vector<ShaderManager::ShaderDesc> SHADERS = {
   ShaderManager::ShaderDesc(ShaderType::TEX_MESH_SHADER, "TexturedMesh.vs", "TexturedMesh.fs", &initMeshShader),
   ShaderManager::ShaderDesc(ShaderType::GUI_SHADER, "GuiElement.vs", "GuiElement.fs", &initTextShader),
   ShaderManager::ShaderDesc(ShaderType::CLOUDS_SHADER, "Clouds.vs", "Clouds.fs", &initSkyMesh),
+  ShaderManager::ShaderDesc(ShaderType::WATER_SHADER, "Water.vs", "Water.fs", &initMeshShader),
   ShaderManager::ShaderDesc(ShaderType::TEST_SHADER, "Test.vs", "Test.fs", &initMeshShader)
 };
 

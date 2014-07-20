@@ -42,6 +42,7 @@ private:
   GLuint heightId;
   GLuint cameraPosId;
   GLuint lightDirId;
+  GLuint waterLevel;
 
   GLuint textureId;
 

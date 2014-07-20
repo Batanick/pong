@@ -108,6 +108,7 @@
     <ClCompile Include="tinyXml\tinyxml.cpp" />
     <ClCompile Include="tinyXml\tinyxmlerror.cpp" />
     <ClCompile Include="tinyXml\tinyxmlparser.cpp" />
+    <ClCompile Include="Water.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bush.h" />
@@ -142,6 +143,7 @@
     <ClInclude Include="tinyXml\tinystr.h" />
     <ClInclude Include="tinyXml\tinyxml.h" />
     <ClInclude Include="Tree.h" />
+    <ClInclude Include="Water.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\Bush.fs" />
@@ -156,6 +158,8 @@
     <None Include="shaders\Test.vs" />
     <None Include="shaders\TexturedMesh.fs" />
     <None Include="shaders\TexturedMesh.vs" />
+    <None Include="shaders\Water.fs" />
+    <None Include="shaders\Water.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

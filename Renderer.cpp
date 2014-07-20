@@ -11,6 +11,7 @@
 #include "ReflectionHolder.h"
 
 #include "Terrain.h"
+#include "Water.h"
 #include "Label.h"
 #include "Clouds.h"
 #include "Sun.h"
@@ -44,6 +45,7 @@ bool Renderer::init() {
   glfwSwapInterval(1);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
+  glEnable(GL_CULL_FACE);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   addons.push_back(std::shared_ptr<RenderHandler>(new ReflectionHolder(*this)));
@@ -61,6 +63,7 @@ bool Renderer::init() {
 void Renderer::initScene() {
 #ifdef DRAW_TERRAIN
   add(std::shared_ptr<Terrain>(new Terrain()));
+  add(std::shared_ptr<Water>(new Water()));
 #endif
 
 #ifdef DRAW_SKYBOX
@@ -110,6 +113,7 @@ void Renderer::render(double timeDelta) {
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
   glCullFace(GL_BACK);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
   renderAll();
 
   fpsCounter->onFrame();

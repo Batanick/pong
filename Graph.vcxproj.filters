@@ -121,6 +121,9 @@
     <ClCompile Include="ReflectionHolder.cpp">
       <Filter>src\renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Water.cpp">
+      <Filter>src\renderer\world</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -219,6 +222,9 @@
     <ClInclude Include="renderCommon.h">
       <Filter>src\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Water.h">
+      <Filter>src\renderer\world</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\Bush.fs">
@@ -255,6 +261,12 @@
       <Filter>src\shaders</Filter>
     </None>
     <None Include="shaders\GuiElement.vs">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\Water.fs">
+      <Filter>src\shaders</Filter>
+    </None>
+    <None Include="shaders\Water.vs">
       <Filter>src\shaders</Filter>
     </None>
   </ItemGroup>

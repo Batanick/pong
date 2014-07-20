@@ -37,17 +37,18 @@ void ReflectionHolder::onContextInit(RenderContext &context) {
 }
 
 void ReflectionHolder::onBeforeRender(const RenderContext &context) {
-  glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
-  glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-  glCullFace(GL_FRONT);
   RenderContext contextCopy(context);
-
   static const glm::vec3 inverseY(1, -1, 1);
   setUpCamera(contextCopy, context.cameraPos * inverseY, context.cameraUp * inverseY, context.cameraDir * inverseY);
 
+  glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
+  glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glCullFace(GL_FRONT);
+
+  glEnable(GL_CLIP_PLANE0);
   renderer.render(CommonRenderer::Common, contextCopy);
+  glDisable(GL_CLIP_PLANE0);
 }
 
 void ReflectionHolder::onInitScene() {
