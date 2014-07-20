@@ -44,8 +44,6 @@ bool Renderer::init() {
   glfwSwapInterval(1);
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LESS);
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
   addons.push_back(std::shared_ptr<RenderHandler>(new ReflectionHolder(*this)));
@@ -110,6 +108,7 @@ void Renderer::render(double timeDelta) {
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  glCullFace(GL_BACK);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   renderAll();
 

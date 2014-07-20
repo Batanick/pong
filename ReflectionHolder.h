@@ -3,6 +3,7 @@
 #include <memory>
 
 class ReflectionHolder final : public RenderHandler {
+
 public:
   ReflectionHolder(CommonRenderer &renderer) :
     renderer(renderer) {
@@ -14,11 +15,11 @@ public:
   virtual void onBeforeRender(const RenderContext &context) override;
   virtual void onInitScene() override;
   virtual void onShutdown() override;
+
 private:
   GLuint textureId;
   GLuint frameBuffer;
   GLuint depthBuffer;
-
 
   CommonRenderer &renderer;
 

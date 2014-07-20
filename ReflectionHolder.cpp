@@ -5,6 +5,8 @@
 
 #include "TexturedFrame.h"
 
+#include "renderUtils.h"
+
 #include "logging.h"
 
 void ReflectionHolder::onInit() {
@@ -39,15 +41,18 @@ void ReflectionHolder::onBeforeRender(const RenderContext &context) {
   glBindRenderbuffer(GL_RENDERBUFFER, depthBuffer);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+  glCullFace(GL_FRONT);
+  RenderContext contextCopy(context);
 
+  static const glm::vec3 inverseY(1, -1, 1);
+  setUpCamera(contextCopy, context.cameraPos * inverseY, context.cameraUp * inverseY, context.cameraDir * inverseY);
 
-  renderer.render(CommonRenderer::Common, context);
+  renderer.render(CommonRenderer::Common, contextCopy);
 }
 
 void ReflectionHolder::onInitScene() {
   renderer.add(std::shared_ptr<TexturedFrame>(new TexturedFrame(0.5f, -1.0f, 0.5f, 0.5f, textureId)), CommonRenderer::GUI);
 }
-
 
 void ReflectionHolder::onShutdown() {
   glDeleteTextures(1, &textureId);

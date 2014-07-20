@@ -138,7 +138,6 @@ void printLog(GLuint obj) {
 }
 
 void initTextShader() {
-  glDisable(GL_CULL_FACE);
   glDisable(GL_DEPTH_TEST);
 
   glEnable(GL_BLEND);
@@ -149,8 +148,6 @@ void initTextShader() {
 
 void initMeshShader() {
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
 }
 
 void initSkyMesh() {
