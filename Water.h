@@ -13,6 +13,7 @@ public:
     timeId = -1;
     projectionId = -1;
     viewId = -1;
+    cameraPosId = -1;
     lightDirId = -1;
   }
 
@@ -26,6 +27,7 @@ private:
 
   GLuint projectionId;
   GLuint viewId;
+  GLuint cameraPosId;
 
   GLuint reflectionTexId;
   GLuint mainColorId;
