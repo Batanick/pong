@@ -51,7 +51,9 @@ void ReflectionHolder::onBeforeRender(const RenderContext &context) {
 }
 
 void ReflectionHolder::onInitScene() {
+#ifdef SHOW_DEBUG_FRAME
   renderer.add(std::shared_ptr<TexturedFrame>(new TexturedFrame(0.5f, -1.0f, 0.5f, 0.5f, textureId)), CommonRenderer::GUI);
+#endif
 }
 
 void ReflectionHolder::onShutdown() {

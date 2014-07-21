@@ -2,6 +2,8 @@
 
 #include <memory>
 
+//#define SHOW_DEBUG_FRAME
+
 class ReflectionHolder final : public RenderHandler {
 
 public:
