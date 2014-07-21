@@ -31,7 +31,7 @@ void main() {
   vec3 viewNormal = normalize((view * vec4(normal, 0)).xyz);
 
   vec2 vDeviceReflection = pvPos.xy / pvPos.w + normal.xz / 77;
-  vec2 vTexReflection = vec2(0.5, 0.48) + 0.5 * vDeviceReflection;
+  vec2 vTexReflection = vec2(0.5, 0.48) + 0.48 * vDeviceReflection;
   vec3 reflectedColor = texture2D (reflectionTex, vTexReflection * vec2(-1, 1)).xyz;
 
   vec3 E = normalize((view * vec4(cameraDir, 0)).xyz);
