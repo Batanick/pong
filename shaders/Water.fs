@@ -22,25 +22,24 @@ vec3 getRandomNormal(float x, float y, float z) {
 }
 
 void main() {
+  vec3 normalLight = normalize(light);
+
   vec3 n1 = getRandomNormal(fPos.x * 0.1 + time * 0.2, time, fPos.z * 0.05 + time * 0.2);
   vec3 n2 = getRandomNormal(fPos.x + time, time, fPos.z + time);
-
   vec3 normal = normalize(n1 + n2 / 8);
-  //vec3 n2 = normalize( vec3( cnoise(basePos + vec3(diff, 1000, diff)) ,1 , cnoise(basePos + vec3(0, 1000, 0))) );
  
-  vec3 viewNormal = normalize((view * vec4(normal, 0)).xyz);
-
   vec2 vDeviceReflection = pvPos.xy / pvPos.w + normal.xz / 77;
   vec2 vTexReflection = vec2(0.5, 0.48) + 0.48 * vDeviceReflection;
   vec3 reflectedColor = texture2D (reflectionTex, vTexReflection * vec2(-1, 1)).xyz;
 
-  vec3 E = normalize((view * vec4(cameraDir, 0)).xyz);
+  vec3 cameraDirView = normalize((view * vec4(cameraDir, 0)).xyz);
+  vec3 normalView = normalize((view * vec4(normal, 0)).xyz);
+  vec3 reflected = reflect(normalLight, normalView);
+  float cosAlpha = clamp( dot( cameraDirView, reflected ), 0,1 );
 
-  vec3 R = reflect(normalize(light),viewNormal);
-  float cosAlpha = clamp( dot( E,R ), 0,1 );
-  float cosTheta = clamp( dot( viewNormal, normalize(light)), 0, 1 );
+  float cosTheta = clamp( dot( normalView, normalLight), 0, 1 );
 
-  vec3 result = mainColor * 0.5 + mainColor * cosTheta * 0.1 + reflectedColor * 0.5 + 0.05 * vec3(1,1,1) * pow(cosAlpha,2);
+  vec3 result = mainColor * 0.5 + mainColor * cosTheta * 0.1 + reflectedColor * 0.5 + 0.07 * vec3(1,1,1) * pow(cosAlpha,5);
 
   color = vec4(result, 0.8);
 }
