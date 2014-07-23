@@ -9,9 +9,9 @@ out vec4 color;
 float cnoise(vec4 P);
 
 void main() {
-    vec3 cloudColor = vec3(1.0, 1.0, 1.0);    
-    vec3 wind = vec3(30, 0, 17) * time;
-	  color = vec4(cloudColor, 0.25 * cnoise(vec4((fragmentPos + wind) / 1000, time / 50)));
+  vec3 cloudColor = vec3(1.0, 1.0, 1.0);    
+  vec3 wind = vec3(30, 0, 17) * time;
+  color = vec4(cloudColor, 0.25 * cnoise(vec4((fragmentPos + wind) / 1000, time / 50)));
 }
 
 //

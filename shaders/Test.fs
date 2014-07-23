@@ -3,6 +3,6 @@
 out vec3 color;
 
 void main() {
-	vec3 v = vec3(1, 0, 0);
-	color = v;	
+  vec3 v = vec3(1, 0, 0);
+  color = v;
 }

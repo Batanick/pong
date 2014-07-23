@@ -8,7 +8,7 @@ uniform mat4 mvp;
 out vec2 fragmentUv;
 
 void main() {
-	gl_Position = mvp * vec4( pos, 1 );
+  gl_Position = mvp * vec4( pos, 1 );
 
   fragmentUv = uv;
 }

@@ -18,10 +18,10 @@ out vec3 xyz;
 void main() {
   vec4 position = vec4( vertexPosition, 1 );
 
-	gl_Position = projection * view * position;
+  gl_Position = projection * view * position;
   gl_ClipDistance[0] = dot( waterLevel, position );
 
-	u = vertexPosition.y / heightScale;
+  u = vertexPosition.y / heightScale;
   normal = (view * vec4(vertexNormal, 0)).xyz;
   light = (view * vec4(lightDir, 0)).xyz;
   xyz = vertexPosition.xyz;
