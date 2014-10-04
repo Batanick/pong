@@ -15,7 +15,7 @@ public:
   }
 
   virtual ShaderType getType() {
-    return ShaderType::TEST_SHADER;
+    return ShaderType::BUSH_SHADER;
   }
 
 protected:
