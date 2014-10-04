@@ -16,6 +16,8 @@
 #include "Clouds.h"
 #include "Sun.h"
 
+#include "Tree.h"
+
 #include "Camera.h"
 #include "FpsCounter.h"
 
@@ -25,8 +27,8 @@
 
 #define SHOW_FPS
 
-#define DRAW_TERRAIN
-#define DRAW_SKYBOX
+//#define DRAW_TERRAIN
+//#define DRAW_SKYBOX
 
 bool Renderer::init() {
   VERIFY(glewInit() == GLEW_OK, "Unable to initialize glew", return false);
@@ -61,6 +63,8 @@ bool Renderer::init() {
 }
 
 void Renderer::initScene() {
+  add(std::shared_ptr<Tree>(new Tree()));
+
 #ifdef DRAW_TERRAIN
   add(std::shared_ptr<Terrain>(new Terrain()));
   add(std::shared_ptr<Water>(new Water()), CommonRenderer::PostRender);

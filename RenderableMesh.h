@@ -9,6 +9,10 @@
 
 class RenderableMesh: public Renderable {
 public:
+  virtual ~RenderableMesh() {
+    //nothing here
+  }
+
   virtual void render(const RenderContext &context) final override;
   virtual void shutdown() final override;
   virtual void init(const GLuint shaderId) final override;

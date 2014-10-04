@@ -11,9 +11,9 @@ static const float CAMERA_MOVE_SPEED = 100.0f;
 static const float CAMERA_ROTATION_SPEED = 0.005f;
 
 Camera::Camera() {
-  horizontalAngle = 0.78f;
-  verticalAngle = -0.2f;
-  position = glm::vec3(0, 30, 0);
+  horizontalAngle = 0.0f;
+  verticalAngle = -0.0f;
+  position = glm::vec3(0, 0.5, -2);
 }
 
 void Camera::onBeforeRender(GLFWwindow * const window, double deltaTime) {

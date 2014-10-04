@@ -10,6 +10,14 @@ public:
     treeParams(blackTupelo()) {
   }
 
+  virtual ~Tree() {
+    // nothing 
+  }
+
+  virtual ShaderType getType() {
+    return ShaderType::TEST_SHADER;
+  }
+
 protected:
   virtual void initMesh(
     std::vector<const glm::vec3> &vertices,
@@ -130,6 +138,4 @@ private:
 
   unsigned int indicesCount;
 
-  GLuint vertexBuffer;
-  GLuint indexBuffer;
 };

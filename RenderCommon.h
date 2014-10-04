@@ -69,6 +69,10 @@ struct TextureInfo {
 
 class Renderable {
 public:
+  virtual ~Renderable() {
+    // nothing
+  }
+
   virtual void render(const RenderContext &context) = 0;
   virtual void shutdown() = 0;
   virtual void init(const GLuint shaderId) = 0;
