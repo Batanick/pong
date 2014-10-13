@@ -13,9 +13,8 @@
 #include "logging.h"
 
 void Tree::initMesh(
-  std::vector<const VertexData> &vertices,
+  std::vector<const TexVertexData> &vertices,
   std::vector<const unsigned int> &indices) {
-  setColor(0.5f, 0.5f, 0.0f);
 
   StemParams rootParams;
   rootParams.direction = glm::normalize(glm::vec3(0, 1, 0));
@@ -32,7 +31,7 @@ void Tree::initMesh(
   drawStem(rootParams, vertices, indices, 0, treeParams.baseSize);
 }
 
-void Tree::drawStem(const StemParams &stem, std::vector<const VertexData> &vertices, std::vector<const unsigned int> &indices, const int level, const float baseSize) {
+void Tree::drawStem(const StemParams &stem, std::vector<const TexVertexData> &vertices, std::vector<const unsigned int> &indices, const int level, const float baseSize) {
   const int indicesOffset = vertices.size();
   const float segmentHeight = stem.length / stem.segments;
   const float yawDelta = glm::pi<float>() * 2 / stem.resolution;
@@ -58,7 +57,7 @@ void Tree::drawStem(const StemParams &stem, std::vector<const VertexData> &verti
       const glm::vec3 addition = glm::normalize( glm::vec3(glm::angleAxis(glm::degrees(yaw), glm::normalize(increment)) * stem.curveAxis) );
       const glm::vec3 current = pos + (addition * stem.radius * (1 - radiusWaistFactor * row));
       
-      vertices.push_back(VertexData(current, addition));
+      vertices.push_back(TexVertexData(current, addition, glm::vec2(0.0f,0.0f)));
       yaw += yawDelta;
     }
 
@@ -131,6 +130,32 @@ const Tree::StemParams Tree::generateChild(
 
   return childParams;
 }
+
+void Tree::initTexture(GLuint &textureId) {
+  static const int textureLength = 64;
+  static const double textureLengthHalfFloat = textureLength / 2;
+
+  static const int textureSize = textureLength * textureLength * 4 * sizeof(unsigned char);
+  unsigned char *textureData = (unsigned char *)malloc(textureSize);
+
+  for (int x = 0; x < textureLength; x++) {
+    for (int y = 0; y < textureLength; y++) {
+      const int i = x + y * textureLength;
+      textureData[i * 4] = 255;			  // R 
+      textureData[i * 4 + 1] = 255;		// G 
+      textureData[i * 4 + 2] = 0;		  // B 
+      textureData[i * 4 + 3] = 255;
+    }
+  }
+
+  glGenTextures(1, &textureId);
+  glBindTexture(GL_TEXTURE_2D, textureId);
+  glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, textureLength, textureLength);
+  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, textureLength, textureLength, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
+
+  free(textureData);
+}
+
 
 // ====================================================================================================================
 // ===================================== TREE LIBRARY (MAGIC NUMBER KINGDOM) ==========================================

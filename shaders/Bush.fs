@@ -3,12 +3,14 @@
 in vec3 normalView;
 in vec3 lightView;
 in vec3 posView;
+in vec2 uvCoord;
 
-uniform vec3 vColor;
+uniform sampler2D texture;
 
-out vec3 color;
+out vec4 color;
 
 void main() {
   float cosTheta = clamp( dot( normalize(normalView), normalize(lightView) ), 0, 1 );
-  color = vColor * (cosTheta * 0.7 + 0.3);
+  vec4 diffuse = texture2D( texture, uvCoord ); 
+  color = vec4(diffuse.rgb * (cosTheta * 0.7 + 0.3), diffuse.a) ;
 }

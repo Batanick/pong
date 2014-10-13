@@ -10,7 +10,11 @@
 class RenderableMesh: public Renderable {
 public:
   virtual ~RenderableMesh() {
-    //nothing here
+    textureId = -1;
+    textureParamId = -1;
+    lightDirId = -1;
+    viewId = -1;
+    projectionId = -1;
   }
 
   virtual void render(const RenderContext &context) final override;
@@ -19,10 +23,9 @@ public:
 
 protected:
   virtual void initMesh(
-    std::vector<const VertexData> &vertices,
+    std::vector<const TexVertexData> &vertices,
     std::vector<const unsigned int> &indices) = 0;
-
-  void setColor(float r, float g, float b);
+  virtual void initTexture(GLuint &textureId) = 0;
 
 private:
 
@@ -32,12 +35,10 @@ private:
   GLuint projectionId;
   GLuint viewId;
   GLuint lightDirId;
-  GLuint colorId;
-
-  glm::vec3 color;
+  GLuint textureId;
+  GLuint textureParamId;
 
   int indicesSize;
-
 };
 
 #endif

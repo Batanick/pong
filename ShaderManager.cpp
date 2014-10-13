@@ -151,6 +151,9 @@ void initTextShader() {
 
 void initMeshShader() {
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_BLEND);
+  glBlendEquation(GL_FUNC_ADD);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 void initSkyMesh() {

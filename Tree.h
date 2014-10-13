@@ -3,7 +3,7 @@
 
 #include <vector>
 
-class Tree final : public RenderableMesh  {
+class Tree final : public RenderableMesh {
 public:
   Tree() :
     pos(glm::vec3()),
@@ -20,11 +20,12 @@ public:
 
 protected:
   virtual void initMesh(
-    std::vector<const VertexData> &vertices,
+    std::vector<const TexVertexData> &vertices,
     std::vector<const unsigned int> &indices) override;
 
-private:
+  virtual void Tree::initTexture(GLuint &textureId) override;
 
+private:
   struct TreeLevelParams {
     TreeLevelParams(float downAngle, float rotate, int branches, float length,
       float taper, int curveRes, float curve, float curveBack) :
@@ -122,7 +123,7 @@ private:
 
   void drawStem(
     const StemParams &stem,
-    std::vector<const VertexData> &vertices,
+    std::vector<const TexVertexData> &vertices,
     std::vector<const unsigned int> &indices,
     const int level,
     const float baseSize);

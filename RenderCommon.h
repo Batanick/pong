@@ -114,4 +114,19 @@ struct VertexData {
   glm::vec3 normal;
 };
 
+struct TexVertexData {
+  TexVertexData(const glm::vec3 &position, const glm::vec3 &normal, const glm::vec2 &uv) {
+    this->position = position;
+    this->normal = normal;
+    this->uv = uv;
+  }
+
+  TexVertexData() {
+  }
+
+  glm::vec3 position;
+  glm::vec3 normal;
+  glm::vec2 uv;
+};
+
 #endif
