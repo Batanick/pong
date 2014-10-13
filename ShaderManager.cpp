@@ -44,6 +44,7 @@ bool ShaderManager::loadShader(const ShaderDesc &shaderDesc){
 
   //Vertex shader
   std::string vertexShaderContent;
+  LOG("Loading shader: %s", shaderDesc.vertexShaderFName.c_str());
   if (!loadContent((SHADER_PATH + shaderDesc.vertexShaderFName).c_str(), vertexShaderContent)) {
     LOG("Unable to load: [%s]", shaderDesc.vertexShaderFName.c_str());
     return false;
@@ -54,6 +55,7 @@ bool ShaderManager::loadShader(const ShaderDesc &shaderDesc){
 
   //Fragment shader
   std::string fragmentShaderContent;
+  LOG("Loading shader: %s", shaderDesc.fragmentShaderFName.c_str());
   if (!loadContent((SHADER_PATH + shaderDesc.fragmentShaderFName).c_str(), fragmentShaderContent)) {
     LOG("Unable to load: [%s]", shaderDesc.fragmentShaderFName.c_str());
     return false;

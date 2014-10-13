@@ -76,7 +76,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Bush.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="fileUtils.cpp" />
     <ClCompile Include="Font.cpp" />
@@ -111,7 +110,6 @@
     <ClCompile Include="Water.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Bush.h" />
     <ClInclude Include="fileUtils.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Camera.h" />

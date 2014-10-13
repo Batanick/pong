@@ -101,4 +101,17 @@ public:
   virtual void onShutdown(){};
 };
 
+struct VertexData {
+  VertexData(const glm::vec3 &position, const glm::vec3 &normal) {
+    this->position = position;
+    this->normal = normal;
+  }
+
+  VertexData() {
+  }
+
+  glm::vec3 position;
+  glm::vec3 normal;
+};
+
 #endif

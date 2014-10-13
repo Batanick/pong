@@ -94,9 +94,6 @@
     <ClCompile Include="ShaderManager.cpp">
       <Filter>src\renderer\common</Filter>
     </ClCompile>
-    <ClCompile Include="Bush.cpp">
-      <Filter>src\renderer\world</Filter>
-    </ClCompile>
     <ClCompile Include="Tree.cpp">
       <Filter>src\renderer\world</Filter>
     </ClCompile>
@@ -191,9 +188,6 @@
     </ClInclude>
     <ClInclude Include="ShaderManager.h">
       <Filter>src\renderer\common</Filter>
-    </ClInclude>
-    <ClInclude Include="Bush.h">
-      <Filter>src\renderer\world</Filter>
     </ClInclude>
     <ClInclude Include="Tree.h">
       <Filter>src\renderer\world</Filter>

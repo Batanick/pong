@@ -9,19 +9,6 @@
 #include "TerrainConstants.h"
 #include "RenderCommon.h"
 
-struct VertexData {
-  VertexData(const glm::vec3 &position, const glm::vec3 &normal) {
-    this->position = position;
-    this->normal = normal;
-  }
-
-  VertexData() {
-  }
-
-  glm::vec3 position;
-  glm::vec3 normal;
-};
-
 struct Patch {
 	Patch() {
 		x = -1;

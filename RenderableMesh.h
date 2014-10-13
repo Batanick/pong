@@ -19,9 +19,8 @@ public:
 
 protected:
   virtual void initMesh(
-    std::vector<const glm::vec3> &vertices,
-    std::vector<const unsigned int> &indices,
-    std::vector<const glm::vec2> &uvs) = 0;
+    std::vector<const VertexData> &vertices,
+    std::vector<const unsigned int> &indices) = 0;
 
   void setColor(float r, float g, float b);
 
@@ -30,7 +29,10 @@ private:
   GLuint vertexBuffer;
   GLuint indexBuffer;
 
-  GLuint mvpId;
+  GLuint projectionId;
+  GLuint viewId;
+  GLuint lightDirId;
+  GLuint colorId;
 
   glm::vec3 color;
 

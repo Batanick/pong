@@ -13,9 +13,9 @@
 #include "logging.h"
 
 void Tree::initMesh(
-  std::vector<const glm::vec3> &vertices,
-  std::vector<const unsigned int> &indices,
-  std::vector<const glm::vec2> &uvs) {
+  std::vector<const VertexData> &vertices,
+  std::vector<const unsigned int> &indices) {
+  setColor(0.5f, 0.5f, 0.0f);
 
   StemParams rootParams;
   rootParams.direction = glm::normalize(glm::vec3(0, 1, 0));
@@ -32,7 +32,7 @@ void Tree::initMesh(
   drawStem(rootParams, vertices, indices, 0, treeParams.baseSize);
 }
 
-void Tree::drawStem(const StemParams &stem, std::vector<const glm::vec3> &vertices, std::vector<const unsigned int> &indices, const int level, const float baseSize) {
+void Tree::drawStem(const StemParams &stem, std::vector<const VertexData> &vertices, std::vector<const unsigned int> &indices, const int level, const float baseSize) {
   const int indicesOffset = vertices.size();
   const float segmentHeight = stem.length / stem.segments;
   const float yawDelta = glm::pi<float>() * 2 / stem.resolution;
@@ -53,12 +53,12 @@ void Tree::drawStem(const StemParams &stem, std::vector<const glm::vec3> &vertic
   std::vector<const StemParams> childs;
 
   for (int row = 0; row <= stem.segments; row++) {
-    glm::vec3 rotor = stem.curveAxis * stem.radius * (1 - radiusWaistFactor * row);
-
     // ================== VERTICES ================
     for (int col = 0; col <= stem.resolution; col++) {
-      const glm::vec3 current = pos + glm::vec3(glm::angleAxis(glm::degrees(yaw), glm::normalize(increment)) * rotor);
-      vertices.push_back(current);
+      const glm::vec3 addition = glm::normalize( glm::vec3(glm::angleAxis(glm::degrees(yaw), glm::normalize(increment)) * stem.curveAxis) );
+      const glm::vec3 current = pos + (addition * stem.radius * (1 - radiusWaistFactor * row));
+      
+      vertices.push_back(VertexData(current, addition));
       yaw += yawDelta;
     }
 
@@ -202,5 +202,21 @@ const Tree::TreeParams Tree::blackOak() {
 
   return params;
 }
+
+const Tree::TreeParams Tree::testCone() {
+  TreeParams params(std::vector<const TreeLevelParams>(), blackTupeloRatio);
+  params.ratio = 0.015f;
+  params.ratioPower = 1.2f;
+  params.rootLength = 1.0f;
+  params.rootCurveRes = 5;
+  params.rootCurve = 1.40f;
+  params.rootCurveBack = 0.0f;
+  params.scale = 5.0f;
+  params.rootTaper = 1.0f;
+  params.baseSize = 1.0f;
+
+  return params;
+}
+
 
 

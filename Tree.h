@@ -20,9 +20,8 @@ public:
 
 protected:
   virtual void initMesh(
-    std::vector<const glm::vec3> &vertices,
-    std::vector<const unsigned int> &indices,
-    std::vector<const glm::vec2> &uvs) override;
+    std::vector<const VertexData> &vertices,
+    std::vector<const unsigned int> &indices) override;
 
 private:
 
@@ -123,7 +122,7 @@ private:
 
   void drawStem(
     const StemParams &stem,
-    std::vector<const glm::vec3> &vertices,
+    std::vector<const VertexData> &vertices,
     std::vector<const unsigned int> &indices,
     const int level,
     const float baseSize);
@@ -135,6 +134,7 @@ private:
 
   static const TreeParams blackTupelo();
   static const TreeParams blackOak();
+  static const TreeParams testCone();
 
   unsigned int indicesCount;
 
