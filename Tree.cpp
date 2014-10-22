@@ -21,7 +21,7 @@ void Tree::initMesh(
   rootParams.curveAxis = glm::normalize(glm::vec3(0, 0, 1));
   rootParams.length = treeParams.rootLength * treeParams.scale;
   rootParams.radius = rootParams.length * treeParams.scale * treeParams.ratio;
-  rootParams.resolution = 8;
+  rootParams.resolution = 16;
   rootParams.segments = treeParams.rootCurveRes;
   rootParams.curve = treeParams.rootCurve;
   rootParams.curveBack = treeParams.rootCurveBack;
@@ -32,7 +32,7 @@ void Tree::initMesh(
 }
 
 void Tree::drawStem(const StemParams &stem, std::vector<const TexVertexData> &vertices, std::vector<const unsigned int> &indices, const int level, const float baseSize) {
-  const int indicesOffset = vertices.size();
+  const unsigned int indicesOffset = vertices.size();
   const float segmentHeight = stem.length / stem.segments;
   const float yawDelta = glm::pi<float>() * 2 / stem.resolution;
   const float radiusWaistFactor = (1 - stem.weist) / stem.segments;
@@ -51,9 +51,9 @@ void Tree::drawStem(const StemParams &stem, std::vector<const TexVertexData> &ve
   float offsetPerChild = (branchesCount > 0) ? 1 / branchesCount : 0;
   std::vector<const StemParams> childs;
 
-  for (int row = 0; row <= stem.segments; row++) {
+  for (unsigned int row = 0; row <= stem.segments; row++) {
     // ================== VERTICES ================
-    for (int col = 0; col <= stem.resolution; col++) {
+    for (unsigned int col = 0; col <= stem.resolution; col++) {
       const glm::vec3 addition = glm::normalize( glm::vec3(glm::angleAxis(glm::degrees(yaw), glm::normalize(increment)) * stem.curveAxis) );
       const glm::vec3 current = pos + (addition * stem.radius * (1 - radiusWaistFactor * row));
       
@@ -83,8 +83,8 @@ void Tree::drawStem(const StemParams &stem, std::vector<const TexVertexData> &ve
   }
 
   // ================== INDICES ================
-  for (int row = 0; row < stem.segments; row++) {
-    for (int col = 0; col < stem.resolution; col++) {
+  for (unsigned int row = 0; row < stem.segments; row++) {
+    for (unsigned int col = 0; col < stem.resolution; col++) {
       indices.push_back(col + row * (stem.resolution + 1) + indicesOffset);
       indices.push_back(col + row * (stem.resolution + 1) + 1 + indicesOffset);
       indices.push_back(col + (row + 1) * (stem.resolution + 1) + indicesOffset);
@@ -200,7 +200,7 @@ float blackOakRatio(float offsetFactor) {
 }
 
 const Tree::TreeParams Tree::blackOak() {
-  TreeLevelParams level1(glm::radians(30.0f), glm::radians(80.0f), 40, 0.8f, 1.0f, 10, glm::radians(40.0f), glm::radians(-70.0f));
+  TreeLevelParams level1(glm::radians(30.0f), glm::radians(80.0f), 8, 0.8f, 1.0f, 2, glm::radians(40.0f), glm::radians(-70.0f));
   level1.initVars(glm::radians(-30.0f), 0.0f, 0.01f, glm::radians(150.0f));
 
   TreeLevelParams level2(glm::radians(45.0f), glm::radians(140.0f), 120, 0.2f, 1.0f, 3, glm::radians(0.0f), glm::radians(-30.0f));
@@ -211,14 +211,14 @@ const Tree::TreeParams Tree::blackOak() {
 
   std::vector<const TreeLevelParams> levelParams;
   levelParams.push_back(level1);
-  levelParams.push_back(level2);
-  levelParams.push_back(level3);
+  //levelParams.push_back(level2);
+  //levelParams.push_back(level3);
 
   TreeParams params(levelParams, blackOakRatio);
   params.ratio = 0.015f;
   params.ratioPower = 1.2f;
   params.rootLength = 1.0f;
-  params.rootCurveRes = 10;
+  params.rootCurveRes = 16;
   params.rootCurve = 0.0f;
   params.rootCurveBack = 0.0f;
   params.scale = 1.0f;
@@ -233,9 +233,9 @@ const Tree::TreeParams Tree::testCone() {
   params.ratio = 0.015f;
   params.ratioPower = 1.2f;
   params.rootLength = 1.0f;
-  params.rootCurveRes = 5;
-  params.rootCurve = 1.40f;
-  params.rootCurveBack = 0.0f;
+  params.rootCurveRes = 10;
+  params.rootCurve = glm::radians(40.0f);
+  params.rootCurveBack = glm::radians(-70.0f);
   params.scale = 5.0f;
   params.rootTaper = 1.0f;
   params.baseSize = 1.0f;

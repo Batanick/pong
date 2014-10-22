@@ -7,7 +7,7 @@ class Tree final : public RenderableMesh {
 public:
   Tree() :
     pos(glm::vec3()),
-    treeParams(blackTupelo()) {
+    treeParams(blackOak()) {
   }
 
   virtual ~Tree() {
@@ -109,8 +109,8 @@ private:
     glm::vec3 direction;
     glm::vec3 curveAxis;
     glm::vec3 pos;
-    int segments;
-    int resolution;
+    unsigned int segments;
+    unsigned int resolution;
     float curve;
     float curveBack;
     float radius;
