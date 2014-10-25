@@ -48,14 +48,14 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>c:\projects\lib\glew-1.10.0\include;c:\projects\lib\glfw-3.0.2\include;c:\projects\lib\glm\glm;c:\projects\lib\assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(CPP_LIB)glew-1.10.0\include;$(CPP_LIB)glfw-3.0.2\include;$(CPP_LIB)glm\glm;$(CPP_LIB)assimp\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glew32.lib;glfw3.lib;glfw3dll.lib;assimp.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>c:\projects\lib\glew-1.10.0\lib\Release\Win32;c:\projects\lib\glfw-3.0.2\lib-msvc110;c:\projects\lib\assimp\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(CPP_LIB)\glew-1.10.0\lib\Release\Win32;$(CPP_LIB)\glfw-3.0.2\lib-msvc110;$(CPP_LIB)\assimp\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <Profile>true</Profile>
     </Link>
   </ItemDefinitionGroup>
