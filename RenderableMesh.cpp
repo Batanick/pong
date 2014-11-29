@@ -7,7 +7,7 @@
 
 void RenderableMesh::init(const GLuint shaderId) {
   MeshContext mesh;
-  initMesh( mesh );
+  initMesh(mesh);
 
   indicesSize = mesh.indices.size();
 
@@ -39,7 +39,7 @@ void RenderableMesh::render(const RenderContext &context) {
   glEnableVertexAttribArray(0);
   glEnableVertexAttribArray(1);
   glEnableVertexAttribArray(2);
-  
+
   glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
 
   static const int coordsOffset = offsetof(TexVertexData, position);
@@ -64,7 +64,7 @@ void RenderableMesh::shutdown() {
   glDeleteBuffers(1, &indexBuffer);
 }
 
-unsigned int RenderableMesh::getTrianglesMode() {
+RenderableMesh::TriangleMode RenderableMesh::getTrianglesMode() {
   return GL_TRIANGLE_STRIP;
 }
 

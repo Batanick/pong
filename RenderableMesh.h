@@ -22,6 +22,8 @@ public:
   virtual void init(const GLuint shaderId) final override;
 
 protected:
+  typedef unsigned int TriangleMode;
+
   struct MeshContext
   {
     std::vector<const TexVertexData> vertices;
@@ -30,7 +32,7 @@ protected:
 
   virtual void initMesh( MeshContext &mesh ) = 0;
   virtual void initTexture(GLuint &textureId) = 0;
-  virtual unsigned int getTrianglesMode();
+  virtual TriangleMode getTrianglesMode();
 
 private:
 

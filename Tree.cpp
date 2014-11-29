@@ -13,7 +13,6 @@
 #include "logging.h"
 
 void Tree::initMesh(MeshContext &mesh) {
-
   StemParams rootParams;
   rootParams.direction = glm::normalize(glm::vec3(0, 1, 0));
   rootParams.curveAxis = glm::normalize(glm::vec3(0, 0, 1));
@@ -154,7 +153,7 @@ void Tree::initTexture(GLuint &textureId) {
   free(textureData);
 }
 
-unsigned int Tree::getTrianglesMode() {
+RenderableMesh::TriangleMode Tree::getTrianglesMode() {
   return GL_TRIANGLES;
 }
 

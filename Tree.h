@@ -126,12 +126,11 @@ private:
     const glm::vec3 pos, const glm::vec3 parentDirection,
     const float offsetFactor, const float rotation);
 
-  virtual unsigned int getTrianglesMode() override;
+  virtual RenderableMesh::TriangleMode getTrianglesMode() override;
 
   static const TreeParams blackTupelo();
   static const TreeParams blackOak();
   static const TreeParams testCone();
 
   unsigned int indicesCount;
-
 };
