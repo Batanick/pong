@@ -7,7 +7,7 @@
 
 #include "RenderCommon.h"
 
-class RenderableMesh: public Renderable {
+class RenderableMesh : public Renderable {
 public:
   virtual ~RenderableMesh() {
     textureId = -1;
@@ -22,10 +22,15 @@ public:
   virtual void init(const GLuint shaderId) final override;
 
 protected:
-  virtual void initMesh(
-    std::vector<const TexVertexData> &vertices,
-    std::vector<const unsigned int> &indices) = 0;
+  struct MeshContext
+  {
+    std::vector<const TexVertexData> vertices;
+    std::vector<const unsigned int> indices;
+  };
+
+  virtual void initMesh( MeshContext &mesh ) = 0;
   virtual void initTexture(GLuint &textureId) = 0;
+  virtual unsigned int getTrianglesMode();
 
 private:
 

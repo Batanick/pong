@@ -6,20 +6,18 @@
 #include <gtc\matrix_transform.hpp>
 
 void RenderableMesh::init(const GLuint shaderId) {
-  std::vector<const TexVertexData> vertices;
-  std::vector<const unsigned int> indices;
+  MeshContext mesh;
+  initMesh( mesh );
 
-  initMesh(vertices, indices);
-  indicesSize = indices.size();
+  indicesSize = mesh.indices.size();
 
   glGenBuffers(1, &vertexBuffer);
   glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
-  glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(TexVertexData), &vertices[0], GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(TexVertexData), &(mesh.vertices[0]), GL_STATIC_DRAW);
 
   glGenBuffers(1, &indexBuffer);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-  indicesSize = indices.size();
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(unsigned int), &(mesh.indices[0]), GL_STATIC_DRAW);
 
   initTexture(textureId);
 
@@ -54,7 +52,7 @@ void RenderableMesh::render(const RenderContext &context) {
   glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(TexVertexData), (void *)uvOffset);
 
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer);
-  glDrawElements(GL_TRIANGLE_STRIP, indicesSize, GL_UNSIGNED_INT, (void *)0);
+  glDrawElements(getTrianglesMode(), indicesSize, GL_UNSIGNED_INT, (void *)0);
 
   glDisableVertexAttribArray(2);
   glDisableVertexAttribArray(1);
@@ -64,5 +62,9 @@ void RenderableMesh::render(const RenderContext &context) {
 void RenderableMesh::shutdown() {
   glDeleteBuffers(1, &vertexBuffer);
   glDeleteBuffers(1, &indexBuffer);
+}
+
+unsigned int RenderableMesh::getTrianglesMode() {
+  return GL_TRIANGLE_STRIP;
 }
 

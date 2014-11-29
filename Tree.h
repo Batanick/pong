@@ -7,7 +7,7 @@ class Tree final : public RenderableMesh {
 public:
   Tree() :
     pos(glm::vec3()),
-    treeParams(blackOak()) {
+    treeParams(blackTupelo()) {
   }
 
   virtual ~Tree() {
@@ -19,9 +19,7 @@ public:
   }
 
 protected:
-  virtual void initMesh(
-    std::vector<const TexVertexData> &vertices,
-    std::vector<const unsigned int> &indices) override;
+  virtual void initMesh(MeshContext &mesh) override;
 
   virtual void Tree::initTexture(GLuint &textureId) override;
 
@@ -109,8 +107,8 @@ private:
     glm::vec3 direction;
     glm::vec3 curveAxis;
     glm::vec3 pos;
-    unsigned int segments;
-    unsigned int resolution;
+    unsigned char segments;
+    unsigned char resolution;
     float curve;
     float curveBack;
     float radius;
@@ -121,17 +119,14 @@ private:
   const TreeParams treeParams;
   const glm::vec3 pos;
 
-  void drawStem(
-    const StemParams &stem,
-    std::vector<const TexVertexData> &vertices,
-    std::vector<const unsigned int> &indices,
-    const int level,
-    const float baseSize);
+  void drawStem(const StemParams &stem, const int level, const float baseSize, MeshContext &mesh);
 
   const StemParams generateChild(
     const StemParams &parentParams, const TreeLevelParams &levelParams,
     const glm::vec3 pos, const glm::vec3 parentDirection,
     const float offsetFactor, const float rotation);
+
+  virtual unsigned int getTrianglesMode() override;
 
   static const TreeParams blackTupelo();
   static const TreeParams blackOak();
