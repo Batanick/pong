@@ -7,7 +7,7 @@ class Tree final : public RenderableMesh {
 public:
   Tree() :
     pos(glm::vec3()),
-    treeParams(blackTupelo()) {
+    treeParams(blackOak()) {
   }
 
   virtual ~Tree() {
@@ -20,8 +20,8 @@ public:
 
 protected:
   virtual void initMesh(MeshContext &mesh) override;
-
   virtual void Tree::initTexture(GLuint &textureId) override;
+  virtual RenderableMesh::TriangleMode getTrianglesMode() override;
 
 private:
   struct TreeLevelParams {
@@ -125,8 +125,6 @@ private:
     const StemParams &parentParams, const TreeLevelParams &levelParams,
     const glm::vec3 pos, const glm::vec3 parentDirection,
     const float offsetFactor, const float rotation);
-
-  virtual RenderableMesh::TriangleMode getTrianglesMode() override;
 
   static const TreeParams blackTupelo();
   static const TreeParams blackOak();

@@ -48,6 +48,20 @@ void generateRowIndices(const int offset, const int cols, std::vector<unsigned i
   }
 }
 
+void generateTriangleIndices(const int offset, const int rows, const int cols, std::vector<const unsigned int> &indices) {
+  for (int row = 0; row < rows; row++) {
+    for (int col = 0; col < cols; col++) {
+      indices.push_back(col + row * (cols + 1) + offset);
+      indices.push_back(col + row * (cols + 1) + 1 + offset);
+      indices.push_back(col + (row + 1) * (cols + 1) + offset);
+
+      indices.push_back(col + row * (cols + 1) + 1 + offset);
+      indices.push_back(col + (row + 1) * (cols + 1) + 1 + offset);
+      indices.push_back(col + (row + 1) * (cols + 1) + offset);
+    }
+  }
+}
+
 glm::mat4 getViewMatrix(const glm::vec3 &pos, const glm::vec3 &dir, const glm::vec3 &up) {
   return glm::lookAt(pos, pos + dir, up);
 }

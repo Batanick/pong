@@ -10,6 +10,7 @@
 #include <gtx\euler_angles.hpp>
 
 #include "commonMath.h"
+#include "renderUtils.h"
 #include "logging.h"
 
 void Tree::initMesh(MeshContext &mesh) {
@@ -80,17 +81,7 @@ void Tree::drawStem(const StemParams &stem, const int level, const float baseSiz
   }
 
   // ================== INDICES ================
-  for (int row = 0; row < stem.segments; row++) {
-    for (int col = 0; col < stem.resolution; col++) {
-      mesh.indices.push_back(col + row * (stem.resolution + 1) + indicesOffset);
-      mesh.indices.push_back(col + row * (stem.resolution + 1) + 1 + indicesOffset);
-      mesh.indices.push_back(col + (row + 1) * (stem.resolution + 1) + indicesOffset);
-
-      mesh.indices.push_back(col + row * (stem.resolution + 1) + 1 + indicesOffset);
-      mesh.indices.push_back(col + (row + 1) * (stem.resolution + 1) + 1 + indicesOffset);
-      mesh.indices.push_back(col + (row + 1) * (stem.resolution + 1) + indicesOffset);
-    }
-  }
+  generateTriangleIndices(indicesOffset, stem.segments, stem.resolution, mesh.indices);
 
   for (const auto child : childs) {
     drawStem(child, level + 1, 0, mesh);
