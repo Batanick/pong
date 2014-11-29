@@ -116,10 +116,22 @@ private:
     float weist;
   };
 
+  struct StemDrawingContext {
+    float segmentHeight;
+    float yawDelta;
+    float radiusWaistFactor;
+    float curveAngle;
+    float branchesCount;
+    float offsetToLength;
+    float offsetPerChild;
+    float segmentOffsetLength;
+  };
+
   const TreeParams treeParams;
   const glm::vec3 pos;
 
   void drawStem(const StemParams &stem, const int level, const float baseSize, MeshContext &mesh);
+  StemDrawingContext buildContext(const StemParams &stem, const TreeLevelParams &levelParams, const float &baseSize);
 
   const StemParams generateChild(
     const StemParams &parentParams, const TreeLevelParams &levelParams,

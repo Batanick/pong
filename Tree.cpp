@@ -29,52 +29,59 @@ void Tree::initMesh(MeshContext &mesh) {
   drawStem(rootParams, 0, treeParams.baseSize, mesh);
 }
 
+Tree::StemDrawingContext Tree::buildContext(const StemParams &stem, const TreeLevelParams &levelParams,const float &baseSize) {
+  StemDrawingContext context;
+  context.segmentHeight = stem.length / stem.segments;
+  context.yawDelta = glm::pi<float>() * 2 / stem.resolution;
+  context.radiusWaistFactor = (1 - stem.weist) / stem.segments;
+  context.curveAngle = stem.curve / stem.segments;
+  context.branchesCount = glm::round(levelParams.branches * (0.2f + 0.8f * (levelParams.length / stem.length)));
+  context.offsetToLength = stem.length / (1 + baseSize);
+  context.offsetPerChild = (context.branchesCount > 0) ? 1.0f / levelParams.branches : 0.0f;
+  context.segmentOffsetLength = (1 + baseSize) / (stem.segments + 1);
+
+  return context;
+}
+
 void Tree::drawStem(const StemParams &stem, const int level, const float baseSize, MeshContext &mesh) {
+  const TreeLevelParams levelParams = treeParams.getParams(level + 1);
+  const StemDrawingContext context = buildContext(stem, levelParams, baseSize);
   const int indicesOffset = mesh.vertices.size();
-  const float segmentHeight = stem.length / stem.segments;
-  const float yawDelta = glm::pi<float>() * 2 / stem.resolution;
-  const float radiusWaistFactor = (1 - stem.weist) / stem.segments;
-  const float curveAngle = stem.curve / (stem.segments);
 
   float yaw = 0;
   glm::vec3 pos = stem.pos;
-  glm::vec3 increment = glm::normalize(stem.direction) * segmentHeight;
-
-  const TreeLevelParams levelParams = treeParams.getParams(level + 1);
-  const float branchesCount = glm::round(levelParams.branches * (0.2f + 0.8f * (levelParams.length / stem.length)));
-  const float offsetToLength = stem.length / (1 + baseSize);
+  glm::vec3 increment = glm::normalize(stem.direction) * context.segmentHeight;
   float offset = 0;
   float rotation = 0;
-  float segmentOffsetLength = (1 + baseSize) / (stem.segments + 1);
-  float offsetPerChild = (branchesCount > 0) ? 1 / branchesCount : 0;
+
   std::vector<const StemParams> childs;
 
   for (unsigned char row = 0; row <= stem.segments; row++) {
     // ================== VERTICES ================
     for (unsigned char col = 0; col <= stem.resolution; col++) {
       const glm::vec3 addition = glm::normalize(glm::vec3(glm::angleAxis(glm::degrees(yaw), glm::normalize(increment)) * stem.curveAxis));
-      const glm::vec3 current = pos + (addition * stem.radius * (1 - radiusWaistFactor * row));
+      const glm::vec3 current = pos + (addition * stem.radius * (1 - context.radiusWaistFactor * row));
 
       mesh.vertices.push_back(TexVertexData(current, addition, glm::vec2(0.0f, 0.0f)));
-      yaw += yawDelta;
+      yaw += context.yawDelta;
     }
 
     // ===============CHILD GENERATION ============
-    while ((branchesCount > 0) && (offset < segmentOffsetLength * row)) {
+    while ((context.branchesCount > 0) && (offset < context.segmentOffsetLength * row)) {
       if (offset < baseSize) {
-        offset += glm::min(segmentOffsetLength, baseSize - offset);
+        offset += glm::min(context.segmentOffsetLength, baseSize - offset);
         continue;
       }
 
-      const glm::vec3 childPos = pos + (glm::normalize(increment) * (offset * offsetToLength - row * segmentHeight));
+      const glm::vec3 childPos = pos + (glm::normalize(increment) * (offset * context.offsetToLength - row * context.segmentHeight));
       childs.push_back(generateChild(stem, levelParams, childPos, glm::normalize(increment), offset - baseSize, rotation));
-      offset += offsetPerChild;
+      offset += context.offsetPerChild;
       rotation += levelParams.rotate;
     }
 
     const float curveAngleActual = glm::abs(stem.curveBack) < 0.01
-      ? curveAngle
-      : ((row > (stem.segments / 2)) ? (curveAngle * 2) : (stem.curveBack * 2 / stem.segments));
+      ? context.curveAngle
+      : ((row > (stem.segments / 2)) ? (context.curveAngle * 2) : (stem.curveBack * 2 / stem.segments));
 
     increment = glm::angleAxis(glm::degrees(curveAngleActual), glm::normalize(stem.curveAxis)) * increment;
     pos += increment;
