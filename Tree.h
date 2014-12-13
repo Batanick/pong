@@ -96,6 +96,8 @@ private:
     float scale;
     float baseSize;
     float leafScale;
+    float leafForm;
+    float leafStem;
 
     const std::vector<const TreeLevelParams> levelsList;
 

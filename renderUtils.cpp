@@ -31,7 +31,7 @@ void generateIndexTable(const int rows, const int cols, std::vector<unsigned int
 
       //repeating last element to reset triangle direction
       indices.push_back(indices.back());
-      indices.push_back(indices.back()); 
+      indices.push_back(indices.back());
     }
   }
 }
@@ -75,3 +75,4 @@ void setUpCamera(RenderContext &context, const glm::vec3 &pos, const glm::vec3 &
   context.projection = glm::perspective(45.0f, ((float)context.windowWidth) / context.windowHeight, 0.01f, 5000.0f);
   context.pv = context.projection * context.view;
 }
+

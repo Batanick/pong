@@ -62,7 +62,7 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
       const glm::vec3 addition = glm::normalize(glm::vec3(glm::angleAxis(glm::degrees(yaw), glm::normalize(increment)) * stem.curveAxis));
       const glm::vec3 current = pos + (addition * stem.radius * (1 - context.radiusWaistFactor * row));
 
-      mesh.vertices.push_back(TexVertexData(current, addition, glm::vec2(0.0f, 0.0f)));
+      mesh.vertices.push_back(TexVertexData(current, addition, glm::vec2(0.25f, 0.25f)));
       yaw += context.yawDelta;
     }
 
@@ -91,7 +91,7 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
   generateTriangleIndices(indicesOffset, stem.segments, stem.resolution, mesh.indices);
 
   for (const auto child : childs) {
-    if (treeParams.levelsList.size() != level + 2) {
+    if (treeParams.levelsList.size() != level + 1) {
       drawStem(child, level + 1, 0, mesh);
     }
     else {
@@ -102,31 +102,18 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
 
 void Tree::drawLeaf(const StemParams &stem, unsigned const int level, const float baseSize, MeshContext &mesh) {
   const int indicesOffset = mesh.vertices.size();
-  const glm::vec3 widthVec = glm::normalize(stem.curveAxis) * 0.5f * stem.length * treeParams.leafScale;
-  const glm::vec3 heightVec = glm::normalize(stem.direction) * stem.length * treeParams.leafScale;
+  const glm::vec3 widthVec = glm::normalize(stem.curveAxis) * 0.5f * stem.length * (1 - treeParams.leafStem) * treeParams.leafScale * treeParams.leafForm;
+  const glm::vec3 heightVec = glm::normalize(stem.direction) * stem.length * (1 - treeParams.leafStem)  * treeParams.leafScale;
   const glm::vec3 normal = glm::normalize(glm::cross(widthVec, heightVec));
+  const glm::vec3 leafStartPos = stem.pos + stem.direction * stem.length * treeParams.leafStem;
 
   //TODO fix normals for back side
-  mesh.vertices.push_back(TexVertexData(stem.pos + widthVec + heightVec, normal, glm::vec2(0, 0)));
-  mesh.vertices.push_back(TexVertexData(stem.pos - widthVec + heightVec, normal, glm::vec2(0, 0)));
-  mesh.vertices.push_back(TexVertexData(stem.pos - widthVec, normal, glm::vec2(0, 0)));
-  mesh.vertices.push_back(TexVertexData(stem.pos + widthVec, normal, glm::vec2(0, 0)));
-  
-  mesh.indices.push_back(0 + indicesOffset);
-  mesh.indices.push_back(1 + indicesOffset);
-  mesh.indices.push_back(2 + indicesOffset);
+  mesh.vertices.push_back(TexVertexData(leafStartPos + widthVec + heightVec, normal, glm::vec2(1.0f, 1.0f)));
+  mesh.vertices.push_back(TexVertexData(leafStartPos - widthVec + heightVec, normal, glm::vec2(1.0f, 0.5f)));
+  mesh.vertices.push_back(TexVertexData(leafStartPos - widthVec, normal, glm::vec2(0.0f, 0.5f)));
+  mesh.vertices.push_back(TexVertexData(leafStartPos + widthVec, normal, glm::vec2(0.0f, 1.0f)));
 
-  mesh.indices.push_back(0 + indicesOffset);
-  mesh.indices.push_back(2 + indicesOffset);
-  mesh.indices.push_back(1 + indicesOffset);
-
-  mesh.indices.push_back(0 + indicesOffset);
-  mesh.indices.push_back(2 + indicesOffset);
-  mesh.indices.push_back(3 + indicesOffset);
-
-  mesh.indices.push_back(0 + indicesOffset);
-  mesh.indices.push_back(3 + indicesOffset);
-  mesh.indices.push_back(2 + indicesOffset);
+  generateQuadIndices(mesh.indices, indicesOffset, true);
 }
 
 const Tree::StemParams Tree::generateChild(
@@ -161,28 +148,43 @@ const Tree::StemParams Tree::generateChild(
 }
 
 void Tree::initTexture(GLuint &textureId) {
-  static const int textureLength = 64;
-  static const double textureLengthHalfFloat = textureLength / 2;
+  static const int texSegments = 2;
 
-  static const int textureSize = textureLength * textureLength * 4 * sizeof(unsigned char);
-  unsigned char *textureData = (unsigned char *)malloc(textureSize);
+  static const int texWidth = 256;
+  static const int texSegmentHeight = 256;
 
-  for (int x = 0; x < textureLength; x++) {
-    for (int y = 0; y < textureLength; y++) {
-      const int i = x + y * textureLength;
-      textureData[i * 4] = 255;			  // R 
-      textureData[i * 4 + 1] = 255;		// G 
-      textureData[i * 4 + 2] = 0;		  // B 
-      textureData[i * 4 + 3] = 255;
+  static const int textureSize = texWidth * texSegmentHeight * texSegments;
+
+  std::vector<unsigned char> texData;
+
+  // branch texture
+  for (int y = 0; y < texSegmentHeight; y++) {
+    for (int x = 0; x < texWidth; x++) {
+      texData.push_back(128u);			  // R 
+      texData.push_back(64u);			  // G 
+      texData.push_back(0u);	  		  // B 
+      texData.push_back(255u);			  // A 
+    }
+  }
+
+  // leaf texture
+  static const int centerX = texWidth / 2;
+  static const int centerY = texSegmentHeight / 2;
+  for (int y = 0; y < texSegmentHeight; y++) {
+    for (int x = 0; x < texWidth; x++) {
+      const double distance = sqrt((x - centerX) * (x - centerX) + (y - centerX) * (y - centerX)) / centerX;
+
+      texData.push_back(0u);  			  // R 
+      texData.push_back(255u);			  // G 
+      texData.push_back(0u);	  		  // B 
+      texData.push_back(distance < 1.0f ? 255u : 0u);			  // A 
     }
   }
 
   glGenTextures(1, &textureId);
   glBindTexture(GL_TEXTURE_2D, textureId);
-  glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, textureLength, textureLength);
-  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, textureLength, textureLength, GL_RGBA, GL_UNSIGNED_BYTE, textureData);
-
-  free(textureData);
+  glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, texWidth, texSegmentHeight * texSegments);
+  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, texWidth, texSegmentHeight * texSegments, GL_RGBA, GL_UNSIGNED_BYTE, &texData[0]);
 }
 
 RenderableMesh::TriangleMode Tree::getTrianglesMode() {
@@ -224,7 +226,9 @@ const Tree::TreeParams Tree::blackTupelo() {
   params.scale = 1.0f;
   params.rootTaper = 1.0f;
   params.baseSize = 0.4f;
-  params.leafScale = 0.5f;
+  params.leafScale = 1.0f;
+  params.leafForm = 0.3f;
+  params.leafStem = 0.05f;
 
   return params;
 }
@@ -258,7 +262,9 @@ const Tree::TreeParams Tree::blackOak() {
   params.scale = 1.0f;
   params.rootTaper = 1.0f;
   params.baseSize = 0.4f;
-  params.leafScale = 0.5f;
+  params.leafScale = .8f;
+  params.leafForm = 0.3f;
+  params.leafStem = 0.05f;
 
   return params;
 }
