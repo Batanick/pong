@@ -15,6 +15,7 @@ public:
     lightDirId = -1;
     viewId = -1;
     projectionId = -1;
+    worldId = -1;
   }
 
   virtual void render(const RenderContext &context) final override;
@@ -33,6 +34,7 @@ protected:
   virtual void initMesh( MeshContext &mesh ) = 0;
   virtual void initTexture(GLuint &textureId) = 0;
   virtual TriangleMode getTrianglesMode();
+  virtual glm::mat4 getWorld();
 
 private:
 
@@ -41,6 +43,7 @@ private:
 
   GLuint projectionId;
   GLuint viewId;
+  GLuint worldId;
   GLuint lightDirId;
   GLuint textureId;
   GLuint textureParamId;

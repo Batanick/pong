@@ -21,6 +21,7 @@ void RenderableMesh::init(const GLuint shaderId) {
 
   initTexture(textureId);
 
+  worldId = glGetUniformLocation(shaderId, "world");
   projectionId = glGetUniformLocation(shaderId, "projection");
   viewId = glGetUniformLocation(shaderId, "view");
   lightDirId = glGetUniformLocation(shaderId, "lightDir");
@@ -30,6 +31,7 @@ void RenderableMesh::init(const GLuint shaderId) {
 void RenderableMesh::render(const RenderContext &context) {
   glUniformMatrix4fv(projectionId, 1, GL_FALSE, &context.projection[0][0]);
   glUniformMatrix4fv(viewId, 1, GL_FALSE, &context.view[0][0]);
+  glUniformMatrix4fv(worldId, 1, GL_FALSE, &getWorld()[0][0]);
   glUniform3fv(lightDirId, 1, &context.lightDir[0]);
 
   glActiveTexture(GL_TEXTURE0);
@@ -62,6 +64,10 @@ void RenderableMesh::render(const RenderContext &context) {
 void RenderableMesh::shutdown() {
   glDeleteBuffers(1, &vertexBuffer);
   glDeleteBuffers(1, &indexBuffer);
+}
+
+glm::mat4 RenderableMesh::getWorld() {
+  return glm::mat4();
 }
 
 RenderableMesh::TriangleMode RenderableMesh::getTrianglesMode() {

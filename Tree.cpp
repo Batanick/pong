@@ -13,6 +13,11 @@
 #include "renderUtils.h"
 #include "logging.h"
 
+Tree::Tree(glm::vec3 pos) :
+world(glm::translate(glm::mat4(), pos)), treeParams(blackTupelo()) {
+  // nothing
+}
+
 void Tree::initMesh(MeshContext &mesh) {
   StemParams rootParams;
   rootParams.direction = glm::normalize(glm::vec3(0, 1, 0));
@@ -49,7 +54,7 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
   const int indicesOffset = mesh.vertices.size();
 
   float yaw = 0;
-  glm::vec3 pos = stem.pos;
+  glm::vec3 startPos = stem.pos;
   glm::vec3 increment = glm::normalize(stem.direction) * context.segmentHeight;
   float offset = 0;
   float rotation = 0;
@@ -60,7 +65,7 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
     // ================== VERTICES ================
     for (unsigned char col = 0; col <= stem.resolution; col++) {
       const glm::vec3 addition = glm::normalize(glm::vec3(glm::angleAxis(glm::degrees(yaw), glm::normalize(increment)) * stem.curveAxis));
-      const glm::vec3 current = pos + (addition * stem.radius * (1 - context.radiusWaistFactor * row));
+      const glm::vec3 current = startPos + (addition * stem.radius * (1 - context.radiusWaistFactor * row));
 
       mesh.vertices.push_back(TexVertexData(current, addition, glm::vec2(0.25f, 0.25f)));
       yaw += context.yawDelta;
@@ -73,7 +78,7 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
         continue;
       }
 
-      const glm::vec3 childPos = pos + (glm::normalize(increment) * (offset * context.offsetToLength - row * context.segmentHeight));
+      const glm::vec3 childPos = startPos + (glm::normalize(increment) * (offset * context.offsetToLength - row * context.segmentHeight));
       childs.push_back(generateChild(stem, levelParams, childPos, glm::normalize(increment), offset - baseSize, rotation));
       offset += context.offsetPerChild;
       rotation += levelParams.rotate;
@@ -84,7 +89,7 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
       : ((row > (stem.segments / 2)) ? (context.curveAngle * 2) : (stem.curveBack * 2 / stem.segments));
 
     increment = glm::angleAxis(glm::degrees(curveAngleActual), glm::normalize(stem.curveAxis)) * increment;
-    pos += increment;
+    startPos += increment;
   }
 
   // ================== INDICES ================
@@ -175,7 +180,7 @@ void Tree::initTexture(GLuint &textureId) {
       const double distance = sqrt((x - centerX) * (x - centerX) + (y - centerX) * (y - centerX)) / centerX;
 
       texData.push_back(0u);  			  // R 
-      texData.push_back(255u);			  // G 
+      texData.push_back(200u);			  // G 
       texData.push_back(0u);	  		  // B 
       texData.push_back(distance < 1.0f ? 255u : 0u);			  // A 
     }

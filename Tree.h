@@ -6,16 +6,22 @@
 class Tree final : public RenderableMesh {
 public:
   Tree() :
-    pos(glm::vec3()),
+    world(glm::mat4()),
     treeParams(blackTupelo()) {
   }
+
+  Tree(const glm::vec3 pos);
 
   virtual ~Tree() {
     // nothing 
   }
 
-  virtual ShaderType getType() {
+  virtual ShaderType getType() override {
     return ShaderType::BUSH_SHADER;
+  }
+
+  virtual glm::mat4 getWorld() {
+    return world;
   }
 
 protected:
@@ -131,7 +137,7 @@ private:
   };
 
   const TreeParams treeParams;
-  const glm::vec3 pos;
+  const glm::mat4 world;
 
   void drawStem(const StemParams &stem, const unsigned int level, const float baseSize, MeshContext &mesh);
   void drawLeaf(const StemParams &stem, const unsigned int level, const float baseSize, MeshContext &mesh);

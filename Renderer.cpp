@@ -63,7 +63,12 @@ bool Renderer::init() {
 }
 
 void Renderer::initScene() {
-  add(std::shared_ptr<Tree>(new Tree()));
+  const float distance{ 1.0f };
+  for (int i = 0; i < 25; i++) {
+    add(std::shared_ptr<Tree>(new Tree(glm::vec3((i / 5) * distance, 0.0f, (i % 5) * distance))));
+  }
+  
+  
 
 #ifdef DRAW_TERRAIN
   add(std::shared_ptr<Terrain>(new Terrain()));
