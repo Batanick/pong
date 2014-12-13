@@ -7,7 +7,7 @@ class Tree final : public RenderableMesh {
 public:
   Tree() :
     pos(glm::vec3()),
-    treeParams(blackOak()) {
+    treeParams(blackTupelo()) {
   }
 
   virtual ~Tree() {
@@ -95,6 +95,7 @@ private:
     float rootTaper;
     float scale;
     float baseSize;
+    float leafScale;
 
     const std::vector<const TreeLevelParams> levelsList;
 
@@ -130,7 +131,8 @@ private:
   const TreeParams treeParams;
   const glm::vec3 pos;
 
-  void drawStem(const StemParams &stem, const int level, const float baseSize, MeshContext &mesh);
+  void drawStem(const StemParams &stem, const unsigned int level, const float baseSize, MeshContext &mesh);
+  void drawLeaf(const StemParams &stem, const unsigned int level, const float baseSize, MeshContext &mesh);
   StemDrawingContext buildContext(const StemParams &stem, const TreeLevelParams &levelParams, const float &baseSize);
 
   const StemParams generateChild(

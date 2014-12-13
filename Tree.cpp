@@ -29,7 +29,7 @@ void Tree::initMesh(MeshContext &mesh) {
   drawStem(rootParams, 0, treeParams.baseSize, mesh);
 }
 
-Tree::StemDrawingContext Tree::buildContext(const StemParams &stem, const TreeLevelParams &levelParams,const float &baseSize) {
+Tree::StemDrawingContext Tree::buildContext(const StemParams &stem, const TreeLevelParams &levelParams, const float &baseSize) {
   StemDrawingContext context;
   context.segmentHeight = stem.length / stem.segments;
   context.yawDelta = glm::pi<float>() * 2 / stem.resolution;
@@ -43,7 +43,7 @@ Tree::StemDrawingContext Tree::buildContext(const StemParams &stem, const TreeLe
   return context;
 }
 
-void Tree::drawStem(const StemParams &stem, const int level, const float baseSize, MeshContext &mesh) {
+void Tree::drawStem(const StemParams &stem, const unsigned int level, const float baseSize, MeshContext &mesh) {
   const TreeLevelParams levelParams = treeParams.getParams(level + 1);
   const StemDrawingContext context = buildContext(stem, levelParams, baseSize);
   const int indicesOffset = mesh.vertices.size();
@@ -91,8 +91,42 @@ void Tree::drawStem(const StemParams &stem, const int level, const float baseSiz
   generateTriangleIndices(indicesOffset, stem.segments, stem.resolution, mesh.indices);
 
   for (const auto child : childs) {
-    drawStem(child, level + 1, 0, mesh);
+    if (treeParams.levelsList.size() != level + 2) {
+      drawStem(child, level + 1, 0, mesh);
+    }
+    else {
+      drawLeaf(child, level + 1, 0, mesh);
+    }
   }
+}
+
+void Tree::drawLeaf(const StemParams &stem, unsigned const int level, const float baseSize, MeshContext &mesh) {
+  const int indicesOffset = mesh.vertices.size();
+  const glm::vec3 widthVec = glm::normalize(stem.curveAxis) * 0.5f * stem.length * treeParams.leafScale;
+  const glm::vec3 heightVec = glm::normalize(stem.direction) * stem.length * treeParams.leafScale;
+  const glm::vec3 normal = glm::normalize(glm::cross(widthVec, heightVec));
+
+  //TODO fix normals for back side
+  mesh.vertices.push_back(TexVertexData(stem.pos + widthVec + heightVec, normal, glm::vec2(0, 0)));
+  mesh.vertices.push_back(TexVertexData(stem.pos - widthVec + heightVec, normal, glm::vec2(0, 0)));
+  mesh.vertices.push_back(TexVertexData(stem.pos - widthVec, normal, glm::vec2(0, 0)));
+  mesh.vertices.push_back(TexVertexData(stem.pos + widthVec, normal, glm::vec2(0, 0)));
+  
+  mesh.indices.push_back(0 + indicesOffset);
+  mesh.indices.push_back(1 + indicesOffset);
+  mesh.indices.push_back(2 + indicesOffset);
+
+  mesh.indices.push_back(0 + indicesOffset);
+  mesh.indices.push_back(2 + indicesOffset);
+  mesh.indices.push_back(1 + indicesOffset);
+
+  mesh.indices.push_back(0 + indicesOffset);
+  mesh.indices.push_back(2 + indicesOffset);
+  mesh.indices.push_back(3 + indicesOffset);
+
+  mesh.indices.push_back(0 + indicesOffset);
+  mesh.indices.push_back(3 + indicesOffset);
+  mesh.indices.push_back(2 + indicesOffset);
 }
 
 const Tree::StemParams Tree::generateChild(
@@ -190,6 +224,7 @@ const Tree::TreeParams Tree::blackTupelo() {
   params.scale = 1.0f;
   params.rootTaper = 1.0f;
   params.baseSize = 0.4f;
+  params.leafScale = 0.5f;
 
   return params;
 }
@@ -223,6 +258,7 @@ const Tree::TreeParams Tree::blackOak() {
   params.scale = 1.0f;
   params.rootTaper = 1.0f;
   params.baseSize = 0.4f;
+  params.leafScale = 0.5f;
 
   return params;
 }
