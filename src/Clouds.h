@@ -8,10 +8,10 @@ static const float HEIGHT_STEP = 10;
 class Clouds final : public Renderable {
 public:
     Clouds() {
-        verticesId = -1;
-        cameraPosId = -1;
-        pvId = -1;
-        timeId = -1;
+        verticesId = 0;
+        cameraPosId = 0;
+        pvId = 0;
+        timeId = 0;
     }
 
     virtual void init(const GLuint shaderId) override;

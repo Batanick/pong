@@ -1,6 +1,5 @@
 #include "Renderer.h"
 
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <algorithm>
@@ -146,13 +145,13 @@ void Renderer::render(const RenderableType &type, const RenderContext &context) 
     const RenderableHolder &holder = renderables[type];
 
     ShaderType currentType = ShaderType::NONE;
-    for (auto iterator = holder.begin(); iterator != holder.end(); iterator++) {
-        if (iterator->first != currentType) {
-            currentType = iterator->first;
+    for (auto &iterator : holder) {
+        if (iterator.first != currentType) {
+            currentType = iterator.first;
             shaderManager->useProgram(currentType);
         }
 
-        iterator->second->render(context);
+        iterator.second->render(context);
     }
 }
 
@@ -185,5 +184,3 @@ void Renderer::shutdown() {
     shaderManager->shutdown();
     assetManager->shutdown();
 }
-
-9

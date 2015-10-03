@@ -11,7 +11,7 @@ float assignValueIfNeeded(float *val1, float *val2, int size) {
         return 0;
     }
 
-    const int targetOffset = ((val2 - val1) / (2));
+    unsigned long targetOffset = ((val2 - val1) / (2));
     float *const targetValue = val1 + targetOffset;
     if (*targetValue == NOT_ASSIGNED) {
         *targetValue = (*val2 + *val1) / 2 + (ROUGHNESS * (2 * getRandomFloat() - 1) * size);

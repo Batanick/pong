@@ -1,6 +1,5 @@
 #include "renderUtils.h"
 
-#include "glm/glm.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 
 void generateIndexTable(const int rows, const int cols, std::vector<unsigned int> &indices) {
@@ -48,10 +47,10 @@ void generateRowIndices(const int offset, const int cols, std::vector<unsigned i
     }
 }
 
-void generateTriangleIndices(const int offset, const int rows, const int cols,
+void generateTriangleIndices(const int offset, const unsigned int rows, const unsigned int cols,
                              std::vector<unsigned int> &indices) {
-    for (int row = 0; row < rows; row++) {
-        for (int col = 0; col < cols; col++) {
+    for (unsigned int row = 0; row < rows; row++) {
+        for (unsigned int col = 0; col < cols; col++) {
             indices.push_back(col + row * (cols + 1) + offset);
             indices.push_back(col + row * (cols + 1) + 1 + offset);
             indices.push_back(col + (row + 1) * (cols + 1) + offset);
@@ -73,7 +72,8 @@ void setUpCamera(RenderContext &context, const glm::vec3 &pos, const glm::vec3 &
     context.cameraDir = direction;
 
     context.view = getViewMatrix(pos, direction, up);
-    context.projection = glm::perspective(45.0f, ((float) context.windowWidth) / context.windowHeight, 0.01f, 5000.0f);
+    context.projection = glm::perspective<float>(45.0f, ((float) context.windowWidth) / context.windowHeight, 0.01f,
+                                                 5000.0f);
     context.pv = context.projection * context.view;
 }
 

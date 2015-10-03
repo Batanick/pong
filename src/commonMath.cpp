@@ -1,7 +1,5 @@
 #include "commonMath.h"
 
-#include <cstdlib>
-
 static const glm::vec3 X_AXIS(1.0f, 0.0f, 0.0f);
 static const glm::vec3 Y_AXIS(0.0f, 1.0f, 0.0f);
 static const glm::vec3 Z_AXIS(0.0f, 0.0f, 1.0f);
@@ -40,8 +38,8 @@ glm::quat getRotation(glm::vec3 start, glm::vec3 dest) {
 
     rotationAxis = glm::cross(start, dest);
 
-    float s = sqrt((1 + cosTheta) * 2);
-    float invs = 1 / s;
+    const double s = sqrt((1 + cosTheta) * 2);
+    const float invs = 1 / s;
 
     return glm::quat(
             s * 0.5f,

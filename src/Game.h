@@ -36,6 +36,4 @@ private:
     void runMainLoop();
 
     void onShutdown();
-
-    RenderContext createRenderContext();
 };

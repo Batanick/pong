@@ -27,7 +27,7 @@ void generateQuadIndices(std::vector<T> &indices, int offset, const bool bothSid
     }
 }
 
-void generateTriangleIndices(const int offset, const int rows, const int cols,
+void generateTriangleIndices(const int offset, const unsigned int rows, const unsigned int cols,
                              std::vector<unsigned int> &indices);
 
 glm::mat3 convertToViewMatrix(float scaleX, float scaleY, int translateX, int translateY);

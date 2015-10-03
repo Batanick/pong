@@ -1,9 +1,7 @@
 
 #include "Terrain.h"
 
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
-
 
 #include "logging.h"
 #include "renderUtils.h"
@@ -102,8 +100,6 @@ void Terrain::render(const RenderContext &context) {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
-    int updateCounter = 0;
-
     for (int i = 0; i < PATCHES_COUNT; i++) {
         PatchHolder holder = patches->acquire(i);
         Patch &patch = holder.patch;
@@ -122,7 +118,7 @@ void Terrain::render(const RenderContext &context) {
 
         const IndexBuffer &indexBuffer = indexBuffers[patch.lod];
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer.id);
-        glDrawElements(GL_TRIANGLE_STRIP, indexBuffer.length, GL_UNSIGNED_INT, (void *) 0);
+        glDrawElements(GL_TRIANGLE_STRIP, (GLsizei) indexBuffer.length, GL_UNSIGNED_INT, (void *) 0);
     }
 
     glDisableVertexAttribArray(0);

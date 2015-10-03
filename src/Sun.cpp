@@ -1,7 +1,5 @@
 #include "Sun.h"
 
-#include <GL/glew.h>
-
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "commonMath.h"
@@ -22,7 +20,7 @@ void Sun::initTexture(GLuint &textureId) {
     static const int textureLength = 64;
     static const double textureLengthHalfFloat = textureLength / 2;
 
-    static const int textureSize = textureLength * textureLength * 4 * sizeof(unsigned char);
+    static const unsigned int textureSize = textureLength * textureLength * 4 * sizeof(unsigned char);
     unsigned char *textureData = (unsigned char *) malloc(textureSize);
 
     for (int x = 0; x < textureLength; x++) {

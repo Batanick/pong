@@ -1,6 +1,7 @@
 #include "RenderCommon.h"
 #include <vector>
 #include <memory>
+#include <GL/glew.h>
 
 #include "TerrainConstants.h"
 #include "Patches.h"
@@ -10,13 +11,13 @@ class Terrain final : public Renderable {
 public:
     Terrain() :
             patches(new Patches()) {
-        projectionId = -1;
-        viewId = -1;
-        textureId = -1;
-        heightId = -1;
-        textureId = -1;
-        cameraPosId = -1;
-        lightDirId = -1;
+        projectionId = 0;
+        viewId = 0;
+        textureId = 0;
+        heightId = 0;
+        textureId = 0;
+        cameraPosId = 0;
+        lightDirId = 0;
     }
 
     virtual void init(const GLuint shaderId) override;
@@ -30,7 +31,7 @@ public:
 private:
     struct IndexBuffer {
         GLuint id;
-        int length;
+        size_t length;
     };
 
     void initTexture(const GLuint &shaderId);
@@ -41,13 +42,13 @@ private:
 
     std::vector<IndexBuffer> indexBuffers;
 
-    GLuint projectionId;
-    GLuint viewId;
-    GLuint textureParamId;
-    GLuint heightId;
-    GLuint cameraPosId;
-    GLuint lightDirId;
-    GLuint waterLevel;
+    GLint projectionId;
+    GLint viewId;
+    GLint textureParamId;
+    GLint heightId;
+    GLint cameraPosId;
+    GLint lightDirId;
+    GLint waterLevel;
 
     GLuint textureId;
 

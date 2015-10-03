@@ -1,14 +1,15 @@
 #include "RenderCommon.h"
 
 #include <vector>
+#include <GL/gl.h>
 
 class TexturedMesh : public Renderable {
 public:
     TexturedMesh() {
-        verticesId = -1;
-        mvpId = -1;
-        textureId = -1;
-        indicesId = -1;
+        verticesId = 0;
+        mvpId = 0;
+        textureId = 0;
+        indicesId = 0;
     }
 
     struct VertexData {
@@ -33,11 +34,11 @@ private:
     GLuint verticesId;
     GLuint indicesId;
 
-    GLuint mvpId;
+    GLint mvpId;
     GLuint textureId;
-    GLuint textureParamId;
+    GLint textureParamId;
 
-    int indicesCount;
+    size_t indicesCount;
 
     virtual void initVertices(std::vector<VertexData> &vertices, std::vector<unsigned short> &indices) = 0;
 

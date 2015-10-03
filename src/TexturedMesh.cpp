@@ -1,7 +1,5 @@
 #include "TexturedMesh.h"
 
-#include <GL/glew.h>
-
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "logging.h"
@@ -50,7 +48,7 @@ void TexturedMesh::render(const RenderContext &context) {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(VertexData), (void *) uvOffset);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indicesId);
-    glDrawElements(GL_TRIANGLE_STRIP, indicesCount, GL_UNSIGNED_SHORT, (void *) 0);
+    glDrawElements(GL_TRIANGLE_STRIP, (GLsizei) indicesCount, GL_UNSIGNED_SHORT, (void *) 0);
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);

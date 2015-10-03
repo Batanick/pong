@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include "RenderCommon.h"
 
 static const float WATER_SIZE = 10000.0f;
@@ -29,14 +30,14 @@ public:
 private:
     GLuint verticesId;
 
-    GLuint projectionId;
-    GLuint viewId;
-    GLuint cameraPosId;
+    GLint projectionId;
+    GLint viewId;
+    GLint cameraPosId;
 
-    GLuint reflectionTexId;
-    GLuint mainColorId;
-    GLuint lightDirId;
-    GLuint cameraDirId;
-    GLuint timeId;
+    GLint reflectionTexId;
+    GLint mainColorId;
+    GLint lightDirId;
+    GLint cameraDirId;
+    GLint timeId;
 
 };
