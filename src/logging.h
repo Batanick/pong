@@ -15,8 +15,7 @@
 #define VERIFY(predicate, errorMsg, operation)       \
     {                                       \
     if ( !predicate ) {                 \
-    printf( errorMsg );                \
-    printf( "\n" );                    \
+    printf( "%s\n", errorMsg );                \
     operation;                        \
     }                                   \
     };

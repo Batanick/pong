@@ -12,15 +12,10 @@ public:
     }
 
     struct VertexData {
-        VertexData(const glm::vec3 &position, const glm::vec2 uv) {
-            this->position = position;
-            this->uv = uv;
-        }
+        VertexData(const glm::vec3 &position, const glm::vec2 &uv) : position(position), uv(uv) { }
 
         VertexData() {
         }
-
-
 
         glm::vec3 position;
         glm::vec2 uv;
@@ -44,7 +39,7 @@ private:
 
     int indicesCount;
 
-    virtual void initVertices(std::vector<const VertexData> &vertices, std::vector<unsigned short> &indices) = 0;
+    virtual void initVertices(std::vector<VertexData> &vertices, std::vector<unsigned short> &indices) = 0;
 
     virtual void initTexture(GLuint &textureId) = 0;
 

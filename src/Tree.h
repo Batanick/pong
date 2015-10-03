@@ -27,7 +27,7 @@ public:
 protected:
     virtual void initMesh(MeshContext &mesh) override;
 
-    virtual void Tree::initTexture(GLuint &textureId) override;
+    virtual void initTexture(GLuint &textureId) override;
 
     virtual RenderableMesh::TriangleMode getTrianglesMode() override;
 
@@ -88,10 +88,9 @@ private:
     struct TreeParams {
         typedef float(*shapeFunction)(float ration);
 
-        TreeParams(std::vector<const TreeLevelParams> levelParams, shapeFunction shape) :
-                levelsList(levelParams),
-                shape(shape) {
-        }
+
+        TreeParams(const std::vector<TreeLevelParams> &levelsList, float (*shapeFunction)(float)) : levelsList(
+                levelsList), shape(shapeFunction) { }
 
         shapeFunction shape;
         float ratio;
@@ -107,7 +106,7 @@ private:
         float leafForm;
         float leafStem;
 
-        const std::vector<const TreeLevelParams> levelsList;
+        const std::vector<TreeLevelParams> levelsList;
 
         const TreeLevelParams getParams(unsigned int level) const {
             return levelsList.size() > (level - 1) ? levelsList[level - 1] : TreeLevelParams();

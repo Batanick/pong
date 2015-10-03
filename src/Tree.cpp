@@ -1,24 +1,19 @@
 #include "Tree.h"
 
-#include <vector>
-
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm.hpp>
-#include <gtx\constants.hpp>
-#include <gtc\matrix_transform.hpp>
-#include <gtx\euler_angles.hpp>
+#include <glm/gtx/constants.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtx/euler_angles.hpp>
 
 #include "commonMath.h"
 #include "renderUtils.h"
-#include "logging.h"
 
 Tree::Tree(glm::vec3 pos) :
         world(glm::translate(glm::mat4(), pos)), treeParams(blackTupelo()) {
     // nothing
 }
 
-void Tree::initMesh(MeshContext & mesh) {
+void Tree::initMesh(MeshContext &mesh) {
     StemParams rootParams;
     rootParams.direction = glm::normalize(glm::vec3(0, 1, 0));
     rootParams.curveAxis = glm::normalize(glm::vec3(0, 0, 1));
@@ -60,7 +55,7 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
     float offset = 0;
     float rotation = 0;
 
-    std::vector<const StemParams> childs;
+    std::vector<StemParams> childs;
 
     for (unsigned char row = 0; row <= stem.segments; row++) {
         // ================== VERTICES ================
@@ -230,7 +225,7 @@ const Tree::TreeParams Tree::blackTupelo() {
                            glm::radians(0.0f));
     level3.initVars(glm::radians(10.0f), 0.0f, 0.0f, glm::radians(0.0f));
 
-    std::vector<const TreeLevelParams> levelParams;
+    std::vector<TreeLevelParams> levelParams;
     levelParams.push_back(level1);
     levelParams.push_back(level2);
     levelParams.push_back(level3);
@@ -269,7 +264,7 @@ const Tree::TreeParams Tree::blackOak() {
                            glm::radians(0.0f));
     level3.initVars(glm::radians(10.0f), 0.0f, 0.0f, glm::radians(0.0f));
 
-    std::vector<const TreeLevelParams> levelParams;
+    std::vector<TreeLevelParams> levelParams;
     levelParams.push_back(level1);
     levelParams.push_back(level2);
     levelParams.push_back(level3);
@@ -292,7 +287,7 @@ const Tree::TreeParams Tree::blackOak() {
 }
 
 const Tree::TreeParams Tree::testCone() {
-    TreeParams params(std::vector<const TreeLevelParams>(), blackTupeloRatio);
+    TreeParams params(std::vector<TreeLevelParams>(), blackTupeloRatio);
     params.ratio = 0.015f;
     params.ratioPower = 1.2f;
     params.rootLength = 1.0f;

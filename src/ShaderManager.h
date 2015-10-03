@@ -21,7 +21,8 @@ public:
     typedef void(*ShaderInitializer)();
 
     struct ShaderDesc {
-        ShaderDesc(ShaderType shaderType, char *vertexShader, char *fragmentShader, ShaderInitializer initilizer) :
+        ShaderDesc(ShaderType shaderType, std::string vertexShader, std::string fragmentShader,
+                   ShaderInitializer initilizer) :
                 vertexShaderFName(vertexShader),
                 fragmentShaderFName(fragmentShader),
                 shaderType(shaderType),

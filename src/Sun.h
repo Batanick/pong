@@ -10,9 +10,9 @@ public:
     }
 
 private:
-    virtual void initVertices(std::vector<const TexturedMesh::VertexData> &vertices,
+    virtual void initVertices(std::vector<TexturedMesh::VertexData> &vertices,
                               std::vector<unsigned short> &indices) override;
-x   
+
     virtual void initTexture(GLuint &textureId) override;
 
     virtual glm::mat4 getModelTransform(const RenderContext &context) override;

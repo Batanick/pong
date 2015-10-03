@@ -3,8 +3,6 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <glm/glm.hpp>
-
 #include "logging.h"
 #include "noise.h"
 
@@ -38,8 +36,11 @@ void Patches::init() {
 }
 
 void Patches::refresh() {
-
-    glm::vec3 cameraPos = cameraPosition;
+    glm::vec3 cameraPos;
+    {
+        std::shared_lock<std::shared_timed_mutex> readLock(rwLock);
+        cameraPos = cameraPosition;
+    }
 
     const glm::vec2 currentPos = glm::vec2(offsetX * PATCH_SIZE_METERS, offsetY * PATCH_SIZE_METERS);
     const glm::vec2 posDelta = glm::vec2(cameraPos.x - currentPos.x, cameraPos.z - currentPos.y);
@@ -111,6 +112,7 @@ PatchHolder Patches::acquire(const int &index) {
 }
 
 void Patches::updatePos(const glm::vec3 &updatePos) {
+    std::unique_lock<std::shared_timed_mutex> writeLock(rwLock);
     cameraPosition = updatePos;
 }
 

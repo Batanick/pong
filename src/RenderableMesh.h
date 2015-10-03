@@ -28,8 +28,8 @@ protected:
     typedef unsigned int TriangleMode;
 
     struct MeshContext {
-        std::vector<const TexVertexData> vertices;
-        std::vector<const unsigned int> indices;
+        std::vector<TexVertexData> vertices;
+        std::vector<unsigned int> indices;
     };
 
     virtual void initMesh(MeshContext &mesh) = 0;

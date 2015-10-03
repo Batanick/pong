@@ -21,14 +21,13 @@
 #include "Camera.h"
 #include "FpsCounter.h"
 
-#include "logging.h"
 #include "commonMath.h"
 #include "renderUtils.h"
 
 #define SHOW_FPS
 
-//#define DRAW_TERRAIN
-//#define DRAW_SKYBOX
+#define DRAW_TERRAIN
+#define DRAW_SKYBOX
 
 bool Renderer::init() {
     VERIFY(glewInit() == GLEW_OK, "Unable to initialize glew", return false);
@@ -128,11 +127,11 @@ void Renderer::render(double timeDelta) {
 
     fpsCounter->onFrame();
     char buff[128];
-    sprintf_s(buff, "FPS: %.2f", fpsCounter->getFps());
+    sprintf(buff, "FPS: %.2f", fpsCounter->getFps());
     fpsLabel->setText(context, buff);
 
     const glm::vec3 pos = camera->getPosition();
-    sprintf_s(buff, "%.2f, %.2f, %.2f", pos.x, pos.y, pos.z);
+    sprintf(buff, "%.2f, %.2f, %.2f", pos.x, pos.y, pos.z);
     cameraCoordsLabel->setText(context, buff);
 }
 
@@ -186,3 +185,5 @@ void Renderer::shutdown() {
     shaderManager->shutdown();
     assetManager->shutdown();
 }
+
+9

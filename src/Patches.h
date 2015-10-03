@@ -1,8 +1,8 @@
 #include <vector>
 #include <mutex>
 #include <memory>
-#include <atomic>
 #include <thread>
+#include <shared_mutex>
 
 #include "glm/glm.hpp"
 
@@ -58,6 +58,7 @@ struct PatchHolder final {
 class Patches final {
 public:
     Patches() {
+        cameraPosition = glm::vec3();
     }
 
     void init();
@@ -78,8 +79,10 @@ private:
     int offsetX = 0;
     int offsetY = 0;
 
-    std::atomic<glm::vec3> cameraPosition{glm::vec3()};
-    std::atomic<bool> running{false};
+    std::shared_timed_mutex rwLock;
+    glm::vec3 cameraPosition;
+
+    volatile bool running;
 
     std::shared_ptr<std::thread> backgndThread;
 

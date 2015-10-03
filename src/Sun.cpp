@@ -1,14 +1,12 @@
 #include "Sun.h"
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 #include "commonMath.h"
 
-void Sun::initVertices(std::vector<const VertexData> &vertices, std::vector<unsigned short> &indices) {
+void Sun::initVertices(std::vector<VertexData> &vertices, std::vector<unsigned short> &indices) {
     vertices.push_back(VertexData(glm::vec3(-MESH_SIZE, MESH_SIZE, 0.0f), glm::vec2(0.0f, 0.0f)));
     vertices.push_back(VertexData(glm::vec3(MESH_SIZE, MESH_SIZE, 0.0f), glm::vec2(1.0f, 0.0f)));
     vertices.push_back(VertexData(glm::vec3(MESH_SIZE, -MESH_SIZE, 0.0f), glm::vec2(1.0f, 1.0f)));

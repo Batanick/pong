@@ -1,8 +1,6 @@
 #include "GuiElement.h"
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm.hpp>
 
 void GuiElement::init(const GLuint shaderId) {
     glGenBuffers(1, &vertexBuffer);

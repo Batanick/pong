@@ -44,7 +44,7 @@ std::shared_ptr<Font> AssetManager::loadFont(std::string metaFileName) {
     loadFontData(metaFileName, glyphs, width, height);
 
     if (glyphs.size() <= 0) {
-        LOG("Unable to load font: [%s]", metaFileName);
+        LOG("Unable to load font: [%s]", metaFileName.c_str());
         return std::shared_ptr<Font>();
     }
 
@@ -65,7 +65,7 @@ bool AssetManager::init() {
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texturesCount);
     LOG("Available texture units: [%d]", texturesCount);
 
-    defaultFont = loadFont("../textures/arial.xml");
+    defaultFont = loadFont("textures/arial.xml");
     return true;
 }
 

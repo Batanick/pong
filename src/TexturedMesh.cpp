@@ -1,26 +1,21 @@
 #include "TexturedMesh.h"
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
-#include <glm.hpp>
-#include <gtc\matrix_transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "logging.h"
-
-#include <vector>
-#include <limits>
 
 void TexturedMesh::init(const GLuint shaderId) {
     mvpId = glGetUniformLocation(shaderId, "mvp");
     textureParamId = glGetUniformLocation(shaderId, "texture");
 
-    std::vector<const VertexData> vertices;
-    std::vector<const unsigned short> indices;
+    std::vector<VertexData> vertices;
+    std::vector<unsigned short> indices;
     initVertices(vertices, indices);
     indicesCount = indices.size();
     if (vertices.size() > USHRT_MAX) {
-        LOG("Too many vertices count: [%d]", vertices.size());
+        LOG("Too many vertices count: [%zu]", vertices.size());
         return;
     }
 

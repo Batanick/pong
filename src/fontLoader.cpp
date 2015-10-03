@@ -2,13 +2,13 @@
 
 #include "logging.h"
 #include "assetLoader.h"
-#include "../tinyXml/tinyxml.h"
+#include "tinyXml/tinyxml.h"
 
-int extractIntValue(char *const name, TiXmlElement *root) {
+int extractIntValue(std::string name, TiXmlElement *root) {
     if (!root)
         return 0;
 
-    TiXmlElement *const element = root->FirstChildElement(name);
+    TiXmlElement *const element = root->FirstChildElement(name.c_str());
     if (!element)
         return 0;
 
@@ -19,7 +19,7 @@ void loadFontData(std::string path, std::vector<Glyph> &out, unsigned int &width
     TiXmlDocument file(path.c_str());
 
     if (!file.LoadFile()) {
-        LOG("Unable to load font meta file: [%s]", path);
+        LOG("Unable to load font meta file: [%s]", path.c_str());
         return;
     }
 

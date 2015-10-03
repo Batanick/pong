@@ -1,8 +1,14 @@
-#include <iostream>
-
-using namespace std;
+#include "Game.h"
 
 int main() {
-    cout << "Hello, World!" << endl;
+    Game game;
+
+    if (!game.init()) {
+        system("pause");
+        return -1;
+    }
+
+    game.start();
+
     return 0;
 }

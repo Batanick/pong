@@ -5,7 +5,7 @@
 #include <assimp/postprocess.h>
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
+
 
 #include "logging.h"
 
@@ -59,7 +59,7 @@ bool loadFromFile(const std::string fileName, std::vector<glm::vec3> &vertices, 
         indexOffset += currentMesh->mNumVertices;
     }
 
-    LOG("Meshes: [%d], vertices: [%d], indices: [%d], uvs: [%d]",
+    LOG("Meshes: [%d], vertices: [%zu], indices: [%zu], uvs: [%zu]",
         scene->mNumMeshes, vertices.size(), indices.size(), uvs.size());
 
     return true;
@@ -71,9 +71,8 @@ static const int DDS_HEADER_SIZE_BYTES = 124;
 #define FOURCC_DXT5 0x35545844
 
 bool loadDDS(const std::string fileName, unsigned int &w, unsigned int &h) {
-    FILE *fp;
-    const errno_t err = fopen_s(&fp, fileName.c_str(), "rb");
-    VERIFY(err == 0, "Unable to open texture file", return false;);
+    FILE *fp = fopen(fileName.c_str(), "rb");
+    VERIFY(fp, "Unable to open texture file", return false;);
 
     char filecode[4];
     fread(filecode, 1, 4, fp);

@@ -1,14 +1,11 @@
-#include "Terrain.h"
 
-#include <vector>
+#include "Terrain.h"
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-#include <glm/glm.hpp>
 
 #include "logging.h"
-#include "commonMath.h"
 #include "renderUtils.h"
 
 //#define STATIC_TERRAIN

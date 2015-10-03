@@ -9,7 +9,7 @@ class Camera final {
 public:
     Camera();
 
-    void Camera::onBeforeRender(GLFWwindow *const window, double timeDelta);
+    void onBeforeRender(GLFWwindow *const window, double timeDelta);
 
     glm::vec3 getPosition();
 

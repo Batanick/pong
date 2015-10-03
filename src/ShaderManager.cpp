@@ -4,7 +4,6 @@
 #include "logging.h"
 
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
 
 void initTextShader();
 
@@ -14,7 +13,7 @@ void initSkyMesh();
 
 void initDumb();
 
-static const std::string SHADER_PATH = "../shaders/";
+static const std::string SHADER_PATH = "shaders/";
 
 void loadShaderSource(GLuint shaderId, char const *source);
 
