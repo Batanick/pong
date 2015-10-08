@@ -10,7 +10,7 @@ void generateIndexTable(const int rows, const int cols, std::vector<unsigned int
     int rowEndCounter = 2 * cols + 1;
     bool forward = true;
     bool right = true;
-    int current = 0;
+    unsigned int current = 0;
     for (int i = 1; i < indidiesNeeded; i++) {
         if (forward) {
             current += cols + 1;
@@ -35,8 +35,8 @@ void generateIndexTable(const int rows, const int cols, std::vector<unsigned int
     }
 }
 
-void generateRowIndices(const int offset, const int cols, std::vector<unsigned int> &indices) {
-    for (int i = offset; i < offset + cols; i++) {
+void generateRowIndices(const unsigned int offset, const int cols, std::vector<unsigned int> &indices) {
+    for (unsigned int i = offset; i < offset + cols; i++) {
         indices.push_back(i);
         indices.push_back(i + 1);
         indices.push_back(i + cols + 1);
