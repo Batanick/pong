@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="CPP_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/CMakeLists.txt" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/AssetManager.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/AssetManager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Camera.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Camera.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Clouds.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Clouds.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Font.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Font.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/FpsCounter.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/FpsCounter.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Game.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Game.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/GuiElement.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/GuiElement.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Label.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Label.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Patches.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Patches.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/ReflectionHolder.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/ReflectionHolder.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/RenderableMesh.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/RenderableMesh.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Renderer.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Renderer.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/ShaderManager.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/ShaderManager.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Sun.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Sun.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Terrain.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Terrain.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/TerrainConstants.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/TerrainConstants.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/TexturedFrame.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/TexturedFrame.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/TexturedMesh.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/TexturedMesh.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Tree.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Tree.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Water.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Water.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/assetLoader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/assetLoader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/commonMath.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/commonMath.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/diamondGen.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/diamondGen.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/fileUtils.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/fileUtils.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/fontLoader.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/fontLoader.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/noise.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/noise.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/noiseTest.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/renderUtils.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/renderUtils.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tinyXml/tinystr.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tinyXml/tinystr.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tinyXml/tinyxml.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tinyXml/tinyxml.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tinyXml/tinyxmlerror.cpp" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/tinyXml/tinyxmlparser.cpp" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="Header Search Paths">
+        <CLASSES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include/cilk" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include/objc" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include/sanitizer" />
+          <root url="file:///usr/local/include" />
+        </CLASSES>
+        <SOURCES>
+          <root url="file:///usr/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include-fixed" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include/cilk" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include/objc" />
+          <root url="file:///usr/lib/gcc/x86_64-linux-gnu/4.9/include/sanitizer" />
+          <root url="file:///usr/local/include" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
