@@ -1,9 +1,5 @@
 #include "Label.h"
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-
 #include "commonMath.h"
 #include "renderUtils.h"
 
@@ -29,14 +25,21 @@ void Label::setText(const RenderContext &context, std::string text) {
     std::vector<glm::vec2> uvs;
 
     int currentX = x;
+    int currentY = y;
     for (unsigned int i = 0; i < str.length(); i++) {
-        int const chr = str[i];
-        Glyph const gl = font->getGlyph(chr);
+        if (str[i] == '\n') {
+            currentX = x;
+            currentY += font->getRowHeight();
+            continue;
+        }
 
-        glm::vec2 p1(glm::vec3(currentX, y, 1) * context.guiView);
-        glm::vec2 p2(glm::vec3(currentX + gl.width, y, 1) * context.guiView);
-        glm::vec2 p3(glm::vec3(currentX + gl.width, y + gl.height, 1) * context.guiView);
-        glm::vec2 p4(glm::vec3(currentX, y + gl.height, 1) * context.guiView);
+        const char chr = str[i];
+        const Glyph gl = font->getGlyph(chr);
+
+        glm::vec2 p1(glm::vec3(currentX, currentY, 1) * context.guiView);
+        glm::vec2 p2(glm::vec3(currentX + gl.width, currentY, 1) * context.guiView);
+        glm::vec2 p3(glm::vec3(currentX + gl.width, currentY + gl.height, 1) * context.guiView);
+        glm::vec2 p4(glm::vec3(currentX, currentY + gl.height, 1) * context.guiView);
 
         glm::vec2 uv1(glm::vec3(gl.x, gl.y + gl.height, 1) * uvProj);
         glm::vec2 uv2(glm::vec3(gl.x + gl.width, gl.y + gl.height, 1) * uvProj);

@@ -4,6 +4,7 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <memory>
+#include <map>
 
 static const float RENDER_PI = 3.14159265358979323846264338327950288f;
 static const float RENDER_FOV = 45.0f;
@@ -43,13 +44,20 @@ struct RenderContext {
     glm::vec3 lightDir;
 
     GLuint reflectionTexId;
+
+    std::map<std::string, std::string> stats;
+public:
+    void updateStats(std::string key, std::string value) {
+        stats[key] = value;
+    }
+
 };
 
 struct Glyph {
     Glyph() {
     }
 
-    Glyph(int key, int x, int y, int width, int height) :
+    Glyph(int key, int x, int y, unsigned int width, unsigned int height) :
             key(key),
             x(x), y(y),
             width(width),
@@ -58,7 +66,7 @@ struct Glyph {
 
     int key;
     int x, y;
-    int width, height;
+    unsigned int width, height;
 };
 
 struct TextureInfo {

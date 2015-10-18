@@ -10,12 +10,9 @@
 #include "ReflectionHolder.h"
 
 #include "Terrain.h"
-#include "Water.h"
 #include "Label.h"
 #include "Clouds.h"
 #include "Sun.h"
-
-#include "Tree.h"
 
 #include "Camera.h"
 #include "FpsCounter.h"
@@ -24,9 +21,7 @@
 #include "renderUtils.h"
 #include "noise.h"
 
-//#include "noise.h"
-
-#define SHOW_FPS
+#define SHOW_STATS
 
 #define DRAW_TERRAIN
 #define DRAW_SKYBOX
@@ -49,7 +44,6 @@ bool Renderer::init() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
     glEnable(GL_CULL_FACE);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     addons.push_back(std::shared_ptr<RenderHandler>(new ReflectionHolder(*this)));
 
@@ -64,15 +58,16 @@ bool Renderer::init() {
 }
 
 void Renderer::initScene() {
+#ifdef TEST_TREES
     const float distance{1.0f};
     for (int i = 0; i < 25; i++) {
         add(std::shared_ptr<Tree>(new Tree(glm::vec3((i / 5) * distance, 0.0f, (i % 5) * distance))));
     }
-
+#endif
 
 #ifdef DRAW_TERRAIN
   add(std::shared_ptr<Terrain>(new Terrain()));
-  add(std::shared_ptr<Water>(new Water()), CommonRenderer::PostRender);
+//  add(std::shared_ptr<Water>(new Water()), CommonRenderer::PostRender);
 #endif
 
 #ifdef DRAW_SKYBOX
@@ -80,15 +75,7 @@ void Renderer::initScene() {
   add(std::shared_ptr<TexturedMesh>(new Sun()));
 #endif
 
-#ifdef SHOW_FPS
-    fpsLabel = std::shared_ptr<Label>(
-            new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 50, glm::vec3(0, 1, 0)));
-    add(fpsLabel, RenderableType::GUI);
-
-    cameraCoordsLabel = std::shared_ptr<Label>(
-            new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
-    add(cameraCoordsLabel, RenderableType::GUI);
-
+#ifdef SHOW_STATS
     statsLabel = std::shared_ptr<Label>(
             new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 110, glm::vec3(0, 1, 0)));
     add(statsLabel, RenderableType::GUI);
@@ -133,15 +120,22 @@ void Renderer::render(double timeDelta) {
 
     fpsCounter->onFrame();
     char buff[128];
-    sprintf(buff, "FPS: %.2f", fpsCounter->getFps());
-    fpsLabel->setText(context, buff);
+    sprintf(buff, "%.2f", fpsCounter->getFps());
+    context.updateStats("fps", buff);
 
     const glm::vec3 pos = camera->getPosition();
     sprintf(buff, "%.2f, %.2f, %.2f", pos.x, pos.y, pos.z);
-    cameraCoordsLabel->setText(context, buff);
+    context.updateStats("cpos", buff);
 
-    sprintf(buff, "Calls:%d", getHeightCalls());
-    statsLabel->setText(context, buff);
+    sprintf(buff, "%d", getHeightCalls());
+    context.updateStats("nc", buff);
+
+
+    std::string stats = "";
+    for (auto &stat : context.stats) {
+        stats += stat.first + ":" + stat.second + "\n";
+    }
+    statsLabel->setText(context, stats);
 }
 
 void Renderer::add(const PRenderable renderable, Renderer::RenderableType type) {

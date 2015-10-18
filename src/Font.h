@@ -9,9 +9,10 @@
 class Font final {
 
 public:
-    Font(TextureInfo info) :
+    Font(TextureInfo info, unsigned int rowHeight) :
             info(info),
-            distance(1) {
+            distance(1),
+            rowHeight(rowHeight + 3) {
     }
 
     void init(std::vector<Glyph> symbols);
@@ -22,10 +23,15 @@ public:
 
     int getDistance() const;
 
+    const int getRowHeight() const {
+        return rowHeight;
+    }
+
 private:
     const TextureInfo info;
     std::map<int, const Glyph> symbols;
     const int distance;
+    const int rowHeight;
 };
 
 #endif

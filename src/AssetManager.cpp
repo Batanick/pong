@@ -1,7 +1,5 @@
 #include "AssetManager.h"
 
-#include <GL/glew.h>
-
 #include "assetLoader.h"
 #include "fontLoader.h"
 #include "logging.h"
@@ -40,15 +38,15 @@ std::shared_ptr<Font> AssetManager::loadFont(std::string metaFileName) {
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     std::vector<Glyph> glyphs;
-    unsigned int width, height;
-    loadFontData(metaFileName, glyphs, width, height);
+    unsigned int width, height, maxHeight;
+    loadFontData(metaFileName, glyphs, width, height, maxHeight);
 
     if (glyphs.size() <= 0) {
         LOG("Unable to load font: [%s]", metaFileName.c_str());
         return std::shared_ptr<Font>();
     }
 
-    std::shared_ptr<Font> font = std::shared_ptr<Font>(new Font(TextureInfo(textureId, width, height)));
+    std::shared_ptr<Font> font = std::shared_ptr<Font>(new Font(TextureInfo(textureId, width, height), maxHeight));
     font->init(glyphs);
     return font;
 }

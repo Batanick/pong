@@ -15,7 +15,8 @@ int extractIntValue(std::string name, TiXmlElement *root) {
     return atoi(element->GetText());
 }
 
-void loadFontData(std::string path, std::vector<Glyph> &out, unsigned int &width, unsigned int &height) {
+void loadFontData(std::string path, std::vector<Glyph> &out, unsigned int &width, unsigned int &height,
+                  unsigned int &maxGlyphHeight) {
     TiXmlDocument file(path.c_str());
 
     if (!file.LoadFile()) {
@@ -31,6 +32,7 @@ void loadFontData(std::string path, std::vector<Glyph> &out, unsigned int &width
         return;
     }
 
+    maxGlyphHeight = 0;
     for (TiXmlElement *current = root->FirstChildElement("character"); current; current = current->NextSiblingElement(
             "character")) {
         Glyph gl;
@@ -41,5 +43,8 @@ void loadFontData(std::string path, std::vector<Glyph> &out, unsigned int &width
         gl.y = extractIntValue("y", current);
 
         out.push_back(gl);
+
+        if (gl.height > maxGlyphHeight)
+            maxGlyphHeight = gl.height;
     }
 }
