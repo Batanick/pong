@@ -15,6 +15,9 @@ add_definitions(-DGLM_FORCE_RADIANS)
 
 add_executable(pong ${SOURCE_FILES})
 
+add_executable(test_noise src/noise.cpp src/noise.h src/noiseTest.cpp)
+set_target_properties(test_noise PROPERTIES COMPILE_DEFINITIONS "NOISE_TEST=1")
+
 #static assets
 file(INSTALL textures DESTINATION ./)
 file(INSTALL shaders DESTINATION ./)

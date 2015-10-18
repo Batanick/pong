@@ -22,6 +22,9 @@
 
 #include "commonMath.h"
 #include "renderUtils.h"
+#include "noise.h"
+
+//#include "noise.h"
 
 #define SHOW_FPS
 
@@ -78,13 +81,17 @@ void Renderer::initScene() {
 #endif
 
 #ifdef SHOW_FPS
-    this->fpsLabel = std::shared_ptr<Label>(
+    fpsLabel = std::shared_ptr<Label>(
             new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 50, glm::vec3(0, 1, 0)));
     add(fpsLabel, RenderableType::GUI);
 
-    this->cameraCoordsLabel = std::shared_ptr<Label>(
+    cameraCoordsLabel = std::shared_ptr<Label>(
             new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 80, glm::vec3(0, 1, 0)));
     add(cameraCoordsLabel, RenderableType::GUI);
+
+    statsLabel = std::shared_ptr<Label>(
+            new Label(assetManager->getDefaultFont(), 20, context.windowHeight - 110, glm::vec3(0, 1, 0)));
+    add(statsLabel, RenderableType::GUI);
 #endif
 
     for (PRenderHandler addon : addons) {
@@ -132,6 +139,9 @@ void Renderer::render(double timeDelta) {
     const glm::vec3 pos = camera->getPosition();
     sprintf(buff, "%.2f, %.2f, %.2f", pos.x, pos.y, pos.z);
     cameraCoordsLabel->setText(context, buff);
+
+    sprintf(buff, "Calls:%d", getHeightCalls());
+    statsLabel->setText(context, buff);
 }
 
 void Renderer::add(const PRenderable renderable, Renderer::RenderableType type) {

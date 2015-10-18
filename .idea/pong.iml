@@ -56,6 +56,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/noise.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/noise.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/src/noiseTest.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/renderUtils.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/renderUtils.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/tinyXml/tinystr.cpp" isTestSource="false" />

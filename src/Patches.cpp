@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <atomic>
+
 #include "logging.h"
 #include "noise.h"
 
@@ -160,7 +162,7 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
             const glm::vec3 position = buildPosition(x, y, tileSize, offset);
 
             const glm::vec3 n1 = x > 0 ? vertices.back().position : buildPosition(x - 1, y, tileSize, offset);
-            int index = vertices.size() - tilesCount - 1;
+            const unsigned long index = vertices.size() - tilesCount - 1;
             const glm::vec3 n2 = y > 0 ? vertices[index].position : buildPosition(x, y - 1, tileSize, offset);
 
             const glm::vec3 normal = glm::normalize(glm::cross(n2 - position, n1 - position));
@@ -174,10 +176,18 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
     }
 }
 
+static std::atomic_int HEIGHT_CALLS;
+
 float getHeight(float x, float y) {
     float result = noise(x / 512, y / 512);
     result = powf((result + 2.0f) / 2.0f, 1.2f) - 0.7f;
+
+    HEIGHT_CALLS++;
     return result * MAX_HEIGHT;
+}
+
+int getHeightCalls() {
+    return HEIGHT_CALLS.load();
 }
 
 int normalizeOffset(const int &value) {

@@ -9,6 +9,8 @@
 #include "TerrainConstants.h"
 #include "RenderCommon.h"
 
+int getHeightCalls();
+
 struct Patch {
     Patch() {
         x = -1;

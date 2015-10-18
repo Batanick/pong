@@ -55,6 +55,7 @@ private:
     std::shared_ptr<FpsCounter> fpsCounter;
     std::shared_ptr<Label> fpsLabel;
     std::shared_ptr<Label> cameraCoordsLabel;
+    std::shared_ptr<Label> statsLabel;
 
     std::shared_ptr<ShaderManager> shaderManager;
     std::shared_ptr<AssetManager> assetManager;
