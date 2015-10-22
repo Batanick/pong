@@ -1,6 +1,5 @@
 #include "Patches.h"
 
-#include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
 #include <atomic>
@@ -19,7 +18,6 @@ void Patches::init() {
 
     std::vector<GLuint> vBuffers(PATCHES_COUNT);
     glGenBuffers(PATCHES_COUNT, &vBuffers[0]);
-    const long dataSize = 0;
 
     for (int i = 0; i < PATCHES_COUNT; i++) {
         pMutex lock = std::shared_ptr<std::mutex>(new std::mutex());

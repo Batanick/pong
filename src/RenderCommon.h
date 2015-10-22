@@ -39,15 +39,17 @@ struct RenderContext {
     glm::vec3 cameraUp;
     glm::vec3 cameraDir;
 
+    float fovHor, fovVer;
+
     glm::mat3 guiView;
 
     glm::vec3 lightDir;
 
     GLuint reflectionTexId;
 
-    std::map<std::string, std::string> stats;
+    mutable std::map<std::string, std::string> stats;
 public:
-    void updateStats(std::string key, std::string value) {
+    void updateStats(std::string key, std::string value) const {
         stats[key] = value;
     }
 
@@ -85,18 +87,30 @@ struct TextureInfo {
 };
 
 class Renderable {
+
+protected:
+    virtual void render(const RenderContext &context) = 0;
+
+    virtual bool needRender() {
+        return true;
+    }
+
 public:
     virtual ~Renderable() {
         // nothing
     }
-
-    virtual void render(const RenderContext &context) = 0;
 
     virtual void shutdown() = 0;
 
     virtual void init(const GLuint shaderId) = 0;
 
     virtual ShaderType getType() = 0;
+
+    void renderObject(const RenderContext &context) {
+        if (needRender()) {
+            render(context);
+        }
+    }
 };
 
 typedef std::shared_ptr<Renderable> PRenderable;

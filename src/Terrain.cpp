@@ -1,4 +1,3 @@
-
 #include "Terrain.h"
 
 #include <GLFW/glfw3.h>
@@ -100,6 +99,8 @@ void Terrain::render(const RenderContext &context) {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
+    unsigned int patchesRendered = 0;
+
     for (int i = 0; i < PATCHES_COUNT; i++) {
         PatchHolder holder = patches->acquire(i);
         Patch &patch = holder.patch;
@@ -107,6 +108,12 @@ void Terrain::render(const RenderContext &context) {
             continue;
         }
         refreshPatch(patch);
+
+        if (!visible(context, patch)) {
+            continue;
+        }
+
+        patchesRendered++;
 
         glBindBuffer(GL_ARRAY_BUFFER, patch.id);
 
@@ -123,6 +130,8 @@ void Terrain::render(const RenderContext &context) {
 
     glDisableVertexAttribArray(0);
     glDisableVertexAttribArray(1);
+
+    context.updateStats("pren", std::to_string(patchesRendered));
 }
 
 void Terrain::refreshPatch(Patch &patch) {
@@ -154,4 +163,24 @@ void Terrain::shutdown() {
 
 ShaderType Terrain::getType() {
     return ShaderType::TERRAIN_SHADER;
+}
+
+bool Terrain::visible(const RenderContext &context, const Patch &patch) const {
+    static const float patchDiagonal = glm::sqrt(2 * PATCH_SIZE_METERS * PATCH_SIZE_METERS);
+
+    const glm::vec2 patchPos = patch.getPosition() + glm::vec2(PATCH_SIZE_METERS / 2, PATCH_SIZE_METERS / 2);
+    const glm::vec2 cameraPos = glm::vec2(context.cameraPos.x, context.cameraPos.z);
+    const glm::vec2 cameraDirNorm = glm::normalize(glm::vec2(context.cameraDir.x, context.cameraDir.z));
+
+    const glm::vec2 dirToPatch = patchPos - cameraPos;
+    if (glm::length(dirToPatch) < patchDiagonal) {
+        return true;
+    }
+
+    const glm::vec2 patchToDistProj = cameraDirNorm * glm::dot(dirToPatch, cameraDirNorm);
+    const glm::vec2 intersectionPoint = patchPos + patchDiagonal * glm::normalize(-dirToPatch + patchToDistProj);
+
+    const float angle = glm::acos(glm::dot(glm::normalize(intersectionPoint - cameraPos), cameraDirNorm));
+
+    return angle < glm::radians(context.fovHor / 1.8);
 }

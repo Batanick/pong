@@ -72,6 +72,10 @@ void setUpCamera(RenderContext &context, const glm::vec3 &pos, const glm::vec3 &
     context.cameraDir = direction;
 
     context.view = getViewMatrix(pos, direction, up);
+
+    context.fovVer = 45.0f;
+    context.fovHor = context.fovVer * context.windowWidth / context.windowHeight;
+
     context.projection = glm::perspective<float>(45.0f, ((float) context.windowWidth) / context.windowHeight, 0.01f,
                                                  5000.0f);
     context.pv = context.projection * context.view;

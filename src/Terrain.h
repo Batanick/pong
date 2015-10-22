@@ -22,11 +22,12 @@ public:
 
     virtual void init(const GLuint shaderId) override;
 
-    virtual void render(const RenderContext &context) override;
-
     virtual void shutdown() override;
 
     virtual ShaderType getType() override;
+
+protected:
+    virtual void render(const RenderContext &context) override;
 
 private:
     struct IndexBuffer {
@@ -39,6 +40,8 @@ private:
     void initVertices(const GLuint &shaderId);
 
     void initIndices(const GLuint &shaderId);
+
+    bool visible(const RenderContext &context, const Patch &patch) const;
 
     std::vector<IndexBuffer> indexBuffers;
 

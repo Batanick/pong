@@ -41,8 +41,9 @@ typedef struct                       /**** BMP file info structure ****/
     unsigned int biClrImportant;   /* Number of important colors */
 } BITMAPINFOHEADER;
 
+int generateFile(int argc, char *argv[]);
 #ifdef NOISE_TEST
-int main(int argc, char *argv[]) {\
+int main(int argc, char *argv[]) {
     return generateFile(argc, argv);
 }
 #endif

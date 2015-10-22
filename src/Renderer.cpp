@@ -155,7 +155,7 @@ void Renderer::render(const RenderableType &type, const RenderContext &context) 
             shaderManager->useProgram(currentType);
         }
 
-        iterator.second->render(context);
+        iterator.second->renderObject(context);
     }
 }
 
@@ -170,7 +170,7 @@ void Renderer::renderAll() {
                 shaderManager->useProgram(currentType);
             }
 
-            iterator->second->render(context);
+            iterator->second->renderObject(context);
         }
     }
 }

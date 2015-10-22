@@ -29,6 +29,10 @@ struct Patch {
     bool needToDraw() const {
         return lod >= 0;
     }
+
+    glm::vec2 getPosition() const {
+        return glm::vec2(x * PATCH_SIZE_METERS, y * PATCH_SIZE_METERS);
+    }
 };
 
 struct PatchHolder final {
