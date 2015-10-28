@@ -1,6 +1,7 @@
 #include "noise.h"
 
 #include <math.h>
+#include <glm/glm.hpp>
 #include "commonMath.h"
 
 inline float signum(float n) {
@@ -27,7 +28,7 @@ float smooth(int x, int y) {
 
 float interpolate(float min, float max, float x) {
     x *= glm::pi<float>();
-    x = (1 - glm::cos<float>(x)) * 0.5f;
+    x = (1 - glm::cos(x)) * 0.5f;
     return min * (1 - x) + max * x;
 }
 

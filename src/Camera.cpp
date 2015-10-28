@@ -6,6 +6,15 @@
 static const float CAMERA_MOVE_SPEED = 500.0f;
 static const float CAMERA_ROTATION_SPEED = 0.005f;
 
+// TODO shitty workaround for https://github.com/glfw/glfw/issues/477
+static double mouseX = 0;
+static double mouseY = 0;
+
+void mouseCallback(GLFWwindow *, double x, double y) {
+    mouseX = x;
+    mouseY = y;
+}
+
 Camera::Camera() {
     horizontalAngle = 0.0f;
     verticalAngle = -0.0f;
@@ -13,20 +22,25 @@ Camera::Camera() {
 }
 
 void Camera::onBeforeRender(GLFWwindow *const window, double deltaTime) {
+
     if (glfwGetWindowAttrib(window, GLFW_FOCUSED) != GL_TRUE) {
         return;
     }
 
-    double mouseXPos, mouseYPos;
-    glfwGetCursorPos(window, &mouseXPos, &mouseYPos);
+    glfwSetCursorPosCallback(window, mouseCallback);
+//    glfwGetCursorPos(window, &mouseXPos, &mouseYPos); TODO: waiting for https://github.com/glfw/glfw/issues/477
+
+    printf("%f:%f\n", mouseX, mouseY);
+
     int windowHeight, windowWidth;
     glfwGetWindowSize(window, &windowWidth, &windowHeight);
 
-    //TODO: Move this from here!!!
-    glfwSetCursorPos(window, windowWidth / 2, windowHeight / 2);
+    horizontalAngle += CAMERA_ROTATION_SPEED * (float) (windowWidth / 2 - mouseX);
+    verticalAngle += CAMERA_ROTATION_SPEED * (float) (windowHeight / 2 - mouseY);
+    mouseX = windowWidth / 2;
+    mouseY = windowHeight / 2;
 
-    horizontalAngle += CAMERA_ROTATION_SPEED * float(windowWidth / 2 - mouseXPos);
-    verticalAngle += CAMERA_ROTATION_SPEED * float(windowHeight / 2 - mouseYPos);
+    glfwSetCursorPos(window, windowWidth / 2, windowHeight / 2);
 
     const glm::vec3 direction = getDirection();
     const glm::vec3 right = getRight();
