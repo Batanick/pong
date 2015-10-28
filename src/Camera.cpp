@@ -30,8 +30,6 @@ void Camera::onBeforeRender(GLFWwindow *const window, double deltaTime) {
     glfwSetCursorPosCallback(window, mouseCallback);
 //    glfwGetCursorPos(window, &mouseXPos, &mouseYPos); TODO: waiting for https://github.com/glfw/glfw/issues/477
 
-    printf("%f:%f\n", mouseX, mouseY);
-
     int windowHeight, windowWidth;
     glfwGetWindowSize(window, &windowWidth, &windowHeight);
 

@@ -1,8 +1,8 @@
 #include "RenderCommon.h"
 
 static const float SIZE = 10000.0f;
-static const int SKY_LEVELS_COUNT = 16;
-static const float HEIGHT = 500;
+static const int SKY_LEVELS_COUNT = 8;
+static const float HEIGHT = 800;
 static const float HEIGHT_STEP = 10;
 
 class Clouds final : public Renderable {
@@ -22,7 +22,7 @@ public:
 
     virtual ShaderType getType() final
 
-    override;
+            override;
 
 private:
     GLuint verticesId;

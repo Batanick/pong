@@ -20,6 +20,7 @@
 #include "commonMath.h"
 #include "renderUtils.h"
 #include "noise.h"
+#include "Water.h"
 
 #define SHOW_STATS
 
@@ -67,7 +68,7 @@ void Renderer::initScene() {
 
 #ifdef DRAW_TERRAIN
   add(std::shared_ptr<Terrain>(new Terrain()));
-//  add(std::shared_ptr<Water>(new Water()), CommonRenderer::PostRender);
+    add(std::shared_ptr<Water>(new Water()), CommonRenderer::PostRender);
 #endif
 
 #ifdef DRAW_SKYBOX

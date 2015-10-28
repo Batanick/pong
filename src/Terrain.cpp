@@ -166,21 +166,5 @@ ShaderType Terrain::getType() {
 }
 
 bool Terrain::visible(const RenderContext &context, const Patch &patch) const {
-    static const float patchDiagonal = glm::sqrt(2 * PATCH_SIZE_METERS * PATCH_SIZE_METERS);
-
-    const glm::vec2 patchPos = patch.getPosition() + glm::vec2(PATCH_SIZE_METERS / 2, PATCH_SIZE_METERS / 2);
-    const glm::vec2 cameraPos = glm::vec2(context.cameraPos.x, context.cameraPos.z);
-    const glm::vec2 cameraDirNorm = glm::normalize(glm::vec2(context.cameraDir.x, context.cameraDir.z));
-
-    const glm::vec2 dirToPatch = patchPos - cameraPos;
-    if (glm::length(dirToPatch) < patchDiagonal) {
-        return true;
-    }
-
-    const glm::vec2 patchToDistProj = cameraDirNorm * glm::dot(dirToPatch, cameraDirNorm);
-    const glm::vec2 intersectionPoint = patchPos + patchDiagonal * glm::normalize(-dirToPatch + patchToDistProj);
-
-    const float angle = glm::acos(glm::dot(glm::normalize(intersectionPoint - cameraPos), cameraDirNorm));
-
-    return angle < glm::radians(context.fovHor / 1.8);
+    return true;
 }
