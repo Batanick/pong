@@ -25,6 +25,7 @@
 #define SHOW_STATS
 
 #define DRAW_TERRAIN
+#define DRAW_WATER
 #define DRAW_SKYBOX
 
 bool Renderer::init() {
@@ -67,13 +68,16 @@ void Renderer::initScene() {
 #endif
 
 #ifdef DRAW_TERRAIN
-  add(std::shared_ptr<Terrain>(new Terrain()));
+    add(std::shared_ptr<Terrain>(new Terrain()));
+#endif
+
+#ifdef DRAW_WATER
     add(std::shared_ptr<Water>(new Water()), CommonRenderer::PostRender);
 #endif
 
 #ifdef DRAW_SKYBOX
-  add(std::shared_ptr<Clouds>(new Clouds()));
-  add(std::shared_ptr<TexturedMesh>(new Sun()));
+    add(std::shared_ptr<Clouds>(new Clouds()));
+    add(std::shared_ptr<TexturedMesh>(new Sun()));
 #endif
 
 #ifdef SHOW_STATS
@@ -139,7 +143,7 @@ void Renderer::render(double timeDelta) {
     statsLabel->setText(context, stats);
 }
 
-void Renderer::add(const PRenderable renderable, Renderer::RenderableType type) {
+void Renderer::add(PRenderable renderable, Renderer::RenderableType type) {
     const GLuint shaderId = shaderManager->getProgramId(renderable->getType());
     renderable->init(shaderId);
 
