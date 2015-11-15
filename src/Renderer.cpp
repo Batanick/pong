@@ -17,7 +17,7 @@
 
 #include "commonMath.h"
 #include "renderUtils.h"
-#include "noise.h"
+#include "heightGenerator.h"
 #include "Water.h"
 
 #define SHOW_STATS

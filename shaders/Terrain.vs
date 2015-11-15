@@ -6,7 +6,6 @@ layout (location = 1) in vec3 vertexNormal;
 uniform mat4 projection;
 uniform mat4 view;
 
-uniform float heightScale;
 uniform vec3 lightDir;
 uniform vec4 waterLevel;
 
@@ -21,7 +20,7 @@ void main() {
   gl_Position = projection * view * position;
   gl_ClipDistance[0] = dot( waterLevel, position );
 
-  u = vertexPosition.y / heightScale;
+  u = vertexPosition.y;
   normal = (view * vec4(vertexNormal, 0)).xyz;
   light = (view * vec4(lightDir, 0)).xyz;
   xyz = vertexPosition.xyz;

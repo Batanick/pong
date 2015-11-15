@@ -11,7 +11,6 @@ void Terrain::init(const GLuint shaderId) {
     projectionId = glGetUniformLocation(shaderId, "projection");
     viewId = glGetUniformLocation(shaderId, "view");
     textureParamId = glGetUniformLocation(shaderId, "terrainTexture");
-    heightId = glGetUniformLocation(shaderId, "heightScale");
     cameraPosId = glGetUniformLocation(shaderId, "cameraPos");
     lightDirId = glGetUniformLocation(shaderId, "lightDir");
     waterLevel = glGetUniformLocation(shaderId, "waterLevel");
@@ -83,7 +82,6 @@ void Terrain::render(const RenderContext &context) {
 
     glUniformMatrix4fv(projectionId, 1, GL_FALSE, &context.projection[0][0]);
     glUniformMatrix4fv(viewId, 1, GL_FALSE, &context.view[0][0]);
-    glUniform1f(heightId, MAX_HEIGHT);
     glUniform3fv(cameraPosId, 1, &context.cameraPos[0]);
     glUniform3fv(lightDirId, 1, &context.lightDir[0]);
     glUniform4f(waterLevel, 0, 1, 0, 0);

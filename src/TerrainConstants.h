@@ -5,8 +5,6 @@
 #ifndef H_RENDER_TERRAIN_CONSTANTS
 #define H_RENDER_TERRAIN_CONSTANTS
 
-static const float MAX_HEIGHT = 256;
-
 static const float PATCH_SIZE_METERS = 128;
 
 static const int PATCHES_COUNT_SQRT = 64;

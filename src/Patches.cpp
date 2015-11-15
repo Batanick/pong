@@ -5,9 +5,7 @@
 #include <atomic>
 
 #include "logging.h"
-#include "noise.h"
-
-float getHeight(float x, float y);
+#include "heightGenerator.h"
 
 void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices, int lod);
 
@@ -172,21 +170,6 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
     if (lod == 0) {
         LOG("Reiniting lod[%d]: %dms", lod, static_cast<int>((glfwGetTime() - start) * 1000));
     }
-}
-
-static std::atomic_int HEIGHT_CALLS;
-
-float getHeight(float x, float y) {
-    static const int noiseScale = 1 << 11;
-
-    float result = noise(x / noiseScale, y / noiseScale);
-
-    HEIGHT_CALLS++;
-    return result * MAX_HEIGHT;
-}
-
-int getHeightCalls() {
-    return HEIGHT_CALLS.load();
 }
 
 int normalizeOffset(const int &value) {

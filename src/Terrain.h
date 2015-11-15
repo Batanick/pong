@@ -14,7 +14,6 @@ public:
         projectionId = 0;
         viewId = 0;
         textureId = 0;
-        heightId = 0;
         textureId = 0;
         cameraPosId = 0;
         lightDirId = 0;
@@ -48,7 +47,6 @@ private:
     GLint projectionId;
     GLint viewId;
     GLint textureParamId;
-    GLint heightId;
     GLint cameraPosId;
     GLint lightDirId;
     GLint waterLevel;
