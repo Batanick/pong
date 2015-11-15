@@ -19,7 +19,9 @@ public:
 
     void init(Renderer &renderer);
 
-    typedef void(*PressCallback)(Renderer &renderer, RenderContext &context);
+    bool shiftPressed();
+
+    typedef void(*PressCallback)(Renderer &renderer, RenderContext &context, Controls &controls);
 
 private:
     std::map<unsigned int, PressCallback> callbacks;

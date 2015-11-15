@@ -10,7 +10,9 @@
 
 class TreeGenerator {
 public:
-    static PRenderable generateTree(glm::vec3 position);
+    static PRenderable generateTupelo(glm::vec3 position);
+
+    static PRenderable generateOak(glm::vec3 position);
 };
 
 

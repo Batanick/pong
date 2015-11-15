@@ -5,12 +5,10 @@
 
 class Tree final : public RenderableMesh {
 public:
-    Tree() :
-            world(glm::mat4()),
-            treeParams(blackTupelo()) {
-    }
+    static std::shared_ptr<Tree> oak(const glm::vec3 pos);
 
-    Tree(const glm::vec3 pos);
+    static std::shared_ptr<Tree> tupelo(glm::vec3 pos);
+
 
     virtual ~Tree() {
         // nothing
@@ -32,6 +30,8 @@ protected:
     virtual RenderableMesh::TriangleMode getTrianglesMode() override;
 
 private:
+
+
     struct TreeLevelParams {
         TreeLevelParams(float downAngle, float rotate, int branches, float length,
                         float taper, int curveRes, float curve, float curveBack) :
@@ -80,7 +80,7 @@ private:
         int branches;
         float length, lengthV;
         float taper;
-        int curveRes;
+        unsigned char curveRes;
         float curve, curveV;
         float curveBack;
     };
@@ -96,7 +96,7 @@ private:
         float ratio;
         float ratioPower;
         float rootLength;
-        int rootCurveRes;
+        unsigned char rootCurveRes;
         float rootCurve;
         float rootCurveBack;
         float rootTaper;
@@ -136,6 +136,8 @@ private:
         float offsetPerChild;
         float segmentOffsetLength;
     };
+
+    Tree(const glm::vec3 &pos, TreeParams treeParams);
 
     const TreeParams treeParams;
     const glm::mat4 world;

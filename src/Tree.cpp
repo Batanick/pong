@@ -6,8 +6,8 @@
 #include "commonMath.h"
 #include "renderUtils.h"
 
-Tree::Tree(glm::vec3 pos) :
-        world(glm::translate(glm::mat4(), pos)), treeParams(blackTupelo()) {
+Tree::Tree(const glm::vec3 &pos, TreeParams treeParams) :
+        world(glm::translate(glm::mat4(), pos)), treeParams(treeParams) {
     // nothing
 }
 
@@ -45,7 +45,7 @@ Tree::StemDrawingContext Tree::buildContext(const StemParams &stem, const TreeLe
 void Tree::drawStem(const StemParams &stem, const unsigned int level, const float baseSize, MeshContext &mesh) {
     const TreeLevelParams levelParams = treeParams.getParams(level + 1);
     const StemDrawingContext context = buildContext(stem, levelParams, baseSize);
-    const int indicesOffset = mesh.vertices.size();
+    const size_t indicesOffset = mesh.vertices.size();
 
     float yaw = 0;
     glm::vec3 startPos = stem.pos;
@@ -59,7 +59,7 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
         // ================== VERTICES ================
         for (unsigned char col = 0; col <= stem.resolution; col++) {
             const glm::vec3 addition = glm::normalize(
-                    glm::vec3(glm::angleAxis(glm::degrees(yaw), glm::normalize(increment)) * stem.curveAxis));
+                    glm::vec3(glm::angleAxis(yaw, glm::normalize(increment)) * stem.curveAxis));
             const glm::vec3 current = startPos + (addition * stem.radius * (1 - context.radiusWaistFactor * row));
 
             mesh.vertices.push_back(TexVertexData(current, addition, glm::vec2(0.25f, 0.25f)));
@@ -86,12 +86,12 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
                                        : ((row > (stem.segments / 2)) ? (context.curveAngle * 2) : (stem.curveBack * 2 /
                                                                                                     stem.segments));
 
-        increment = glm::angleAxis(glm::degrees(curveAngleActual), glm::normalize(stem.curveAxis)) * increment;
+        increment = glm::angleAxis(curveAngleActual, glm::normalize(stem.curveAxis)) * increment;
         startPos += increment;
     }
 
     // ================== INDICES ================
-    generateTriangleIndices(indicesOffset, stem.segments, stem.resolution, mesh.indices);
+    generateTriangleIndices((int) indicesOffset, stem.segments, stem.resolution, mesh.indices);
 
     for (const auto child : childs) {
         if (treeParams.levelsList.size() != level + 1) {
@@ -104,7 +104,7 @@ void Tree::drawStem(const StemParams &stem, const unsigned int level, const floa
 }
 
 void Tree::drawLeaf(const StemParams &stem, unsigned const int level, const float baseSize, MeshContext &mesh) {
-    const int indicesOffset = mesh.vertices.size();
+    const size_t indicesOffset = mesh.vertices.size();
     const glm::vec3 widthVec =
             glm::normalize(stem.curveAxis) * 0.5f * stem.length * (1 - treeParams.leafStem) * treeParams.leafScale *
             treeParams.leafForm;
@@ -119,7 +119,7 @@ void Tree::drawLeaf(const StemParams &stem, unsigned const int level, const floa
     mesh.vertices.push_back(TexVertexData(leafStartPos - widthVec, normal, glm::vec2(0.0f, 0.5f)));
     mesh.vertices.push_back(TexVertexData(leafStartPos + widthVec, normal, glm::vec2(0.0f, 1.0f)));
 
-    generateQuadIndices(mesh.indices, indicesOffset, true);
+    generateQuadIndices(mesh.indices, (int) indicesOffset, true);
 }
 
 const Tree::StemParams Tree::generateChild(
@@ -136,8 +136,8 @@ const Tree::StemParams Tree::generateChild(
     StemParams childParams;
     childParams.curve = random(levelParams.curve, levelParams.curveV);
 
-    const glm::mat3 rotationMat = glm::toMat3(glm::angleAxis(glm::degrees(rotation), parentDirection) *
-                                              glm::angleAxis(glm::degrees(downAngle), parentParams.curveAxis));
+    const glm::mat3 rotationMat = glm::toMat3(glm::angleAxis(rotation, parentDirection) *
+                                              glm::angleAxis(downAngle, parentParams.curveAxis));
     childParams.direction = glm::normalize(rotationMat * parentDirection);
 
     childParams.curveAxis = glm::normalize(glm::cross(childParams.direction, parentDirection));
@@ -147,7 +147,7 @@ const Tree::StemParams Tree::generateChild(
     childParams.pos = pos;
     childParams.radius =
             parentParams.radius * glm::pow(childParams.length / parentParams.length, treeParams.ratioPower);
-    childParams.resolution = parentParams.resolution / 2;
+    childParams.resolution = parentParams.resolution / (char) 2;
     childParams.segments = levelParams.curveRes;
     childParams.weist = 1 - levelParams.taper;
     childParams.curveBack = levelParams.curveBack;
@@ -258,7 +258,7 @@ const Tree::TreeParams Tree::blackOak() {
                            glm::radians(-30.0f));
     level2.initVars(glm::radians(10.0f), 0.0f, 0.05f, glm::radians(-30.0f));
 
-    TreeLevelParams level3(glm::radians(45.0f), glm::radians(140.0f), 0, 0.4f, 1.0f, 1, glm::radians(0.0f),
+    TreeLevelParams level3(glm::radians(45.0f), glm::radians(140.0f), 4, 0.4f, 1.0f, 1, glm::radians(0.0f),
                            glm::radians(0.0f));
     level3.initVars(glm::radians(10.0f), 0.0f, 0.0f, glm::radians(0.0f));
 
@@ -277,15 +277,16 @@ const Tree::TreeParams Tree::blackOak() {
     params.scale = 1.0f;
     params.rootTaper = 1.0f;
     params.baseSize = 0.4f;
-    params.leafScale = .8f;
-    params.leafForm = 0.3f;
-    params.leafStem = 0.05f;
+    params.leafScale = .6f;
+    params.leafForm = 0.6f;
+    params.leafStem = 0.2f;
 
     return params;
 }
 
 const Tree::TreeParams Tree::testCone() {
-    TreeParams params(std::vector<TreeLevelParams>(), blackTupeloRatio);
+    std::vector<TreeLevelParams> levelParams;
+    TreeParams params(levelParams, blackTupeloRatio);
     params.ratio = 0.015f;
     params.ratioPower = 1.2f;
     params.rootLength = 1.0f;
@@ -300,3 +301,10 @@ const Tree::TreeParams Tree::testCone() {
 }
 
 
+std::shared_ptr<Tree> Tree::oak(const glm::vec3 pos) {
+    return std::shared_ptr<Tree>(new Tree(pos, blackOak()));
+}
+
+std::shared_ptr<Tree> Tree::tupelo(glm::vec3 pos) {
+    return std::shared_ptr<Tree>(new Tree(pos, blackTupelo()));
+}

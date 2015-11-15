@@ -6,7 +6,11 @@
 
 #include "Tree.h"
 
-PRenderable TreeGenerator::generateTree(glm::vec3 position) {
-    const std::shared_ptr<Tree> &result = std::shared_ptr<Tree>(new Tree(position));
-    return result;
+PRenderable TreeGenerator::generateTupelo(glm::vec3 position) {
+    return Tree::tupelo(position);
+}
+
+
+PRenderable TreeGenerator::generateOak(glm::vec3 position) {
+    return Tree::oak(position);
 }

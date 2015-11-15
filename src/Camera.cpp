@@ -3,6 +3,8 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "heightGenerator.h"
+
 static const float CAMERA_MOVE_SPEED = 50.0f;
 static const float CAMERA_ROTATION_SPEED = 0.005f;
 
@@ -18,7 +20,7 @@ void mouseCallback(GLFWwindow *, double x, double y) {
 Camera::Camera() {
     horizontalAngle = 0.0f;
     verticalAngle = -0.0f;
-    position = glm::vec3(0, 0.5, -2);
+    position = glm::vec3(0, getHeight(0.0f, -2.0f), -2);
 }
 
 void Camera::onBeforeRender(GLFWwindow *const window, double deltaTime) {
@@ -59,6 +61,8 @@ void Camera::onBeforeRender(GLFWwindow *const window, double deltaTime) {
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
         position -= right * (float) deltaTime * CAMERA_MOVE_SPEED;
     }
+
+    position.y = glm::max(position.y, getHeight(position.x, position.z) + 0.5f);
 
     //Switching polygon draw mode
     static bool buttonUp = true;
