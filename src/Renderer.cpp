@@ -13,6 +13,7 @@
 #include "Label.h"
 
 #include "Camera.h"
+#include "Controls.h"
 #include "FpsCounter.h"
 
 #include "commonMath.h"
@@ -39,6 +40,9 @@ bool Renderer::init() {
 
     camera = std::shared_ptr<Camera>(new Camera());
     glClearColor(0.0f, 0.635f, 0.91f, 0.0f);
+
+    controls = std::shared_ptr<Controls>(new Controls());
+    controls->init(*this);
 
     glfwSwapInterval(1);
     glEnable(GL_DEPTH_TEST);
@@ -107,8 +111,10 @@ void Renderer::render(double timeDelta) {
     camera->onBeforeRender(window, timeDelta);
     context.timeDelta = timeDelta;
     context.time += timeDelta;
-
     setUpCamera(context, camera->getPosition(), camera->getUp(), camera->getDirection());
+
+    controls->onBeforeRender(window, *this, context);
+
 
     for (PRenderHandler addon : addons) {
         addon->onBeforeRender(context);

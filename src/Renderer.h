@@ -1,3 +1,6 @@
+#ifndef PONG_RENDERER_H
+#define PONG_RENDERER_H
+
 #include "RenderCommon.h"
 
 #include <memory>
@@ -14,6 +17,8 @@ class AssetManager;
 class Terrain;
 
 class Camera;
+
+class Controls;
 
 class Tickable;
 
@@ -58,6 +63,7 @@ private:
     std::shared_ptr<ShaderManager> shaderManager;
     std::shared_ptr<AssetManager> assetManager;
     std::shared_ptr<Camera> camera;
+    std::shared_ptr<Controls> controls;
 
     std::vector<RenderableHolder> renderables;
     std::vector<PRenderHandler> addons;
@@ -69,3 +75,4 @@ private:
     void initScene();
 };
 
+#endif //PONG_RENDERER_H

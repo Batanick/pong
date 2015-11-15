@@ -13,7 +13,7 @@ file(GLOB_RECURSE SOURCE_FILES src/*.cpp)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 add_definitions(-DGLM_FORCE_RADIANS)
 
-add_executable(pong ${SOURCE_FILES})
+add_executable(pong ${SOURCE_FILES} src/Controls.cpp src/Controls.h)
 
 add_executable(test_noise src/noise.cpp src/noise.h src/noiseTest.cpp)
 set_target_properties(test_noise PROPERTIES COMPILE_DEFINITIONS "NOISE_TEST=1")

@@ -3,7 +3,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/gtc/matrix_transform.hpp>
 
-static const float CAMERA_MOVE_SPEED = 500.0f;
+static const float CAMERA_MOVE_SPEED = 50.0f;
 static const float CAMERA_ROTATION_SPEED = 0.005f;
 
 // TODO shitty workaround for https://github.com/glfw/glfw/issues/477
