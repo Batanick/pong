@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <cfloat>
-
+#include <vector>
 #include "noise.h"
 
 typedef struct                       /**** BMP file header structure ****/
@@ -42,6 +42,7 @@ typedef struct                       /**** BMP file info structure ****/
 } BITMAPINFOHEADER;
 
 int generateFile(int argc, char *argv[]);
+
 #ifdef NOISE_TEST
 int main(int argc, char *argv[]) {
     return generateFile(argc, argv);
@@ -95,29 +96,38 @@ int generateFile(int argc, char *argv[]) {
 
 /*Write bitmap*/
     const float step = size / width;
-    const float maxAmplitude = sqrt(PERSISTENCE);
 
     float maxHeight = FLT_MIN;
     float minHeight = FLT_MAX;
 
+    std::vector<float> heights;
     for (int x = 0; x < width; x++) {
         for (int y = 0; y < width; y++) {
             const float posX = (x - width / 2) * step;
             const float posY = (y - height / 2) * step;
 
-            const float height = noise(posX, posY) / maxAmplitude + AMPLITUDE;
+            const float height = noise(posX, posY);
 
             maxHeight = fmaxf(maxHeight, height);
             minHeight = fminf(minHeight, height);
 
             // 0.2989, 0.5870, 0.1140
-            unsigned char r = 0 ;
-            unsigned char g = 0;
-            unsigned char b = 255 * height;
-            fwrite(&b, 1, 1, file);
-            fwrite(&g, 1, 1, file);
-            fwrite(&r, 1, 1, file);
+//            unsigned char r = 0 ;
+//            unsigned char g = 0;
+//            unsigned char b = 255 * height;
+            heights.push_back(height);
         }
+    }
+
+    for (float &value: heights) {
+        float normValue = 255 * ((value - minHeight) / (maxHeight - minHeight));
+        unsigned char r = 0;
+        unsigned char g = 0;
+        unsigned char b = normValue;
+        fwrite(&r, 1, 1, file);
+        fwrite(&g, 1, 1, file);
+        fwrite(&b, 1, 1, file);
+
     }
 
     printf("Min height: %f\n", minHeight);

@@ -11,8 +11,6 @@
 
 #include "Terrain.h"
 #include "Label.h"
-#include "Clouds.h"
-#include "Sun.h"
 
 #include "Camera.h"
 #include "FpsCounter.h"
@@ -26,7 +24,7 @@
 
 #define DRAW_TERRAIN
 #define DRAW_WATER
-#define DRAW_SKYBOX
+//#define DRAW_SKYBOX
 
 bool Renderer::init() {
     VERIFY(glewInit() == GLEW_OK, "Unable to initialize glew", return false);

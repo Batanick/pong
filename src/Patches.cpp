@@ -177,8 +177,9 @@ void generateVertices(const glm::vec2 offset, std::vector<VertexData> &vertices,
 static std::atomic_int HEIGHT_CALLS;
 
 float getHeight(float x, float y) {
-    float result = noise(x / 512, y / 512);
-    result = powf((result + 2.0f) / 2.0f, 1.2f) - 0.7f;
+    static const int noiseScale = 1 << 11;
+
+    float result = noise(x / noiseScale, y / noiseScale);
 
     HEIGHT_CALLS++;
     return result * MAX_HEIGHT;

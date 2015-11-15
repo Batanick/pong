@@ -56,7 +56,7 @@ float interpolatedNoise(float x, float y) {
 float noise(float x, float y) {
     float result = 0;
     for (int i = 0; i < OCTAVES; i++) {
-        const float frequency = pow(AMPLITUDE, i);
+        const float frequency = pow(2, i);
         const float amplitude = pow(PERSISTENCE, i);
         result += interpolatedNoise(x * frequency, y * frequency) * amplitude;
     }
